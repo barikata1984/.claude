@@ -1,14 +1,6 @@
 ---
 name: literature-survey
-description: >
-  Conduct a comprehensive academic literature survey on a given research topic.
-  Searches the web systematically for papers from recent to historical, producing
-  a structured Markdown report with summaries and a BibTeX file.
-  Use this skill whenever the user asks for a literature review, survey, related work
-  search, prior art investigation, or wants to know "what research exists on X".
-  Also trigger when the user says things like "papers about", "survey the field of",
-  "what's the state of the art in", "find relevant publications", "先行研究", "文献調査",
-  "サーベイ", "論文を探して", or any request to systematically gather academic references.
+description: "Conduct a comprehensive academic literature survey on a given research topic. Searches the web systematically for papers from recent to historical, producing a structured Markdown report with summaries and a BibTeX file. Use this skill whenever the user asks for a literature review, survey, related work search, prior art investigation, or wants to know what research exists on X. Also trigger when the user says things like papers about, survey the field of, what is the state of the art in, find relevant publications, 先行研究, 文献調査, サーベイ, 論文を探して, or any request to systematically gather academic references."
 ---
 
 # Literature Survey Skill
@@ -73,20 +65,81 @@ Use subagents to parallelize searches across different queries and sources when 
 Each subagent should handle a distinct search angle (e.g., one for the main topic,
 one for a related subtopic, one for survey papers).
 
-### Phase 3: Synthesis and Organization
+**DOI/URL requirement**: Every paper collected must have at least one of:
+- DOI (preferred): e.g., `10.1109/ICRA.2024.XXXXXXX`
+- URL: arXiv page, Semantic Scholar page, or publisher page
 
-After collecting papers, organize them into a coherent narrative:
+Papers for which neither DOI nor URL can be found should be excluded.
+
+### Phase 3: Paper-Level Analysis
+
+After collecting papers, analyze each individually and organize into themes:
 
 1. **Identify themes**: Group papers by subtopic, methodology, or contribution type
 2. **Trace the evolution**: Show how the field progressed over time
 3. **Highlight connections**: Note where papers build on, extend, or contradict each other
-4. **Spot gaps**: Identify areas with limited research or open questions
-5. **Deep annotation per paper**: For each paper, write three structured fields:
-   - **summary**: Concise description of the proposed method (2-3 sentences). What problem does it solve and how?
-   - **core**: The essential, irreplaceable element(s) of the method. Without this, the approach would not work. Be specific (e.g., "differentiable rendering loss that back-propagates through the physics simulator" not just "differentiable rendering").
-   - **diff**: Explicit contrast with prior work. Name the predecessor(s) and state what limitation is overcome or what new capability is introduced. Avoid vague statements like "improves over previous methods".
+4. **Annotate each paper** with three structured fields:
+   - **thesis**: The author's central claim — not what the method does, but what the
+     author argues is true. Frame as an argumentative stance (e.g., "dense physical
+     features from interaction are necessary for manipulation, visual appearance alone
+     is insufficient" rather than "proposes a method to assign dense physical features").
+   - **core**: The essential, irreplaceable element(s) of the method. Without this, the
+     approach would not work. Be specific (e.g., "differentiable rendering loss that
+     back-propagates through the physics simulator" not just "differentiable rendering").
+   - **diff**: Explicit contrast with prior work. Name the predecessor(s) and state what
+     limitation is overcome or what new capability is introduced. This is a factual record
+     of accomplished advances. Avoid vague statements like "improves over previous methods".
 
-### Phase 4: Output Generation
+### Phase 4: Survey-Level Synthesis
+
+Derive survey-level findings by cross-cutting the paper-level annotations. This is the
+primary intellectual contribution of the survey — it transforms a collection of papers
+into actionable research insight.
+
+1. **thesis** (この分野の本質的問題):
+   Paper-level theses will reveal agreements, contradictions, and tensions. Synthesize
+   these into a central claim about what the field's fundamental unsolved problem is.
+   Example: "The core tension is between pre-task estimation accuracy and interaction
+   cost — no existing approach resolves this without compromising one or the other."
+
+2. **core** (分野の共通前提・暗黙の制約):
+   Identify assumptions shared across the surveyed papers — these are the field's
+   implicit constraints that bound what current methods can achieve.
+
+   **Counter-example check (required)**: For each stated core assumption, search the
+   surveyed papers for violations. If a counter-example exists, narrow the claim until
+   no paper in the survey contradicts it. Document the check:
+   - "Assumption: X. Counter-examples: [Paper A] partially violates this by doing Y.
+     Refined: X, except when Z."
+
+3. **diff** (未踏領域と工学的帰結):
+   Identify what remains unsolved by examining the frontier of paper-level diffs — the
+   limitations that the most recent papers still have not overcome. For each gap:
+   - State the gap concretely (what is not yet achieved)
+   - State the engineering consequence (what becomes possible if this gap is closed)
+   - Trace which paper-level diffs point toward this gap as evidence
+
+### Phase 5: Hallucination Check
+
+Before generating the final report, verify that every paper actually exists.
+
+Launch a subagent to batch-check all papers in parallel. For each paper, the subagent
+should attempt to access the paper's DOI or URL using WebFetch:
+
+- **DOI**: Fetch `https://doi.org/<DOI>` and confirm it resolves (HTTP 200/302)
+- **URL**: Fetch the URL and confirm the page contains the paper title or authors
+
+Report format from the subagent:
+```
+PASS: [Paper Title] — DOI/URL confirmed
+FAIL: [Paper Title] — DOI/URL returned error or title mismatch
+```
+
+- Papers that FAIL must be re-searched via WebSearch to find a valid DOI/URL.
+- If no valid reference can be found after re-search, remove the paper from the report.
+- Document any removals in the Survey Methodology section.
+
+### Phase 6: Output Generation
 
 Produce two files in the user's specified directory (default: current directory):
 
@@ -101,37 +154,86 @@ Produce two files in the user's specified directory (default: current directory)
 
 ## Research Landscape Overview
 
-[2-3 paragraphs summarizing the field: major trends, key debates,
-how the area has evolved, and where it's heading]
+[2-3 paragraphs of factual background: major trends, how the area has evolved,
+key venues and research groups. This orients a reader unfamiliar with the topic.
+This section is descriptive, not argumentative.]
 
-## Thematic Sections
+## Survey Findings
 
-### [Theme 1 Name]
+### Thesis
 
-[Brief narrative connecting the papers in this theme]
+[The survey's central claim about the field's fundamental unsolved problem,
+derived from cross-cutting paper-level theses. 1-2 paragraphs.]
 
-1. **[Paper Title]** — Authors (Year)
-   Venue | [Citations: N] | [URL]
-   - **summary**: [提案手法の概要を2-3文で記述。何をどのように解決するか]
-   - **core**: [提案手法の中核要素。これが欠けると手法が成立しない本質的な要素を端的に記述]
-   - **diff**: [先行研究との対比。何が新しいか、どの既存手法の限界を克服したか]
+### Core Assumptions
+
+[Shared assumptions and implicit constraints across the field. Each assumption
+includes a counter-example check against surveyed papers.]
+
+1. **[Assumption]**
+   Counter-examples: [Papers that partially violate this, if any]
+   Refined: [Narrowed statement if needed]
 
 2. ...
 
-### [Theme 2 Name]
+### Frontier Gaps
+
+[Unsolved problems at the frontier, with engineering consequences.]
+
+1. **[Gap]**
+   - Evidence: [Paper-level diffs that point to this gap]
+   - Engineering consequence: [What becomes possible if resolved]
+
+2. ...
+
+## Paper Catalogue
+
+### Category Overview
+
+[Narrative explaining how the surveyed papers cluster into categories.
+Describe what characterizes each category and how they relate to each other.]
+
+| Category | Description | Count |
+|----------|-------------|-------|
+| [Cat 1]  | [One-line description] | N |
+| [Cat 2]  | [One-line description] | N |
+| ...      | ...         | ... |
+
+### Foundational Works
+
+| # | Paper | Year | Venue | Significance |
+|---|-------|------|-------|-------------|
+| N | [Title] | YYYY | [Venue] | [この分野における意義を端的に記述] |
+| ... | ... | ... | ... | ... |
+
+The `#` column corresponds to the paper's number within its category section,
+enabling cross-reference from this table to the detailed entry.
+
+### [Category 1 Name]
+
+[Brief narrative connecting the papers in this category]
+
+1. **[Paper Title]** — Authors (Year)
+   Venue | [Citations: N] | DOI: `10.xxxx/xxxxx` or [URL]
+   - **thesis**: [著者の中心的主張。手法の記述ではなく、何が真であると論じているか]
+   - **core**: [手法の中核要素。これが欠けると手法が成立しない本質的な要素]
+   - **diff**: [先行研究との対比（事実の記述）。何が新しいか、どの限界を克服したか]
+
+2. ...
+
+### [Category 2 Name]
 ...
-
-## Foundational Works
-
-[Papers from Tier 3 that underpin the field]
-
-## Research Gaps and Future Directions
-
-[What's missing, what's emerging, what opportunities exist]
 
 ## Survey Methodology
 
 [What sources were searched, what queries were used, any limitations]
+
+### Hallucination Check Results
+
+- Papers checked: N
+- Passed: N
+- Failed and re-searched: N
+- Removed (unverifiable): N ([list titles if any])
 ```
 
 #### BibTeX File: `survey_<topic_slug>.bib`
@@ -143,22 +245,26 @@ Generate a BibTeX entry for every paper in the report. Use the format:
   author = {Author1 and Author2 and Author3},
   year = {2024},
   journal = {Venue or ArXiv ID},
+  doi = {10.xxxx/xxxxx},
   url = {https://...},
   note = {Citations: N}
 }
 ```
 
 Use `@inproceedings` for conference papers, `@article` for journals,
-`@misc` for preprints/arXiv.
+`@misc` for preprints/arXiv. Always include `doi` field when available.
 
 ## Quality Checklist
 
 Before delivering results, verify:
 
 - [ ] All three temporal tiers are represented
-- [ ] Each paper has: title, authors, year, venue/source, URL, and summary
+- [ ] Each paper has: title, authors, year, venue/source, DOI or URL, and thesis/core/diff
 - [ ] BibTeX file has an entry for every paper in the report
-- [ ] Papers are organized thematically, not just listed chronologically
+- [ ] Papers are organized by category, not just listed chronologically
 - [ ] The overview section gives a reader unfamiliar with the topic a clear starting point
+- [ ] Survey Findings section contains thesis, core (with counter-example checks), and diff (with engineering consequences)
+- [ ] Survey-level claims are traceable to specific paper-level annotations
+- [ ] Foundational works table includes #, paper, year, venue, and significance
+- [ ] Hallucination check completed — all papers verified via DOI/URL
 - [ ] Search methodology is documented so the user can extend the survey later
-- [ ] No hallucinated papers — every entry was found via actual web search
