@@ -13,23 +13,11 @@
 
 ## 参考文献の処理
 
-ログに文献を引用した場合、以下を必ず行う:
+引用規約は `docs/REFERENCES/STYLE.md` に一元定義されている。ログに文献を引用した場合、以下を行う:
 
-1. **本文中**: インラインキーをクリッカブルリンクにする
-   - 例: `[[Tsujita2008]](../REFERENCES/MAIN.md#Tsujita2008)`
-   - パスはログファイルからの相対パス（`docs/LOGS/` 配下なら `../REFERENCES/MAIN.md#Key`）
-
-2. **セクション末尾**: `#### 参考文献` セクションを追加し、引用した文献を短縮形で列挙する
-   ```markdown
-   #### 参考文献
-   - [[Tsujita2008]](../REFERENCES/MAIN.md#Tsujita2008) — discount γ=0.99 がバックスイングを抑制
-   ```
-
-3. **REFERENCES/MAIN.md の更新**: `docs/REFERENCES/MAIN.md` を読み、引用キーのエントリが存在するか確認する
-   - 存在しない場合 → 適切なカテゴリに `<a id="Key"></a>**[Key]** Authors, "Title", Venue, Year.` 形式で追加
-   - 存在する場合 → 追加不要
-
-引用キーの命名規則: `[著者姓Year]` または `[略称Year]`。詳細は `docs/REFERENCES/STYLE.md` を参照。
+1. **本文中**: `[[Key]](../REFERENCES/MAIN.md#Key)` 形式のクリッカブルリンクにする
+2. **セクション末尾**: `#### 参考文献` セクションにキー + 1 行要約を列挙する
+3. **MAIN.md の更新**: エントリが存在しなければ追加する（形式は STYLE.md 参照）
 
 ## ルール
 

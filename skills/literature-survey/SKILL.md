@@ -141,9 +141,9 @@ FAIL: [Paper Title] — DOI/URL returned error or title mismatch
 
 ### Phase 6: Output Generation
 
-Produce two files in the user's specified directory (default: current directory):
+Produce two files in `docs/SURVEYS/`:
 
-#### Main Report: `survey_<topic_slug>.md`
+#### Main Report: `docs/SURVEYS/<topic_slug>.md`
 
 ```markdown
 # Literature Survey: [Topic]
@@ -236,7 +236,7 @@ enabling cross-reference from this table to the detailed entry.
 - Removed (unverifiable): N ([list titles if any])
 ```
 
-#### BibTeX File: `survey_<topic_slug>.bib`
+#### BibTeX File: `docs/SURVEYS/<topic_slug>.bib`
 
 Generate a BibTeX entry for every paper in the report. Use the format:
 ```bibtex
@@ -253,6 +253,20 @@ Generate a BibTeX entry for every paper in the report. Use the format:
 
 Use `@inproceedings` for conference papers, `@article` for journals,
 `@misc` for preprints/arXiv. Always include `doi` field when available.
+
+## 参考文献の処理
+
+引用規約は `docs/REFERENCES/STYLE.md` に従う。
+
+1. **Paper Catalogue のエントリ**: カタログ形式（thesis/core/diff 注釈付き）で記述する。
+   個々のカタログエントリは MAIN.md へのリンクを必要としない
+2. **Survey Findings / プロジェクトへの示唆**: 特定の論文に言及する場合は MAIN.md に
+   エントリを追加し、インライン引用形式 `[[Key]](../REFERENCES/MAIN.md#Key)` を使用する
+3. **BibTeX ファイル**: サーベイと同じディレクトリ (`docs/SURVEYS/`) に保持する
+4. **SURVEYS/README.md の更新**: サーベイ完了後、`docs/SURVEYS/README.md` の
+   テーブルに新しいエントリを追加する
+5. **実行ログ**: `docs/LOGS/literature-survey.md` にサーベイの実行経緯・成果物パス・
+   プロジェクトへの示唆を追記する
 
 ## Quality Checklist
 
