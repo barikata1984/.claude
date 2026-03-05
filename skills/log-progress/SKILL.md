@@ -6,10 +6,10 @@
 
 1. 会話を分析し、進捗・発見・解決済み課題を特定する
 2. 以下のファイルを適切に更新する:
-   - `docs/TODO.md` — 完了した項目に `[x]` を付ける。新たに発生したタスクを追加する
-   - `docs/LOGS/log_*.md` — 該当するトピックのログに結果・発見を追記する（末尾に append）
-   - `docs/ISSUES.md` — 新たに発見した課題を追加する。解決した課題は項目ごと削除する
-   - `docs/PLAN.md` — 設計判断が変わった場合のみ更新する
+   - `catkin_ws/src/osx_bilateral/docs/TODO.md` — 完了した項目に `[x]` を付ける。新たに発生したタスクを追加する
+   - `catkin_ws/src/osx_bilateral/docs/LOGS/log_*.md` — 該当するトピックのログに結果・発見を追記する（末尾に append）
+   - `catkin_ws/src/osx_bilateral/docs/ISSUES.md` — 新たに発見した課題を追加する。解決した課題は項目ごと削除する
+   - `catkin_ws/src/osx_bilateral/docs/PLAN.md` — 設計判断が変わった場合のみ更新する
 
 ## ルール
 

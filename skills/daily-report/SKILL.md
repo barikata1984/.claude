@@ -42,10 +42,10 @@ git log --since="<start>" --until="<end>" --format="%h %ai %s"
 
 以下のファイルを読む:
 
-- `docs/TODO.md` — 完了済み `[x]` と未完了 `[ ]` の項目
-- `docs/ISSUES.md` — 新規登録・解決した課題
-- `docs/LOGS/log_*.md` — 対象日に追記されたセクション (git diff or 日付ヘッダで特定)
-- `docs/PLAN.md` — 設計変更があれば
+- `catkin_ws/src/osx_bilateral/docs/TODO.md` — 完了済み `[x]` と未完了 `[ ]` の項目
+- `catkin_ws/src/osx_bilateral/docs/ISSUES.md` — 新規登録・解決した課題
+- `catkin_ws/src/osx_bilateral/docs/LOGS/log_*.md` — 対象日に追記されたセクション (git diff or 日付ヘッダで特定)
+- `catkin_ws/src/osx_bilateral/docs/PLAN.md` — 設計変更があれば
 
 git log のコミットメッセージとログの内容を突合し、対象日の作業範囲を確定する。
 
@@ -93,7 +93,7 @@ git log のコミットメッセージとログの内容を突合し、対象日
 
 ### 5. 保存
 
-出力先: `docs/LOGS/REPORTS/YYYY-MM-DD.md`
+出力先: `catkin_ws/src/osx_bilateral/docs/LOGS/REPORTS/YYYY-MM-DD.md`
 
 ディレクトリが存在しない場合は作成する。同名ファイルが既にある場合はユーザーに確認する。
 

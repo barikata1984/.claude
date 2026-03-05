@@ -92,7 +92,9 @@
       "Bash(tmux capture-pane -t sweep-r3-ob5qxqes-0 -p)",
       "Bash(tmux capture-pane -t sweep-r3-ob5qxqes-1 -p)",
       "Bash(mv /root/osx-ur/CLAUDE.md /root/osx-ur/.claude/CLAUDE.md)",
-      "Bash(ln -s .claude/CLAUDE.md /root/osx-ur/CLAUDE.md)"
+      "Bash(ln -s .claude/CLAUDE.md /root/osx-ur/CLAUDE.md)",
+      "Bash(git push)",
+      "Bash(git pull origin ros-o)"
     ]
   }
 }
