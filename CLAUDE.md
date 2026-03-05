@@ -7,7 +7,7 @@
 - 実装完了を自己宣言するな。テスト実行・差分確認・ログ確認で動作を実証せよ
 - バグ報告を受けたらまずログ・エラー・テストから自力調査せよ。質問は調査後に
 - 修正指摘を受けたら MEMORY.md に教訓を記録せよ
-- セッション終了時は /record-progress で進捗を記録せよ
+- セッション終了時は /log-progress で進捗を記録せよ
 
 ## コマンド
 
@@ -81,4 +81,4 @@ wandb agent <sweep-id>
 - 未解決の技術課題: docs/ISSUES.md
 - ドキュメントガイド: docs/README.md
 - 報酬設計リファレンス: configs/hammer_swing.yaml
-- Key papers: Diffusion Policy (Chi et al.), DP3 (Ze et al.), TossNet (IEEE T-RO 2024)
+- 参考文献マスタ: docs/REFERENCES/MAIN.md（引用規約: docs/REFERENCES/STYLE.md）
