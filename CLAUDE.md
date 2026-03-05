@@ -82,3 +82,5 @@ wandb agent <sweep-id>
 - ドキュメントガイド: docs/README.md
 - 報酬設計リファレンス: configs/hammer_swing.yaml
 - 参考文献マスタ: docs/REFERENCES/MAIN.md（引用規約: docs/REFERENCES/STYLE.md）
+- 文献調査: docs/SURVEYS/README.md（索引）→ docs/SURVEYS/（サーベイ別レポート）
+- 日次報告: docs/REPORTS/（日付別レポート）
