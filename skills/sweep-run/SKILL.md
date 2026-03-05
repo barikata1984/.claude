@@ -2,8 +2,6 @@
 
 Sweep エージェントを tmux セッションで起動する。GPU 状況を表示し、ユーザーの判断に基づいて並列数・GPU 割当を決定する。
 
-全パスは `catkin_ws/src/osx_bilateral/` からの相対。
-
 ## 入力
 
 以下のいずれかで sweep を特定する:

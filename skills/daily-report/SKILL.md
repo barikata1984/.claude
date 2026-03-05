@@ -11,8 +11,6 @@ description: >
 
 対象日に実施した作業を docs/ と git log から抽出し、上長への報告書を生成する。
 
-全パスは `catkin_ws/src/osx_bilateral/` からの相対。
-
 ## 引数
 
 - 引数なし → 当日 (JST) を対象

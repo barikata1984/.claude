@@ -5,10 +5,7 @@ UR5e object manipulation imitation learning with physical properties using ROS1.
 ## Workspace Layout
 
 ```
-catkin_ws/src/osx_bilateral/         ← main package (see its CLAUDE.md for architecture)
-catkin_ws/src/iparam_identification/ ← inertial parameter estimation
-catkin_ws/src/xela_server_ros/       ← tactile sensor (friction)
-underlay_ws/src/third_party/         ← BundleSDF, LeRobot, robotiq, etc.
+(TBD — update for current project)
 ```
 
 ## Coding Standards

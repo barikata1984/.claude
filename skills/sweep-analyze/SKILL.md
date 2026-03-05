@@ -2,8 +2,6 @@
 
 wandb API を使って sweep 結果を取得・分析し、知見を抽出する。
 
-全パスは `catkin_ws/src/osx_bilateral/` からの相対。
-
 ## 入力
 
 以下のいずれかで sweep を特定する:

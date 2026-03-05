@@ -60,7 +60,6 @@
       "WebFetch(domain:www.gend.co)",
       "Bash(git rm docs/2026-02-13-validation_strategy_overhaul.md docs/2026-02-16-act_implementation.md docs/2026-02-16-policy_unification_phase3.md docs/2026-02-16-policy_unification_plan.md docs/2026-02-17-act_implementation_log.md docs/2026-02-17-bilateral_feedback_analysis.md docs/2026-02-17-code_review_remaining.md docs/2026-02-19-bundlesdf_pose_update_analysis.md docs/2026-02-19-validation_trajectory_analysis.md docs/2026-02-25-realtime_inference_analysis.md docs/dialy/2026-02-27.md)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(RESULTS_BASE=\"/root/osx-ur/catkin_ws/src/osx_bilateral/results/phys-prop-aware/push-wood-02-26-#3_act\" RUN1=\"$RESULTS_BASE/dim-128_ndec-10_nenc-2_lr-1e_05/03-01_id01\" ls -la \"$RUN1/training/\" echo \"=== checkpoints ===\" ls \"$RUN1/training/checkpoints/\")",
       "Bash(for c in 05d1d02 2fa4229 3e156a0 e785ff8 ac3831b 944d56d 5c3edc1)",
       "Bash(do echo \"=== $c ===\")",
       "Bash(git diff-tree --no-commit-id --name-only -r \"$c\")",

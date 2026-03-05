@@ -2,8 +2,6 @@
 
 Sweep 計画に基づいて wandb sweep config YAML を生成・検証する。
 
-全パスは `catkin_ws/src/osx_bilateral/` からの相対。
-
 ## 入力
 
 以下のいずれかから sweep 設定情報を取得する:
