@@ -61,6 +61,11 @@ Semantic Scholar API pages, or arXiv pages for details.
 **arXiv search** for preprints:
 - `https://export.arxiv.org/api/query?search_query=all:TOPIC&sortBy=submittedDate&sortOrder=descending&max_results=20`
 
+**ar5iv** for full-text access (arXiv papers only):
+- `https://ar5iv.labs.arxiv.org/html/PAPER_ID` (e.g., `https://ar5iv.labs.arxiv.org/html/2206.15469`)
+- HTML rendering of arXiv PDFs — use to access Limitations/Future Work sections for the `limit` field
+- Not all papers are available; fall back to abstract/Semantic Scholar if ar5iv returns an error
+
 Use subagents to parallelize searches across different queries and sources when possible.
 Each subagent should handle a distinct search angle (e.g., one for the main topic,
 one for a related subtopic, one for survey papers).
@@ -78,7 +83,7 @@ After collecting papers, analyze each individually and organize into themes:
 1. **Identify themes**: Group papers by subtopic, methodology, or contribution type
 2. **Trace the evolution**: Show how the field progressed over time
 3. **Highlight connections**: Note where papers build on, extend, or contradict each other
-4. **Annotate each paper** with three structured fields:
+4. **Annotate each paper** with four structured fields:
    - **thesis**: The author's central claim — not what the method does, but what the
      author argues is true. Frame as an argumentative stance (e.g., "dense physical
      features from interaction are necessary for manipulation, visual appearance alone
@@ -89,6 +94,13 @@ After collecting papers, analyze each individually and organize into themes:
    - **diff**: Explicit contrast with prior work. Name the predecessor(s) and state what
      limitation is overcome or what new capability is introduced. This is a factual record
      of accomplished advances. Avoid vague statements like "improves over previous methods".
+   - **limit**: Constraints or unsolved problems the authors explicitly acknowledge —
+     typically from the Limitations or Future Work sections. Record only what the authors
+     themselves state; do not mix in the reviewer's subjective critique. Where diff records
+     limitations that *were* overcome, limit records those that *remain*.
+     When the full text is unavailable, supplement with: (a) Semantic Scholar TLDR or
+     abstract hints, (b) limitations noted by citing papers. If no limit information can
+     be found from any source, write "limit not available" rather than guessing.
 
 ### Phase 4: Survey-Level Synthesis
 
@@ -113,11 +125,15 @@ into actionable research insight.
      Refined: X, except when Z."
 
 3. **diff** (未踏領域と工学的帰結):
-   Identify what remains unsolved by examining the frontier of paper-level diffs — the
-   limitations that the most recent papers still have not overcome. For each gap:
+   Identify what remains unsolved by examining two sources:
+   (a) the frontier of paper-level diffs — limitations that the most recent papers
+       still have not overcome, and
+   (b) paper-level limits — constraints that multiple papers independently acknowledge.
+   Converging limits across papers are stronger evidence of structural gaps than
+   isolated mentions. For each gap:
    - State the gap concretely (what is not yet achieved)
    - State the engineering consequence (what becomes possible if this gap is closed)
-   - Trace which paper-level diffs point toward this gap as evidence
+   - Trace which paper-level diffs and/or limits point toward this gap as evidence
 
 ### Phase 5: Hallucination Check
 
@@ -148,9 +164,11 @@ Produce two files in `docs/SURVEYS/`:
 ```markdown
 # Literature Survey: [Topic]
 
-**Date**: YYYY-MM-DD
-**Scope**: [Brief description of what was covered]
-**Papers found**: N
+| | |
+|---|---|
+| **Date** | YYYY-MM-DD |
+| **Scope** | [Brief description of what was covered] |
+| **Papers found** | N |
 
 ## Research Landscape Overview
 
@@ -181,7 +199,7 @@ includes a counter-example check against surveyed papers.]
 [Unsolved problems at the frontier, with engineering consequences.]
 
 1. **[Gap]**
-   - Evidence: [Paper-level diffs that point to this gap]
+   - Evidence: [Paper-level diffs and/or limits that point to this gap]
    - Engineering consequence: [What becomes possible if resolved]
 
 2. ...
@@ -218,6 +236,7 @@ enabling cross-reference from this table to the detailed entry.
    - **thesis**: [著者の中心的主張。手法の記述ではなく、何が真であると論じているか]
    - **core**: [手法の中核要素。これが欠けると手法が成立しない本質的な要素]
    - **diff**: [先行研究との対比（事実の記述）。何が新しいか、どの限界を克服したか]
+   - **limit**: [著者が認めた制約・未到達点。Limitations/Future Work からの縮約]
 
 2. ...
 
@@ -234,6 +253,12 @@ enabling cross-reference from this table to the detailed entry.
 - Passed: N
 - Failed and re-searched: N
 - Removed (unverifiable): N ([list titles if any])
+
+### Limit Field Coverage
+
+- Papers with limit recorded: N / M (X%)
+- Papers marked "limit not available": N ([list titles if any])
+- Primary cause of unavailability: [e.g., paywall, no Limitations section, preprint without full text]
 ```
 
 #### BibTeX File: `docs/SURVEYS/<topic_slug>.bib`
@@ -258,7 +283,7 @@ Use `@inproceedings` for conference papers, `@article` for journals,
 
 引用規約は `docs/REFERENCES/STYLE.md` に従う。
 
-1. **Paper Catalogue のエントリ**: カタログ形式（thesis/core/diff 注釈付き）で記述する。
+1. **Paper Catalogue のエントリ**: カタログ形式（thesis/core/diff/limit 注釈付き）で記述する。
    個々のカタログエントリは MAIN.md へのリンクを必要としない
 2. **Survey Findings / プロジェクトへの示唆**: 特定の論文に言及する場合は MAIN.md に
    エントリを追加し、インライン引用形式 `[[Key]](../REFERENCES/MAIN.md#Key)` を使用する
@@ -273,7 +298,7 @@ Use `@inproceedings` for conference papers, `@article` for journals,
 Before delivering results, verify:
 
 - [ ] All three temporal tiers are represented
-- [ ] Each paper has: title, authors, year, venue/source, DOI or URL, and thesis/core/diff
+- [ ] Each paper has: title, authors, year, venue/source, DOI or URL, and thesis/core/diff/limit
 - [ ] BibTeX file has an entry for every paper in the report
 - [ ] Papers are organized by category, not just listed chronologically
 - [ ] The overview section gives a reader unfamiliar with the topic a clear starting point

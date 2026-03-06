@@ -1,6 +1,8 @@
 {
   "permissions": {
     "allow": [
+      "WebSearch",
+      "WebFetch",
       "Bash(python:*)",
       "Bash(python3:*)",
       "Bash(python -m pytest:*)",
