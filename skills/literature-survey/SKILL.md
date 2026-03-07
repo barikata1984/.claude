@@ -108,23 +108,28 @@ Derive survey-level findings by cross-cutting the paper-level annotations. This 
 primary intellectual contribution of the survey — it transforms a collection of papers
 into actionable research insight.
 
+The four paper-level axes (thesis/core/diff/limit) aggregate into four survey-level
+sections via the following logic:
+
 1. **thesis** (この分野の本質的問題):
    Paper-level theses will reveal agreements, contradictions, and tensions. Synthesize
    these into a central claim about what the field's fundamental unsolved problem is.
    Example: "The core tension is between pre-task estimation accuracy and interaction
    cost — no existing approach resolves this without compromising one or the other."
 
-2. **core** (分野の共通前提・暗黙の制約):
-   Identify assumptions shared across the surveyed papers — these are the field's
-   implicit constraints that bound what current methods can achieve.
+2. **foundation** (分野の共通技術基盤):
+   Aggregate paper-level cores to identify what technical building blocks the field
+   relies on. These are the shared substrates — methods, representations, or
+   assumptions — without which the majority of surveyed approaches would not function.
+   For each stated foundation, verify that it genuinely holds across the surveyed papers;
+   if a paper contradicts it, narrow the claim accordingly.
 
-   **Counter-example check (required)**: For each stated core assumption, search the
-   surveyed papers for violations. If a counter-example exists, narrow the claim until
-   no paper in the survey contradicts it. Document the check:
-   - "Assumption: X. Counter-examples: [Paper A] partially violates this by doing Y.
-     Refined: X, except when Z."
+3. **progress** (達成された前進の軌跡):
+   Aggregate paper-level diffs chronologically to trace how the field has advanced.
+   Identify the most significant capability transitions — where a limitation of earlier
+   work was definitively overcome. This section shows the trajectory of solved problems.
 
-3. **diff** (未踏領域と工学的帰結):
+4. **gap** (構造的未解決問題と工学的帰結):
    Identify what remains unsolved by examining two sources:
    (a) the frontier of paper-level diffs — limitations that the most recent papers
        still have not overcome, and
@@ -183,20 +188,28 @@ This section is descriptive, not argumentative.]
 [The survey's central claim about the field's fundamental unsolved problem,
 derived from cross-cutting paper-level theses. 1-2 paragraphs.]
 
-### Core Assumptions
+### Foundation
 
-[Shared assumptions and implicit constraints across the field. Each assumption
-includes a counter-example check against surveyed papers.]
+[Shared technical building blocks and assumptions that the surveyed methods
+rely on. Derived from aggregating paper-level cores.]
 
-1. **[Assumption]**
-   Counter-examples: [Papers that partially violate this, if any]
-   Refined: [Narrowed statement if needed]
+1. **[Foundation element]**: [Description and which papers depend on it]
 
 2. ...
 
-### Frontier Gaps
+### Progress
 
-[Unsolved problems at the frontier, with engineering consequences.]
+[Trajectory of significant advances, derived from aggregating paper-level
+diffs chronologically. Show the major capability transitions.]
+
+1. **[Advance]**: [What limitation was overcome, by which paper(s), when]
+
+2. ...
+
+### Gap
+
+[Structural unsolved problems, derived from converging paper-level limits
+and the frontier of paper-level diffs.]
 
 1. **[Gap]**
    - Evidence: [Paper-level diffs and/or limits that point to this gap]
@@ -302,7 +315,7 @@ Before delivering results, verify:
 - [ ] BibTeX file has an entry for every paper in the report
 - [ ] Papers are organized by category, not just listed chronologically
 - [ ] The overview section gives a reader unfamiliar with the topic a clear starting point
-- [ ] Survey Findings section contains thesis, core (with counter-example checks), and diff (with engineering consequences)
+- [ ] Survey Findings section contains thesis, foundation, progress, and gap (with engineering consequences)
 - [ ] Survey-level claims are traceable to specific paper-level annotations
 - [ ] Foundational works table includes #, paper, year, venue, and significance
 - [ ] Hallucination check completed — all papers verified via DOI/URL
