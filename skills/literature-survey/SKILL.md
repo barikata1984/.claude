@@ -21,8 +21,9 @@ of the user's topic description:**
 descriptions, gap analyses, significance descriptions, and methodology notes.
 
 Always keep the following in English regardless of output language:
-paper titles, author names, venue names, DOI, URLs, BibTeX keys, and
-structural labels (thesis/core/diff/limit).
+chapter/section/subsection headings, paper titles, author names, venue names,
+proposed method/architecture names (e.g., "Rapid Motor Adaptation", "Domain Contraction"),
+DOI, URLs, BibTeX keys, and structural labels (thesis/core/diff/limit).
 
 Do NOT mix languages within a single report. The template below contains
 placeholder descriptions in English; translate them to match the output language.
@@ -83,6 +84,13 @@ Semantic Scholar API pages, or arXiv pages for details.
 - `https://ar5iv.labs.arxiv.org/html/PAPER_ID` (e.g., `https://ar5iv.labs.arxiv.org/html/2206.15469`)
 - HTML rendering of arXiv PDFs — use to access Limitations/Future Work sections for the `limit` field
 - Not all papers are available; fall back to abstract/Semantic Scholar if ar5iv returns an error
+
+**Authenticated publisher access** (paywalled papers):
+- Use the `fetch_with_auth` MCP tool to access full-text HTML from IEEE, Elsevier, Springer, and ACM
+- The tool uses institutional authentication cookies exported from the user's browser
+- Use this primarily to populate the `limit` field for papers where ar5iv and abstracts are insufficient
+- If the tool returns a session-expiry error, inform the user that cookie re-export is needed
+  (see `.claude/mcp/academic-fetch/README.md` for the workflow)
 
 Use subagents to parallelize searches across different queries and sources when possible.
 Each subagent should handle a distinct search angle (e.g., one for the main topic,
