@@ -30,6 +30,10 @@
           {
             "type": "command",
             "command": ".claude/hooks/format-python.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/validate-references.sh"
           }
         ]
       }
