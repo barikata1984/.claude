@@ -9,6 +9,24 @@ You are conducting a comprehensive academic literature survey. Your goal is to p
 a well-organized, citable reference collection that gives the user a clear picture of
 the research landscape on their topic.
 
+## Language Rule
+
+**The entire report must be written in a single language, determined by the language
+of the user's topic description:**
+
+- User provides topic in **Japanese** → all prose in **Japanese**
+- User provides topic in **English** → all prose in **English**
+
+"Prose" means: section narratives, thesis/core/diff/limit annotations, category
+descriptions, gap analyses, significance descriptions, and methodology notes.
+
+Always keep the following in English regardless of output language:
+paper titles, author names, venue names, DOI, URLs, BibTeX keys, and
+structural labels (thesis/core/diff/limit).
+
+Do NOT mix languages within a single report. The template below contains
+placeholder descriptions in English; translate them to match the output language.
+
 ## Workflow
 
 ### Phase 1: Scope Definition
@@ -111,25 +129,25 @@ into actionable research insight.
 The four paper-level axes (thesis/core/diff/limit) aggregate into four survey-level
 sections via the following logic:
 
-1. **thesis** (この分野の本質的問題):
+1. **thesis** — the field's fundamental unsolved problem:
    Paper-level theses will reveal agreements, contradictions, and tensions. Synthesize
    these into a central claim about what the field's fundamental unsolved problem is.
    Example: "The core tension is between pre-task estimation accuracy and interaction
    cost — no existing approach resolves this without compromising one or the other."
 
-2. **foundation** (分野の共通技術基盤):
+2. **foundation** — the shared technical substrate:
    Aggregate paper-level cores to identify what technical building blocks the field
    relies on. These are the shared substrates — methods, representations, or
    assumptions — without which the majority of surveyed approaches would not function.
    For each stated foundation, verify that it genuinely holds across the surveyed papers;
    if a paper contradicts it, narrow the claim accordingly.
 
-3. **progress** (達成された前進の軌跡):
+3. **progress** — the trajectory of solved problems:
    Aggregate paper-level diffs chronologically to trace how the field has advanced.
    Identify the most significant capability transitions — where a limitation of earlier
    work was definitively overcome. This section shows the trajectory of solved problems.
 
-4. **gap** (構造的未解決問題と工学的帰結):
+4. **gap** — structural unsolved problems and engineering consequences:
    Identify what remains unsolved by examining two sources:
    (a) the frontier of paper-level diffs — limitations that the most recent papers
        still have not overcome, and
@@ -142,8 +160,9 @@ sections via the following logic:
 
 ### Phase 5: Hallucination Check
 
-`.claude/rules/references.md` の「ハルシネーションチェック」に従い、収集した全論文を検証する。
-FAIL した論文はレポートから除外し、除外数を Survey Methodology セクションに記録する。
+Follow the hallucination check procedure in `.claude/rules/references.md`.
+Exclude papers that fail verification and record the exclusion count in the
+Survey Methodology section.
 
 ### Phase 6: Output Generation
 
@@ -219,7 +238,7 @@ Describe what characterizes each category and how they relate to each other.]
 
 | # | Paper | Year | Venue | Significance |
 |---|-------|------|-------|-------------|
-| N | [Title] | YYYY | [Venue] | [この分野における意義を端的に記述] |
+| N | [Title] | YYYY | [Venue] | [Brief significance in this field] |
 | ... | ... | ... | ... | ... |
 
 The `#` column corresponds to the paper's number within its category section,
@@ -230,10 +249,10 @@ enabling cross-reference from this table to the detailed entry.
 [Brief narrative connecting the papers in this category]
 
 1. [[Key]](../REFERENCES/MAIN.md#Key) — Authors, "Title" (Year)
-   - **thesis**: [著者の中心的主張。手法の記述ではなく、何が真であると論じているか]
-   - **core**: [手法の中核要素。これが欠けると手法が成立しない本質的な要素]
-   - **diff**: [先行研究との対比（事実の記述）。何が新しいか、どの限界を克服したか]
-   - **limit**: [著者が認めた制約・未到達点。Limitations/Future Work からの縮約]
+   - **thesis**: [The author's central claim — what they argue is true, not what the method does]
+   - **core**: [The essential element(s) without which the method would not work]
+   - **diff**: [Explicit contrast with prior work — what is new, what limitation is overcome]
+   - **limit**: [Constraints the authors acknowledge — from Limitations/Future Work sections]
 
 2. ...
 
@@ -258,16 +277,16 @@ enabling cross-reference from this table to the detailed entry.
 - Primary cause of unavailability: [e.g., paywall, no Limitations section, preprint without full text]
 ```
 
-## 参考文献の処理
+## Reference Processing
 
-`.claude/rules/references.md` の引用規約に従う。
+Follow the citation conventions in `.claude/rules/references.md`.
 
-追加手順:
-1. **MAIN.md の更新**: Paper Catalogue の全論文を MAIN.md に追加する
-2. **SURVEYS/README.md の更新**: サーベイ完了後、`docs/SURVEYS/README.md` の
-   テーブルに新しいエントリを追加する
-3. **実行ログ**: `docs/LOGS/literature-survey.md` にサーベイの実行経緯・成果物パス・
-   プロジェクトへの示唆を追記する
+Additional steps:
+1. **Update MAIN.md**: Add all papers from the Paper Catalogue to MAIN.md
+2. **Update SURVEYS/README.md**: Add a new entry to the table in `docs/SURVEYS/README.md`
+   after the survey is complete
+3. **Execution log**: Append to `docs/LOGS/literature-survey.md` with the search process,
+   output file paths, and implications for the project
 
 ## Quality Checklist
 
@@ -282,3 +301,4 @@ Before delivering results, verify:
 - [ ] Foundational works table includes #, paper, year, venue, and significance
 - [ ] Hallucination check completed — all papers verified via DOI/URL
 - [ ] Search methodology is documented so the user can extend the survey later
+- [ ] Output language is consistent throughout — no mixing of languages
