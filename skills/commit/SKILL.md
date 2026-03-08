@@ -1,41 +1,41 @@
 # commit
 
-セッション中のファイル変更、または git の差分に基づいてコミットを作成する。変更をトピックごとにカテゴライズし、Conventional Commits 形式でコミットする。`/commit-and-push` の一部としても使用される。コミットしたい、ステージングしたい、変更をまとめたい、といったリクエストで使用する。
+Create commits from session file changes or git diffs. Categorize changes by topic and commit using Conventional Commits format. Also used as part of `/commit-and-push`. Trigger on requests like "commit", "stage changes", "group changes".
 
-## 手順
+## Procedure
 
-### 1. セッション履歴の調査
+### 1. Inspect session history
 
-会話履歴を確認し、このセッション中に Edit / Write / Bash ツールで変更されたファイルを特定する。
+Review the conversation history to identify files changed during this session via Edit / Write / Bash tools.
 
-### 2-A. セッション中に変更がある場合
+### 2-A. When there are session changes
 
-会話コンテキストから「何を・なぜ変更したか」を把握できるため、コミットメッセージの精度が高い。
+The conversation context provides "what was changed and why", so commit messages are highly accurate.
 
-1. `git status` と `git diff` で実際のファイル状態を確認する
-2. 異なるトピックの変更が明確に区別できる場合は、トピックごとにグループ化する
-3. 各グループに Conventional Commits 形式のコミットメッセージを生成する
-4. ステージング・コミットを実行する（セッションのコンテキストから意図が明確なため、ユーザー確認不要）
+1. Check actual file state with `git status` and `git diff`
+2. If changes across different topics are clearly distinguishable, group them by topic
+3. Generate a Conventional Commits format message for each group
+4. Stage and commit (no user confirmation needed since intent is clear from session context)
 
-セッション中の変更以外にも未コミットの変更がある場合は、それらについてユーザーに通知し、含めるかどうか確認する。
+If there are uncommitted changes beyond session changes, notify the user and ask whether to include them.
 
-### 2-B. セッション中に変更がない場合
+### 2-B. When there are no session changes
 
-会話コンテキストに変更の経緯がないため、git から読み取った情報のみでコミットメッセージを作成する。
+Without conversation context about the changes, commit messages are based solely on git information.
 
-1. `git status` で変更ファイルを一覧する
-2. `git diff` (staged + unstaged) で変更内容を詳細に調査する
-3. `git log --oneline -10` で直近のコミット履歴を確認し、メッセージのスタイルを合わせる
-4. 変更内容を分析し、トピックごとにグループ化する
-5. 各グループに Conventional Commits 形式のコミットメッセージを生成する
-6. **コミットメッセージをユーザーに提示し、承認を得てから** ステージング・コミットを実行する
+1. List changed files with `git status`
+2. Examine change details with `git diff` (staged + unstaged)
+3. Check recent commit history with `git log --oneline -10` to match message style
+4. Analyze changes and group by topic
+5. Generate a Conventional Commits format message for each group
+6. **Present commit messages to the user and obtain approval before** staging and committing
 
-### 3. コミットの実行
+### 3. Execute commits
 
-各トピックグループについて:
+For each topic group:
 
-1. `git add <file1> <file2> ...` で該当ファイルを個別にステージング
-2. HEREDOC 形式でコミットメッセージを渡してコミット:
+1. Stage relevant files individually with `git add <file1> <file2> ...`
+2. Commit with the message passed via HEREDOC format:
    ```bash
    git commit -m "$(cat <<'EOF'
    <type>: <description>
@@ -44,17 +44,17 @@
    EOF
    )"
    ```
-3. コミット後に `git status` で結果を確認
-4. 複数グループがある場合は次のグループに進む
+3. Verify the result with `git status` after committing
+4. If there are multiple groups, proceed to the next group
 
-## ルール
+## Rules
 
-- コミットメッセージは Conventional Commits 形式: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`
-- コミットメッセージは英語、命令形（imperative mood）
-- 直近の `git log` のスタイルに合わせる
-- 秘密情報を含むファイル（`.env`, credentials, API key 等）はコミット対象から除外し、警告する
-- メインブランチ (`ros-o`) への直接コミット時は警告を出す
-- `git add -A` や `git add .` は使わず、ファイルを個別に指定する
-- pre-commit hook が失敗した場合は `--amend` せず、問題を修正して新しいコミットを作成する
-- 空コミットは作成しない
-- サブモジュールの変更（`git diff` で `Subproject commit` と表示されるもの）は明示的にユーザーに確認する
+- Commit messages use Conventional Commits format: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`
+- Commit messages in English, imperative mood
+- Match the style of recent `git log`
+- Exclude files containing secrets (`.env`, credentials, API keys, etc.) from commits and warn
+- Warn when committing directly to the main branch (`ros-o`)
+- Do not use `git add -A` or `git add .`; specify files individually
+- If a pre-commit hook fails, do not use `--amend`; fix the issue and create a new commit
+- Do not create empty commits
+- For submodule changes (shown as `Subproject commit` in `git diff`), explicitly confirm with the user

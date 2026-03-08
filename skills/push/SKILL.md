@@ -1,23 +1,23 @@
 # push
 
-コミット済みの変更をリモートリポジトリにプッシュする。`/commit-and-push` の一部としても使用される。プッシュしたい、リモートに反映したい、といったリクエストで使用する。
+Push committed changes to the remote repository. Also used as part of `/commit-and-push`. Trigger on requests like "push", "push to remote", "sync with remote".
 
-## 手順
+## Procedure
 
-1. `git log --oneline @{u}..HEAD` でプッシュ対象のコミットを確認する
-   - 追跡ブランチがない場合は `git log --oneline -5` で直近のコミットを表示する
-2. プッシュ対象のコミットがない場合は、その旨を通知して終了する
-3. 現在のブランチ名を確認する
-4. メインブランチ (`ros-o`) へのプッシュの場合:
-   - ユーザーに警告し、明示的な確認を得る
-   - フォースプッシュは禁止
-5. `git push` を実行する:
-   - リモート追跡ブランチがある場合: `git push`
-   - リモート追跡ブランチがない場合: `git push -u origin <branch>`
-6. プッシュ結果を表示する
+1. Check commits to push with `git log --oneline @{u}..HEAD`
+   - If no tracking branch exists, show recent commits with `git log --oneline -5`
+2. If there are no commits to push, notify the user and finish
+3. Confirm the current branch name
+4. For pushes to the main branch (`ros-o`):
+   - Warn the user and obtain explicit confirmation
+   - Force push is prohibited
+5. Execute `git push`:
+   - If a remote tracking branch exists: `git push`
+   - If no remote tracking branch exists: `git push -u origin <branch>`
+6. Display the push result
 
-## ルール
+## Rules
 
-- プッシュ先はユーザーから別段の指定がない限り、現在のブランチのリモート
-- `ros-o` (メインブランチ) への `--force` プッシュは禁止
-- push に失敗した場合（リモートが先行している等）は、原因を報告しユーザーに対応を相談する
+- Push destination defaults to the current branch's remote unless otherwise specified by the user
+- `--force` push to `ros-o` (main branch) is prohibited
+- If push fails (e.g., remote is ahead), report the cause and consult the user on how to proceed

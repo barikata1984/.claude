@@ -1,30 +1,30 @@
 # sweep-config
 
-Sweep 計画に基づいて wandb sweep config YAML を生成・検証する。
+Generate and validate wandb sweep config YAML based on a sweep plan.
 
-## 入力
+## Input
 
-以下のいずれかから sweep 設定情報を取得する:
+Obtain sweep configuration from one of the following:
 
-- `/sweep-plan` の結果（会話中 or `docs/LOGS/log_sweep.md` の最新エントリ）
-- ユーザーからの直接指定（パラメータ名・値のリスト）
+- `/sweep-plan` results (in conversation or latest entry in `docs/LOGS/log_sweep.md`)
+- Direct specification from the user (list of parameter names and values)
 
-## 手順
+## Procedure
 
-### 1. ベース config の検証
+### 1. Validate base config
 
-1. 指定されたベース config YAML を読み込む
-2. `scripts/train.py` のエントリポイントと `command:` セクションの互換性を確認する
-3. ベース config で `use_wandb: true` が設定されていることを確認する
+1. Load the specified base config YAML
+2. Verify compatibility between the `scripts/train.py` entry point and the `command:` section
+3. Confirm that `use_wandb: true` is set in the base config
 
-### 2. YAML 生成
+### 2. Generate YAML
 
-既存の sweep config（`configs/sweep_*.yaml`）のフォーマットに従い、以下の構成で生成する:
+Follow the format of existing sweep configs (`configs/sweep_*.yaml`) and generate with this structure:
 
 ```yaml
-# Sweep config for <目的の簡潔な説明>
-# Base: <ベースconfig名>
-# <探索内容の要約>
+# Sweep config for <brief description of objective>
+# Base: <base config name>
+# <summary of search space>
 #
 # Usage:
 #   cd catkin_ws/src/osx_bilateral
@@ -32,27 +32,27 @@ Sweep 計画に基づいて wandb sweep config YAML を生成・検証する。
 #   wandb agent <sweep_id>
 
 project: phys-prop-aware
-name: <sweep名>
+name: <sweep_name>
 program: scripts/train.py
 method: <grid/random/bayes>
 metric:
-  name: <メトリック名>
+  name: <metric_name>
   goal: minimize
 
 parameters:
   # Dataset
   trainer.dataset-path:
-    value: "<dataset名>"
+    value: "<dataset_name>"
 
   # Base config
   config:
-    value: <ベースconfig>
+    value: <base_config>
 
-  # Fixed overrides (ベースconfigと異なる固定パラメータ)
+  # Fixed overrides (fixed parameters differing from base config)
   ...
 
   # === Sweep parameters ===
-  <パラメータ>:
+  <parameter>:
     values: [...]
 
 command:
@@ -62,30 +62,30 @@ command:
   - ${args}
 ```
 
-### 3. 検証
+### 3. Validation
 
-生成した YAML について以下を確認する:
+Verify the following for the generated YAML:
 
-1. **パラメータ名の整合性**: CLI 引数名（kebab-case）が `TrainingConfig` / `MultiModalConfig` のフィールド名と一致するか
-   - trainer 配下: `trainer.<field-name>` (例: `trainer.batch-size`)
-   - model 配下: `model.<field-name>` (例: `model.embed-dim`)
-   - ネスト: `model.transformer.<field>`, `model.cvae.<field>`
-2. **値の型チェック**: int/float/bool/str が正しいか
-3. **組み合わせ数**: grid の場合、全パラメータの values の直積を計算して表示する
-4. **metric 名**: ACT の場合は `val/prior_loss`、非 ACT の場合は `validation_loss` が適切
-5. **command セクション**: ベース config を `--config` で渡す場合は command に `--config` / `configs/...` を含める
+1. **Parameter name consistency**: CLI argument names (kebab-case) match `TrainingConfig` / `MultiModalConfig` field names
+   - Under trainer: `trainer.<field-name>` (e.g., `trainer.batch-size`)
+   - Under model: `model.<field-name>` (e.g., `model.embed-dim`)
+   - Nested: `model.transformer.<field>`, `model.cvae.<field>`
+2. **Value type check**: Verify int/float/bool/str are correct
+3. **Combination count**: For grid, compute and display the Cartesian product of all parameter values
+4. **Metric name**: `val/prior_loss` for ACT, `validation_loss` for non-ACT
+5. **Command section**: If base config is passed via `--config`, ensure command includes `--config` / `configs/...`
 
-### 4. 出力
+### 4. Output
 
-1. 生成した YAML を `configs/sweep_<name>.yaml` に書き出す
-2. ユーザーに以下を提示する:
-   - 生成したファイルパス
-   - 実行コマンド（`wandb sweep` + `wandb agent`）
-   - 想定 run 数と探索パラメータの一覧
+1. Write the generated YAML to `configs/sweep_<name>.yaml`
+2. Present the following to the user:
+   - Generated file path
+   - Execution commands (`wandb sweep` + `wandb agent`)
+   - Expected run count and list of search parameters
 
-## ルール
+## Rules
 
-- 既存の sweep config のスタイル・構造に合わせる（ヘッダコメント、パラメータ順序）
-- `command` セクションは既存ファイルと一貫性を保つ
-- ベース config の `--config` 指定方法を既存の sweep config から推測する（`config` パラメータ vs `command` セクション内）
-- パラメータ名は Python (snake_case) ではなく CLI 形式 (kebab-case) で記述する
+- Match the style and structure of existing sweep configs (header comments, parameter ordering)
+- Keep the `command` section consistent with existing files
+- Infer base config `--config` specification method from existing sweep configs (`config` parameter vs within `command` section)
+- Use CLI format (kebab-case) for parameter names, not Python (snake_case)

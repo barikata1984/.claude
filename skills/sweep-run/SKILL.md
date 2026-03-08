@@ -1,43 +1,43 @@
 # sweep-run
 
-Sweep エージェントを tmux セッションで起動する。GPU 状況を表示し、ユーザーの判断に基づいて並列数・GPU 割当を決定する。
+Launch sweep agents in tmux sessions. Display GPU status and determine parallelism and GPU assignment based on user decisions.
 
-## 入力
+## Input
 
-以下のいずれかで sweep を特定する:
+Identify the sweep using one of the following:
 
-- **sweep ID**: `wandb sweep` の出力から得た ID（例: `entity/project/abc123de`）
-- **sweep config**: 未登録の YAML パス → `wandb sweep` で登録してから agent を起動する
+- **sweep ID**: ID obtained from `wandb sweep` output (e.g., `entity/project/abc123de`)
+- **sweep config**: Unregistered YAML path → register with `wandb sweep` first, then launch agents
 
-## 手順
+## Procedure
 
-### 1. GPU 状況の表示
+### 1. Display GPU status
 
-`nvidia-smi` を実行し、以下をユーザーに提示する:
+Run `nvidia-smi` and present the following to the user:
 
 ```
 GPU  Name           Util%  Memory         Status
-  0  RTX 3090       12%    1.2G / 24.0G   空き
-  1  RTX 3090       97%   20.1G / 24.0G   使用中
-  2  RTX 3090        0%    0.4G / 24.0G   空き
+  0  RTX 3090       12%    1.2G / 24.0G   Available
+  1  RTX 3090       97%   20.1G / 24.0G   In use
+  2  RTX 3090        0%    0.4G / 24.0G   Available
 ```
 
-- Util > 80% または Memory 使用 > 80% の GPU は「使用中」と表示する
-- それ以外は「空き」と表示する
+- GPUs with Util > 80% or Memory usage > 80% are shown as "In use"
+- Others are shown as "Available"
 
-### 2. ユーザーに判断を委ねる
+### 2. Defer to user judgment
 
-以下をユーザーに質問する:
+Ask the user:
 
-- **何並列で起動するか**（空き GPU 数をデフォルト値として提案）
-- **どの GPU に割り当てるか**（空き GPU の番号をデフォルトとして提案）
+- **How many parallel agents to launch** (propose available GPU count as default)
+- **Which GPUs to assign** (propose available GPU numbers as default)
 
-### 3. tmux セッションの起動
+### 3. Launch tmux sessions
 
-ユーザーの指定に基づき、各エージェントを個別の tmux セッションで起動する:
+Based on user specifications, launch each agent in a separate tmux session:
 
 ```bash
-# セッション命名: <sweep名>-<sweep_id短縮>-<agent番号>
+# Session naming: <sweep_name>-<short_sweep_id>-<agent_number>
 tmux new-session -d -s "<name>-<id>-0" \
   "cd catkin_ws/src/osx_bilateral && CUDA_VISIBLE_DEVICES=<gpu> wandb agent <sweep_id>"
 
@@ -45,27 +45,27 @@ tmux new-session -d -s "<name>-<id>-1" \
   "cd catkin_ws/src/osx_bilateral && CUDA_VISIBLE_DEVICES=<gpu> wandb agent <sweep_id>"
 ```
 
-### 4. 起動確認
+### 4. Launch confirmation
 
-起動後に以下を表示する:
+Display the following after launch:
 
 ```
-起動完了:
-  sweep: <sweep名> (<sweep_id>)
+Launch complete:
+  sweep: <sweep_name> (<sweep_id>)
   sessions:
     - <session_name_0> → GPU 0
     - <session_name_1> → GPU 2
 
-確認コマンド:
-  tmux ls                          # セッション一覧
-  tmux attach -t <session_name>    # セッションに接続
-  wandb sweep cancel <sweep_id>    # sweep 中止
+Management commands:
+  tmux ls                          # List sessions
+  tmux attach -t <session_name>    # Attach to session
+  wandb sweep cancel <sweep_id>    # Cancel sweep
 ```
 
-## ルール
+## Rules
 
-- GPU 割当はユーザーが決定する。自動判定しない
-- 各 agent は `CUDA_VISIBLE_DEVICES` で 1 GPU に固定する
-- sweep ID が未指定の場合、`configs/sweep_*.yaml` の一覧を提示して選択させる
-- 既に同名の tmux セッションが存在する場合は警告する
-- `wandb sweep` の登録と `wandb agent` の起動は分けて実行し、sweep ID を明示する
+- GPU assignment is decided by the user. Do not auto-assign
+- Each agent is pinned to 1 GPU via `CUDA_VISIBLE_DEVICES`
+- If no sweep ID is provided, list `configs/sweep_*.yaml` and let the user choose
+- Warn if a tmux session with the same name already exists
+- Separate `wandb sweep` registration and `wandb agent` launch, making the sweep ID explicit

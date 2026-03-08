@@ -1,117 +1,114 @@
 ---
 name: daily-report
-description: >
-  日次作業報告書を生成する。docs/LOGS/ のログ、docs/TODO.md、git log から対象日の作業を抽出し、
-  上長向けの構造化レポートとして docs/REPORTS/ に保存する。
-  /daily-report または /daily-report YYYY-MM-DD で呼び出す。
-  日報・報告書・レポート作成・今日の作業まとめ、などのリクエストにも使う。
+description: "Generate a structured daily work report. Extracts the day's work from docs/LOGS/ logs, docs/TODO.md, and git log, then saves it as a structured report for management in docs/REPORTS/. Invoke with /daily-report or /daily-report YYYY-MM-DD. Also trigger for requests like daily report, work summary, progress report, today's work summary."
 ---
 
 # daily-report
 
-対象日に実施した作業を docs/ と git log から抽出し、上長への報告書を生成する。
+Extract the day's work from docs/ and git log, and generate a report for management.
 
-## 引数
+## Arguments
 
-- 引数なし → 当日 (JST) を対象
-- `YYYY-MM-DD` → 指定日を対象
+- No arguments → targets today (JST)
+- `YYYY-MM-DD` → targets the specified date
 
-## 手順
+## Procedure
 
-### 1. 対象日の決定と git log 抽出
+### 1. Determine target date and extract git log
 
-サーバは PST (UTC-8)。JST (UTC+9) との差は 17 時間。
+The server runs in PST (UTC-8). The offset from JST (UTC+9) is 17 hours.
 
-対象日 `YYYY-MM-DD` (JST) の PST 範囲:
-- 開始: `YYYY-MM-(DD-1)T07:00:00` PST
-- 終了: `YYYY-MM-DDT07:00:00` PST
+PST range for target date `YYYY-MM-DD` (JST):
+- Start: `YYYY-MM-(DD-1)T07:00:00` PST
+- End: `YYYY-MM-DDT07:00:00` PST
 
-osx_bilateral サブモジュールと親リポジトリの両方で git log を取得:
+Retrieve git log from both the osx_bilateral submodule and the parent repository:
 
 ```bash
 # osx_bilateral
 cd catkin_ws/src/osx_bilateral
 git log --since="<start>" --until="<end>" --format="%h %ai %s"
 
-# 親リポジトリ
+# Parent repository
 cd /root/osx-ur
 git log --since="<start>" --until="<end>" --format="%h %ai %s"
 ```
 
-### 2. ソース読み込み
+### 2. Read sources
 
-以下のファイルを読む:
+Read the following files:
 
-- `docs/TODO.md` — 完了済み `[x]` と未完了 `[ ]` の項目
-- `docs/ISSUES.md` — 新規登録・解決した課題
-- `docs/LOGS/log_*.md` — 対象日に追記されたセクション (git diff or 日付ヘッダで特定)
-- `docs/PLAN.md` — 設計変更があれば
+- `docs/TODO.md` — completed `[x]` and pending `[ ]` items
+- `docs/ISSUES.md` — newly registered and resolved issues
+- `docs/LOGS/log_*.md` — sections appended on the target date (identify via git diff or date headers)
+- `docs/PLAN.md` — if there were design changes
 
-git log のコミットメッセージとログの内容を突合し、対象日の作業範囲を確定する。
+Cross-reference git log commit messages with log content to determine the scope of work for the target date.
 
-### 3. トピック統合 (最重要)
+### 3. Topic integration (most important)
 
-同じテーマに対する複数の記述 (検討 1 → 検討 2、分析 → 修正 など) は、
-**結論を中心に 1 トピックへ統合** する。経緯は結論の理解に必要な最小限に留める。
+Multiple entries about the same theme (investigation 1 → investigation 2, analysis → fix, etc.)
+should be **consolidated into a single topic centered on the conclusion**. Keep the background
+to the minimum necessary for understanding the conclusion.
 
-統合のルール:
-- 同一テーマの調査・検討・実装が複数ステップに分かれている場合、最終結論を先に述べ、
-  前段はその結論に至った理由として簡潔に言及する
-- 数値データ (loss 値、テスト結果、統計検定) は具体的に記載する
-- 変更ファイルの一覧はテーブル形式で記載する
-- 「検討した結果、変更しなかった」も報告に含める (判断の記録として価値がある)
+Integration rules:
+- When investigation/analysis/implementation for the same theme spans multiple steps, state the
+  final conclusion first, then briefly reference preceding steps as reasons leading to that conclusion
+- Include specific numerical data (loss values, test results, statistical tests)
+- List changed files in table format
+- Include "investigated but decided not to change" as well (valuable as a record of decisions)
 
-### 4. レポート構成
+### 4. Report structure
 
 ```markdown
-# 作業報告書 — YYYY-MM-DD
+# Work Report — YYYY-MM-DD
 
-## 1. [トピック名]
+## 1. [Topic name]
 
-### 結論 / 概要
-(結論を先に。1-3 文)
+### Conclusion / Summary
+(Conclusion first. 1-3 sentences)
 
-### 背景
-(結論に至った経緯。必要な場合のみ)
+### Background
+(Context leading to the conclusion. Only if necessary)
 
-### 変更内容
-(ファイル変更テーブル、テスト結果)
+### Changes
+(File change table, test results)
 
-## 2. [次のトピック]
+## 2. [Next topic]
 ...
 
-## 参考文献
+## References
 
-(本レポート内で引用した文献がある場合のみ)
+(Only if citations are used in this report)
 
-- [[Key]](../REFERENCES/MAIN.md#Key) — 引用理由の短い要約
+- [[Key]](../REFERENCES/MAIN.md#Key) — Brief summary of why cited
 
 ---
 
-**本日のコミット数**: N (osx_bilateral) + M (親リポジトリ)
-**テスト最終状態**: X passed, Y skipped
+**Commits today**: N (osx_bilateral) + M (parent repository)
+**Final test status**: X passed, Y skipped
 ```
 
-各トピックの粒度:
-- 大きな調査+実装 → 結論/背景/変更内容 の 3 セクション
-- 小さな修正 → 概要 のみの 1 セクション
-- 設計・計画 → 概要+設計内容
+Granularity per topic:
+- Large investigation + implementation → 3 sections: Conclusion / Background / Changes
+- Small fix → 1 section: Summary only
+- Design/planning → Summary + Design details
 
-### 5. 保存
+### 5. Save
 
-出力先: `docs/REPORTS/YYYY-MM-DD.md`
+Output to: `docs/REPORTS/YYYY-MM-DD.md`
 
-ディレクトリが存在しない場合は作成する。同名ファイルが既にある場合はユーザーに確認する。
+Create the directory if it does not exist. If a file with the same name already exists, confirm with the user.
 
-## 参考文献の処理
+## Reference processing
 
-`.claude/rules/references.md` の引用規約に従う。
+Follow the citation conventions in `.claude/rules/references.md`.
 
-## ルール
+## Rules
 
-- 言語は日本語固定
-- 結論ファースト。上長が最初の 1 文で要点を把握できるように
-- 冗長な経緯説明を避け、判断と結果にフォーカスする
-- 数値は具体的に記載する (「改善した」ではなく「3-5% 改善」)
-- テスト結果は必ず記載する
-- ログに書かれていない作業は報告書に含めない (推測しない)
+- Language is Japanese (fixed)
+- Conclusion first. The manager should grasp the key point from the first sentence
+- Avoid verbose background explanations; focus on decisions and results
+- Include specific numbers ("improved by 3-5%" not "improved")
+- Always include test results
+- Do not include work not recorded in logs (do not speculate)

@@ -1,24 +1,24 @@
 # log-progress
 
-セッション終了時に呼び出し、会話内容に基づいてドキュメントを更新する。
+Update documentation based on conversation content at session end.
 
-## 手順
+## Procedure
 
-1. 会話を分析し、進捗・発見・解決済み課題を特定する
-2. 以下のファイルを適切に更新する:
-   - `docs/TODO.md` — 完了した項目に `[x]` を付ける。新たに発生したタスクを追加する
-   - `docs/LOGS/log_*.md` — 該当するトピックのログに結果・発見を追記する（末尾に append）
-   - `docs/ISSUES.md` — 新たに発見した課題を追加する。解決した課題は項目ごと削除する
-   - `docs/PLAN.md` — 設計判断が変わった場合のみ更新する
+1. Analyze the conversation to identify progress, findings, and resolved issues
+2. Update the following files as appropriate:
+   - `docs/TODO.md` — Check off completed items with `[x]`. Add newly identified tasks
+   - `docs/LOGS/log_*.md` — Append results and findings to the relevant topic log (append to end)
+   - `docs/ISSUES.md` — Add newly discovered issues. Delete resolved issues entirely
+   - `docs/PLAN.md` — Update only if design decisions have changed
 
-## 参考文献の処理
+## Reference processing
 
-`.claude/rules/references.md` の引用規約に従う。
+Follow the citation conventions in `.claude/rules/references.md`.
 
-## ルール
+## Rules
 
-- LOGS は **append-only**。過去の記録は編集しない
-- ISSUES は解決済み項目を **削除** する（アーカイブしない）
-- 各ファイルの既存フォーマットを維持する
-- 日付は ISO 形式 (YYYY-MM-DD) を使用する
-- 変更がない場合はファイルを触らない
+- LOGS are **append-only**. Do not edit past records
+- ISSUES: **delete** resolved items (do not archive)
+- Maintain the existing format of each file
+- Use ISO date format (YYYY-MM-DD)
+- Do not touch files if there are no changes

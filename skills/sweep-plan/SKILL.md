@@ -1,68 +1,68 @@
 # sweep-plan
 
-Sweep 実験を計画する。ユーザーとの対話を通じて目的を明確化し、探索すべきパラメータを選定する。
+Plan sweep experiments. Clarify objectives through dialogue with the user and select parameters to explore.
 
-## フェーズ 1: 目的の明確化
+## Phase 1: Clarify objectives
 
-ユーザーに以下を質問し、マクロな実験目的を言語化する:
+Ask the user the following questions to articulate the macro-level experiment objective:
 
-- **何を改善したいか**: タスク性能？学習効率？汎化性能？推論速度？
-- **現状の課題**: 今のモデルの何が不満か？どのような挙動を改善したいか？
-- **仮説**: なぜその問題が起きていると考えるか？
+- **What to improve**: Task performance? Training efficiency? Generalization? Inference speed?
+- **Current issues**: What is unsatisfactory about the current model? What behavior to improve?
+- **Hypothesis**: Why do you think this problem is occurring?
 
-質問は一度にまとめず、回答に基づいて掘り下げる。目的が十分に明確になるまで対話を続ける。
+Do not ask all questions at once; dig deeper based on responses. Continue the dialogue until the objective is sufficiently clear.
 
-## フェーズ 2: パラメータ選定
+## Phase 2: Parameter selection
 
-目的が明確になったら:
+Once the objective is clear:
 
-1. `src/models/configs/multi_modal_config.py` と `src/training/config.py` を読み、利用可能なパラメータの全体像を把握する
-2. ユーザーの目的に関連するパラメータ候補を提示する
-   - 各候補について「なぜこのパラメータが目的に関係するか」を説明する
-   - パラメータの型・デフォルト値・取りうる範囲を提示する
-3. ユーザーと対話しながら、探索するパラメータと値の範囲を決定する
+1. Read `src/models/configs/multi_modal_config.py` and `src/training/config.py` to understand the full landscape of available parameters
+2. Propose parameter candidates relevant to the user's objective
+   - Explain "why this parameter is relevant to the objective" for each candidate
+   - Present the type, default value, and feasible range for each parameter
+3. Determine the parameters and value ranges to explore through dialogue with the user
 
-**注意**: パラメータの提案はユーザーの目的から逆算する。事前に決まった Tier 構造を押し付けない。
+**Note**: Parameter proposals should be derived from the user's objective. Do not impose a pre-determined tier structure.
 
-## フェーズ 3: 実行計画の策定
+## Phase 3: Execution plan
 
-パラメータが決まったら:
+Once parameters are determined:
 
-1. 探索方法を決定する（grid / random / bayes）
-   - 組み合わせ数を計算し、grid が現実的か評価する
-   - 100 run 超の場合は random/bayes を提案する
-2. ベースとなる config ファイルとデータセットを確認する
-3. 既存の sweep 記録（`docs/LOGS/log_sweep.md`）を確認し、重複を避ける
-4. 計画を会話上で提示し、ユーザーの承認を得る
+1. Decide the search method (grid / random / bayes)
+   - Calculate the number of combinations and evaluate whether grid is realistic
+   - Suggest random/bayes for more than 100 runs
+2. Confirm the base config file and dataset
+3. Check existing sweep records (`docs/LOGS/log_sweep.md`) to avoid duplicates
+4. Present the plan in conversation and obtain user approval
 
-## フェーズ 4: 記録
+## Phase 4: Record
 
-承認後、`docs/LOGS/log_sweep.md` に追記する:
+After approval, append to `docs/LOGS/log_sweep.md`:
 
 ```markdown
-## YYYY-MM-DD: <sweep名>
+## YYYY-MM-DD: <sweep_name>
 
-### 目的
-<ユーザーとの対話で明確化した実験目的・仮説>
+### Objective
+<Experiment objective and hypothesis clarified through user dialogue>
 
-### 探索パラメータ
-| Parameter | Values | 選定理由 |
-|-----------|--------|----------|
-| ...       | ...    | ...      |
+### Search parameters
+| Parameter | Values | Selection rationale |
+|-----------|--------|---------------------|
+| ...       | ...    | ...                 |
 
-### 実行計画
+### Execution plan
 - method: <grid/random/bayes>
 - base config: `<path>`
 - dataset: `<name>`
-- 想定 run 数: <N>
+- expected run count: <N>
 
-### 結果
-_（sweep-analyze で記入）_
+### Results
+_(to be filled by sweep-analyze)_
 ```
 
-## ルール
+## Rules
 
-- 目的が曖昧なまま先に進まない。フェーズ 1 を省略しない
-- パラメータ選定は目的ベース。「とりあえず全部探索」は避ける
-- 既存の sweep 結果（log_sweep.md）がある場合、その知見を踏まえて提案する
-- ユーザーの直感や仮説を尊重し、それを検証可能な実験に翻訳する
+- Do not proceed with a vague objective. Do not skip Phase 1
+- Parameter selection is objective-driven. Avoid "explore everything just in case"
+- If existing sweep results (log_sweep.md) are available, incorporate those insights into proposals
+- Respect the user's intuition and hypotheses, and translate them into testable experiments

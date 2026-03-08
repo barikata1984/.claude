@@ -1,47 +1,47 @@
 # sweep
 
-Sweep 実験管理の統合エントリポイント。引数またはコンテキストに応じてサブスキルを呼び分ける。
+Unified entry point for sweep experiment management. Routes to sub-skills based on arguments or context.
 
-## 使い方
+## Usage
 
 ```
-/sweep              → コンテキストから自動判定
-/sweep plan         → 実験計画の立案（/sweep-plan）
-/sweep config       → sweep config YAML の生成（/sweep-config）
-/sweep run          → sweep エージェントを tmux で起動（/sweep-run）
-/sweep monitor      → GPU リソースモニタリング開始（/sweep-monitor）
-/sweep analyze      → sweep 結果の分析（/sweep-analyze）
-/sweep full         → plan → config → run + monitor → analyze を順に実行
+/sweep              → Auto-detect from context
+/sweep plan         → Plan the experiment (/sweep-plan)
+/sweep config       → Generate sweep config YAML (/sweep-config)
+/sweep run          → Launch sweep agents in tmux (/sweep-run)
+/sweep monitor      → Start GPU resource monitoring (/sweep-monitor)
+/sweep analyze      → Analyze sweep results (/sweep-analyze)
+/sweep full         → Run plan → config → run + monitor → analyze in sequence
 ```
 
-## 自動判定ロジック
+## Auto-detection logic
 
-引数なしで呼ばれた場合、以下の優先順で判定する:
+When called without arguments, determine the sub-skill in the following priority order:
 
-1. 会話中に sweep 結果や sweep ID への言及がある → **analyze**
-2. sweep が実行中（tmux セッションが存在） → **monitor** の状況確認を提示
-3. 会話中に `/sweep-plan` の結果（パラメータ選定済み）がある → **config**
-4. 上記いずれでもない → **plan** から開始
+1. Conversation mentions sweep results or a sweep ID → **analyze**
+2. A sweep is running (tmux sessions exist) → present **monitor** status check
+3. Conversation contains `/sweep-plan` results (parameters already selected) → **config**
+4. None of the above → start with **plan**
 
-## full モード
+## Full mode
 
-`/sweep full` が指定された場合、以下を順に実行する:
+When `/sweep full` is specified, execute the following in sequence:
 
-1. `/sweep-plan` — 目的の明確化とパラメータ選定
-2. `/sweep-config` — YAML 生成と検証
-3. `/sweep-run` — GPU 状況表示 → ユーザー判断 → tmux でエージェント起動
-4. `/sweep-monitor` — リソースモニタリング開始（並行）
-5. （sweep 完了後に再度呼ばれた場合）`/sweep-analyze` — 結果分析 + モニタリングデータ集計
+1. `/sweep-plan` — Clarify objectives and select parameters
+2. `/sweep-config` — Generate and validate YAML
+3. `/sweep-run` — Display GPU status → user decides → launch agents in tmux
+4. `/sweep-monitor` — Start resource monitoring (in parallel)
+5. (When called again after sweep completion) `/sweep-analyze` — Analyze results + aggregate monitoring data
 
-各フェーズの間でユーザーの承認を得てから次に進む。
+Obtain user approval between each phase before proceeding to the next.
 
-## 共通コンテキスト
+## Shared context
 
-全サブスキルで共通する参照先:
+References common to all sub-skills:
 
-- **プロジェクト構成**: `src/training/config.py`, `src/models/configs/multi_modal_config.py`
-- **wandb ユーティリティ**: `src/training/wandb_utils.py`
-- **既存 sweep config**: `configs/sweep_*.yaml`
-- **実験ログ**: `docs/LOGS/log_sweep.md`
-- **GPU モニタリングデータ**: `docs/LOGS/gpu_monitor_*.csv`
-- **戦略ドキュメント**: `docs/archive/wandb_sweep_unified_strategy.md`
+- **Project config**: `src/training/config.py`, `src/models/configs/multi_modal_config.py`
+- **wandb utilities**: `src/training/wandb_utils.py`
+- **Existing sweep configs**: `configs/sweep_*.yaml`
+- **Experiment logs**: `docs/LOGS/log_sweep.md`
+- **GPU monitoring data**: `docs/LOGS/gpu_monitor_*.csv`
+- **Strategy document**: `docs/archive/wandb_sweep_unified_strategy.md`
