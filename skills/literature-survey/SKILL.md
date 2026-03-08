@@ -1,6 +1,6 @@
 ---
 name: literature-survey
-description: "Conduct a comprehensive academic literature survey on a given research topic. Searches the web systematically for papers from recent to historical, producing a structured Markdown report with summaries and a BibTeX file. Use this skill whenever the user asks for a literature review, survey, related work search, prior art investigation, or wants to know what research exists on X. Also trigger when the user says things like papers about, survey the field of, what is the state of the art in, find relevant publications, 先行研究, 文献調査, サーベイ, 論文を探して, or any request to systematically gather academic references."
+description: "Conduct a comprehensive academic literature survey on a given research topic. Searches the web systematically for papers from recent to historical, producing a structured Markdown report with summaries. Use this skill whenever the user asks for a literature review, survey, related work search, prior art investigation, or wants to know what research exists on X. Also trigger when the user says things like papers about, survey the field of, what is the state of the art in, find relevant publications, 先行研究, 文献調査, サーベイ, 論文を探して, or any request to systematically gather academic references."
 ---
 
 # Literature Survey Skill
@@ -142,27 +142,12 @@ sections via the following logic:
 
 ### Phase 5: Hallucination Check
 
-Before generating the final report, verify that every paper actually exists.
-
-Launch a subagent to batch-check all papers in parallel. For each paper, the subagent
-should attempt to access the paper's DOI or URL using WebFetch:
-
-- **DOI**: Fetch `https://doi.org/<DOI>` and confirm it resolves (HTTP 200/302)
-- **URL**: Fetch the URL and confirm the page contains the paper title or authors
-
-Report format from the subagent:
-```
-PASS: [Paper Title] — DOI/URL confirmed
-FAIL: [Paper Title] — DOI/URL returned error or title mismatch
-```
-
-- Papers that FAIL must be re-searched via WebSearch to find a valid DOI/URL.
-- If no valid reference can be found after re-search, remove the paper from the report.
-- Document any removals in the Survey Methodology section.
+`.claude/rules/references.md` の「ハルシネーションチェック」に従い、収集した全論文を検証する。
+FAIL した論文はレポートから除外し、除外数を Survey Methodology セクションに記録する。
 
 ### Phase 6: Output Generation
 
-Produce two files in `docs/SURVEYS/`:
+Produce the following file in `docs/SURVEYS/`:
 
 #### Main Report: `docs/SURVEYS/<topic_slug>.md`
 
@@ -244,8 +229,7 @@ enabling cross-reference from this table to the detailed entry.
 
 [Brief narrative connecting the papers in this category]
 
-1. **[Paper Title]** — Authors (Year)
-   Venue | [Citations: N] | DOI: `10.xxxx/xxxxx` or [URL]
+1. [[Key]](../REFERENCES/MAIN.md#Key) — Authors, "Title" (Year)
    - **thesis**: [著者の中心的主張。手法の記述ではなく、何が真であると論じているか]
    - **core**: [手法の中核要素。これが欠けると手法が成立しない本質的な要素]
    - **diff**: [先行研究との対比（事実の記述）。何が新しいか、どの限界を克服したか]
@@ -274,36 +258,15 @@ enabling cross-reference from this table to the detailed entry.
 - Primary cause of unavailability: [e.g., paywall, no Limitations section, preprint without full text]
 ```
 
-#### BibTeX File: `docs/SURVEYS/<topic_slug>.bib`
-
-Generate a BibTeX entry for every paper in the report. Use the format:
-```bibtex
-@article{AuthorYear_keyword,
-  title = {Full Paper Title},
-  author = {Author1 and Author2 and Author3},
-  year = {2024},
-  journal = {Venue or ArXiv ID},
-  doi = {10.xxxx/xxxxx},
-  url = {https://...},
-  note = {Citations: N}
-}
-```
-
-Use `@inproceedings` for conference papers, `@article` for journals,
-`@misc` for preprints/arXiv. Always include `doi` field when available.
-
 ## 参考文献の処理
 
-引用規約は `docs/REFERENCES/STYLE.md` に従う。
+`.claude/rules/references.md` の引用規約に従う。
 
-1. **Paper Catalogue のエントリ**: カタログ形式（thesis/core/diff/limit 注釈付き）で記述する。
-   個々のカタログエントリは MAIN.md へのリンクを必要としない
-2. **Survey Findings / プロジェクトへの示唆**: 特定の論文に言及する場合は MAIN.md に
-   エントリを追加し、インライン引用形式 `[[Key]](../REFERENCES/MAIN.md#Key)` を使用する
-3. **BibTeX ファイル**: サーベイと同じディレクトリ (`docs/SURVEYS/`) に保持する
-4. **SURVEYS/README.md の更新**: サーベイ完了後、`docs/SURVEYS/README.md` の
+追加手順:
+1. **MAIN.md の更新**: Paper Catalogue の全論文を MAIN.md に追加する
+2. **SURVEYS/README.md の更新**: サーベイ完了後、`docs/SURVEYS/README.md` の
    テーブルに新しいエントリを追加する
-5. **実行ログ**: `docs/LOGS/literature-survey.md` にサーベイの実行経緯・成果物パス・
+3. **実行ログ**: `docs/LOGS/literature-survey.md` にサーベイの実行経緯・成果物パス・
    プロジェクトへの示唆を追記する
 
 ## Quality Checklist
@@ -312,7 +275,6 @@ Before delivering results, verify:
 
 - [ ] All three temporal tiers are represented
 - [ ] Each paper has: title, authors, year, venue/source, DOI or URL, and thesis/core/diff/limit
-- [ ] BibTeX file has an entry for every paper in the report
 - [ ] Papers are organized by category, not just listed chronologically
 - [ ] The overview section gives a reader unfamiliar with the topic a clear starting point
 - [ ] Survey Findings section contains thesis, foundation, progress, and gap (with engineering consequences)

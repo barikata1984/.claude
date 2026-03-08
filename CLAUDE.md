@@ -81,6 +81,6 @@ wandb agent <sweep-id>
 - 未解決の技術課題: docs/ISSUES.md
 - ドキュメントガイド: docs/README.md
 - 報酬設計リファレンス: configs/hammer_swing.yaml
-- 参考文献マスタ: docs/REFERENCES/MAIN.md（引用規約: docs/REFERENCES/STYLE.md）
+- 参考文献マスタ: docs/REFERENCES/MAIN.md（BibTeX: docs/REFERENCES/references.bib, 引用規約: .claude/rules/references.md）
 - 文献調査: docs/SURVEYS/README.md（索引）→ docs/SURVEYS/（サーベイ別レポート）
 - 日次報告: docs/REPORTS/（日付別レポート）
