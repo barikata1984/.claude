@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "academic-fetch": {
+      "command": "uv",
+      "args": ["run", ".claude/mcp/academic-fetch/server.py"]
+    }
+  }
+}
