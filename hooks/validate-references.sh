@@ -61,9 +61,11 @@ BIB_FILE="$(dirname "$FILE_PATH")/references.bib"
     if [[ -z "$KEY" ]]; then return; fi
     # Determine entry type from venue name
     TYPE="misc"
-    if [[ "$VENUE" =~ (ICRA|IROS|NeurIPS|ICML|ICLR|CoRL|RSS|CVPR|ICCV|ECCV|AAAI|IJCAI|Proceedings|Conference|Conf\.|Proc\.) ]]; then
+    local re_conf='(ICRA|IROS|NeurIPS|ICML|ICLR|CoRL|RSS|CVPR|ICCV|ECCV|AAAI|IJCAI|Proceedings|Conference|Conf\.|Proc\.)'
+    local re_journal='(Journal|Trans\.|Transactions|IEEE|ACM|Letters|Review|Magazine)'
+    if [[ "$VENUE" =~ $re_conf ]]; then
       TYPE="inproceedings"
-    elif [[ "$VENUE" =~ (Journal|Trans\.|Transactions|IEEE|ACM|Letters|Review|Magazine) ]]; then
+    elif [[ "$VENUE" =~ $re_journal ]]; then
       TYPE="article"
     elif [[ "$VENUE" =~ arXiv ]]; then
       TYPE="misc"
@@ -91,8 +93,9 @@ BIB_FILE="$(dirname "$FILE_PATH")/references.bib"
   while IFS= read -r line; do
     # New entry: ### Key
     if [[ "$line" =~ ^###[[:space:]]+(.+) ]]; then
+      new_key="${BASH_REMATCH[1]}"
       flush_entry
-      KEY="${BASH_REMATCH[1]}"
+      KEY="$new_key"
       continue
     fi
 
@@ -118,9 +121,11 @@ BIB_FILE="$(dirname "$FILE_PATH")/references.bib"
     fi
 
     # URL (standalone or after |)
-    if [[ "$line" =~ \[([^\]]*)\]\((https?://[^)]+)\) ]]; then
+    re_mdlink='\[([^]]*)\]\((https?://[^)]+)\)'
+    re_bareurl='(https?://[^[:space:]]+)'
+    if [[ "$line" =~ $re_mdlink ]]; then
       URL="${BASH_REMATCH[2]}"
-    elif [[ "$line" =~ (https?://[^[:space:]]+) && -z "$URL" ]]; then
+    elif [[ "$line" =~ $re_bareurl && -z "$URL" ]]; then
       URL="${BASH_REMATCH[1]}"
     fi
   done < "$FILE_PATH"
