@@ -172,6 +172,30 @@ Follow the hallucination check procedure in `.claude/rules/references.md`.
 Exclude papers that fail verification and record the exclusion count in the
 Survey Methodology section.
 
+### Phase 5b: Limit Field Triage
+
+After hallucination checks and initial limit field collection, classify all papers
+where limit is still missing into three categories:
+
+1. **Paywall barrier**: Papers behind publisher paywalls (IEEE, Elsevier, Springer, ACM, etc.)
+   where full text was inaccessible. These can potentially be resolved with `fetch_with_auth`.
+2. **Rendering failure**: arXiv papers where ar5iv failed to render the HTML version.
+   These can potentially be resolved by retrying ar5iv, trying alternative arXiv mirrors,
+   or fetching the abstract more carefully from Semantic Scholar.
+3. **Survey/review papers**: Papers that are surveys, reviews, or textbooks and inherently
+   lack a Limitations/Future Work section. No additional retrieval will help.
+
+Present these three categories to the user with the paper counts and titles, and ask
+per-category whether to attempt additional information retrieval:
+
+- **Paywall**: Ask whether to use `fetch_with_auth` MCP tool (requires valid cookies)
+- **Rendering failure**: Ask whether to retry with alternative access methods
+- **Survey papers**: Inform the user these will remain "limit not available" (no action needed)
+
+Only proceed to Phase 6 after the user responds. If the user declines all categories,
+proceed immediately. If the user approves retrieval for a category, attempt it and
+update the limit fields before generating the final report.
+
 ### Phase 6: Output Generation
 
 Produce the following file in `docs/SURVEYS/`:
@@ -281,8 +305,13 @@ enabling cross-reference from this table to the detailed entry.
 ### Limit Field Coverage
 
 - Papers with limit recorded: N / M (X%)
-- Papers marked "limit not available": N ([list titles if any])
-- Primary cause of unavailability: [e.g., paywall, no Limitations section, preprint without full text]
+- Papers marked "limit not available": N, breakdown:
+
+| Category | Count | Papers | Action taken |
+|----------|-------|--------|-------------|
+| Paywall barrier | N | [list keys] | [e.g., fetch_with_auth attempted / user declined] |
+| Rendering failure | N | [list keys] | [e.g., retried with alternative methods / user declined] |
+| Survey/review paper | N | [list keys] | N/A (no Limitations section expected) |
 ```
 
 ## Reference Processing
