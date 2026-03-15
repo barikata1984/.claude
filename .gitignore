@@ -1,0 +1,5 @@
+# Local settings (user-specific overrides)
+settings.local.json
+
+# Academic authentication cookies (session tokens - NEVER commit)
+**/academic_cookies.json
