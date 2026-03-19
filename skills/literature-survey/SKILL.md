@@ -69,13 +69,9 @@ Use multiple complementary search approaches to maximize coverage:
 4. **Author tracking**: If a few researchers dominate the field, search their recent publications
 5. **Venue-specific search**: Check top venues (conferences/journals) known for this area
 
-For each search, use WebSearch to find papers and WebFetch to access abstracts,
-Semantic Scholar API pages, or arXiv pages for details.
-
-**Semantic Scholar API** is particularly useful:
-- Search: `https://api.semanticscholar.org/graph/v1/paper/search?query=TOPIC&limit=20&fields=title,authors,year,abstract,citationCount,url,venue,externalIds`
-- Paper details: `https://api.semanticscholar.org/graph/v1/paper/PAPER_ID?fields=title,authors,year,abstract,citationCount,references,citations,url,venue,externalIds`
-- Use citation counts to gauge impact and prioritize papers
+For each search, use WebSearch to find papers and WebFetch to access abstracts
+or arXiv pages for details. WebSearch is the primary discovery tool — it is
+fast, has no rate limits, and reliably finds papers across all venues.
 
 **arXiv search** for preprints:
 - `https://export.arxiv.org/api/query?search_query=all:TOPIC&sortBy=submittedDate&sortOrder=descending&max_results=20`
@@ -104,10 +100,16 @@ obtained, and (4) a brief note on relevance. This log is aggregated into the
 Survey Methodology → Search Log section of the final report.
 
 **DOI/URL requirement**: Every paper collected must have at least one of:
-- DOI (preferred): e.g., `10.1109/ICRA.2024.XXXXXXX`
-- URL: arXiv page, Semantic Scholar page, or publisher page
+- **Publisher DOI** (preferred): e.g., `10.1109/ICRA.2024.XXXXXXX`, `10.1007/...`
+  This is the DOI assigned by the publisher (IEEE, ACM, Springer, PMLR, etc.),
+  NOT the arXiv DOI (`10.48550/arXiv.XXXX.XXXXX`). Many ML papers appear first
+  on arXiv but are later published at conferences with a different, authoritative DOI.
+- **arXiv ID**: e.g., `2407.04620` — acceptable as a fallback, but always attempt
+  to resolve to a publisher DOI in Phase 4 (DOI Resolution).
+- **URL**: Publisher page, OpenReview page, or project page — use only when
+  neither publisher DOI nor arXiv ID is available.
 
-Papers for which neither DOI nor URL can be found should be excluded.
+Papers for which none of these can be found should be excluded.
 
 ### Phase 3: Paper-Level Analysis
 
@@ -135,7 +137,47 @@ After collecting papers, analyze each individually and organize into themes:
      abstract hints, (b) limitations noted by citing papers. If no limit information can
      be found from any source, write "limit not available" rather than guessing.
 
-### Phase 4: Survey-Level Synthesis
+### Phase 4: DOI Resolution
+
+Many ML/AI papers first appear on arXiv but are later published at conferences
+(ICML, NeurIPS, ICLR, CoRL, IROS, etc.) or in journals (JMLR, Science Robotics,
+IJRR, etc.) with a separate, authoritative publisher DOI. The arXiv DOI
+(`10.48550/arXiv.XXXX.XXXXX`) is not the same as the publisher DOI — the
+publisher DOI is what should appear in formal citations.
+
+After collecting and analyzing papers (Phases 2-3), resolve each paper's
+identifier to its best available DOI. Process papers **sequentially** (not in
+parallel) to respect API rate limits.
+
+For each paper that currently only has an arXiv ID or URL:
+
+1. **DBLP API** (first choice — fast, no authentication, generous rate limit):
+   - `https://dblp.org/search/publ/api?q=TITLE&format=json`
+   - Returns venue, year, and DOI for conference/journal publications
+   - Match on title similarity (DBLP normalizes titles)
+
+2. **Semantic Scholar API** (second choice — richer metadata, stricter rate limit):
+   - `https://api.semanticscholar.org/graph/v1/paper/ArXiv:ARXIV_ID?fields=externalIds,venue,year,citationCount`
+   - The `externalIds` field contains both `ArXiv` and `DOI` keys when available
+   - Also useful for citation counts to gauge impact
+   - **Rate limit**: 1 request/second without API key. Process one paper at a time
+     with a brief pause between requests. If you receive a 429 error, wait 3 seconds
+     and retry once. Do not retry more than once per paper — fall back to DBLP or
+     Crossref instead.
+
+3. **Crossref API** (fallback — broadest coverage, slower):
+   - `https://api.crossref.org/works?query.title=TITLE&rows=3`
+   - Returns publisher DOI for most published works
+   - Match carefully on title and authors to avoid false positives
+
+**Resolution priority**: Publisher DOI > arXiv ID > URL-only.
+
+Record the resolution results in the DOI Resolution Log section of the final
+report (see Phase 7 template). For papers that remain arXiv-only after this
+phase, note whether the paper is a preprint (not yet published at a venue) or
+whether the publisher DOI simply could not be found.
+
+### Phase 5: Survey-Level Synthesis
 
 Derive survey-level findings by cross-cutting the paper-level annotations. This is the
 primary intellectual contribution of the survey — it transforms a collection of papers
@@ -222,7 +264,7 @@ sections via the following logic:
      be pursued, with rationale for the ordering (e.g., which seed provides foundations
      for others, which can start immediately, which requires results from a prior seed)
 
-### Phase 5: Reference Verification
+### Phase 6: Reference Verification
 
 Use the **reference-verify** skill to verify all collected papers and retrieve
 missing `limit` fields. Invoke it with:
@@ -238,10 +280,10 @@ The reference-verify skill will:
    rendering failure / no Limitations section expected) and ask the user
    per-category whether to attempt additional retrieval
 
-Only proceed to Phase 6 after reference-verify completes and the user has
+Only proceed to Phase 7 after reference-verify completes and the user has
 responded to any triage prompts.
 
-### Phase 6: Output Generation
+### Phase 7: Output Generation
 
 Produce the following file in `docs/SURVEYS/`:
 
@@ -372,6 +414,7 @@ enabling cross-reference from this table to the detailed entry.
 [Brief narrative connecting the papers in this category]
 
 1. [[Key]](../REFERENCES/MAIN.md#Key) — Authors, "Title" (Year)
+   - **DOI**: [Publisher DOI, e.g., `10.1109/ICRA.2024.XXXXXXX`] | **arXiv**: [ID if no publisher DOI]
    - **thesis**: [The author's central claim — what they argue is true, not what the method does]
    - **core**: [The essential element(s) without which the method would not work]
    - **diff**: [Explicit contrast with prior work — what is new, what limitation is overcome]
@@ -408,6 +451,18 @@ via WebSearch, Semantic Scholar API, arXiv API, ar5iv, IEEE Xplore via
 fetch_with_auth, OpenReview, specific project websites) and the approximate
 number of queries to each.]
 
+### DOI Resolution Log
+
+- Papers with publisher DOI resolved: N / M
+- Papers remaining arXiv-only: N (preprint: N, DOI not found: N)
+- Resolution sources used: [e.g., DBLP (N queries), Semantic Scholar (N), Crossref (N)]
+
+| Paper | arXiv ID | Publisher DOI | Source | Notes |
+|-------|----------|---------------|--------|-------|
+| [Short title] | XXXX.XXXXX | 10.XXXX/... | DBLP | [venue] |
+| [Short title] | XXXX.XXXXX | — | — | Preprint (not yet published) |
+| ... | ... | ... | ... | ... |
+
 ### Hallucination Check Results
 
 - Papers checked: N
@@ -443,7 +498,8 @@ Additional steps:
 Before delivering results, verify:
 
 - [ ] All three temporal tiers are represented
-- [ ] Each paper has: title, authors, year, venue/source, DOI or URL, and thesis/core/diff/limit
+- [ ] Each paper has: title, authors, year, venue/source, publisher DOI (or arXiv ID if unpublished), and thesis/core/diff/limit
+- [ ] DOI Resolution phase completed — arXiv-only papers checked against DBLP/Semantic Scholar/Crossref for publisher DOIs
 - [ ] Papers are organized by category, not just listed chronologically
 - [ ] The overview section gives a reader unfamiliar with the topic a clear starting point
 - [ ] Survey Findings section contains thesis, foundation, progress, gap, and seed
