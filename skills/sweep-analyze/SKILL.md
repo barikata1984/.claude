@@ -1,14 +1,19 @@
+---
+name: sweep-analyze
+description: sweep-analyze
+---
+
 # sweep-analyze
 
-Retrieve and analyze sweep results via the wandb API, extracting insights.
+Retrieve and analyze wandb sweep results, extract insights, and optionally analyze GPU resource usage.
 
 ## Input
 
 Identify the sweep using one of the following:
 
-- **sweep ID**: wandb sweep ID (e.g., `abc123de`)
-- **sweep name**: entry name in `log_sweep.md`
-- **project specification**: `--project phys-prop-aware` etc. (default: `phys-prop-aware`)
+- **sweep ID**: wandb sweep ID (e.g., `abc123de` or `entity/project/abc123de`)
+- **sweep name**: entry name in `docs/LOGS/log_sweep.md`
+- **project specification**: `--project <name>` (default: infer from existing sweep configs or ask)
 
 Ask the user for any missing information.
 
@@ -25,80 +30,110 @@ sweep = api.sweep(f"<entity>/<project>/<sweep_id>")
 runs = sweep.runs
 ```
 
-Collect from each run:
+Retrieve entity from `wandb.Api().default_entity`. Collect from each run:
 - config (hyperparameters)
-- summary metrics (final values: val/prior_loss, validation_loss, etc.)
-- history (learning curves: loss progression per step)
+- summary metrics (final values)
+- history (learning curves)
 - state (finished / crashed / running)
+
+Identify the sweep's optimization metric from `sweep.config["metric"]` rather than
+assuming a specific metric name.
 
 ### 2. Core analysis
 
-Perform the following analyses and present results:
-
 #### a) Best model identification
-- Sort by metric (val/prior_loss or validation_loss) and display top N
+- Sort by the sweep's optimization metric and display top N
 - Table of parameters and final metrics for each run
 
 #### b) Per-parameter impact analysis
 - Aggregate mean metrics for each value of each search parameter
 - Identify which parameters have the greatest impact on performance
-- Check for interactions (2-parameter combination effects) if possible
+- Check for interactions (2-parameter combination effects) if feasible
 
 #### c) Learning curve overview
-- Compare convergence speed (distribution of early stopping steps)
+- Compare convergence speed (distribution of stopping steps)
 - Check for divergent or failed runs
 
 #### d) Status summary
 - Count of completed / running / failed runs
 - Error patterns for failed runs (if any)
 
-#### e) Early stopping configuration assessment
-- **Stop step distribution**: Mean and range by parameter condition. Suggest configuration review if there are many extremely early stops or runs hitting the upper limit
-- **Patience consumption pattern**: Analyze the gap between best_step and stopped_step. Insufficient if patience is always exhausted, excessive if significantly unused
-- **`min_delta_relative` effectiveness**: Compare threshold (SMA × min_delta_relative) with typical val loss fluctuation range. Effectively inactive if threshold is extremely small relative to fluctuations
-- **`min_steps` validity**: Compare SMA at min_steps with final SMA. Suggest lowering the value if many runs show clear divergence before min_steps
+#### e) Early stopping assessment (if applicable)
 
-### 3. Insight extraction
+Only include this section if the training framework uses early stopping. Analyze:
 
-Derive the following from analysis results:
+- **Stop step distribution**: Mean and range by parameter condition
+- **Patience consumption**: Gap between best_step and stopped_step — is patience too tight or too loose?
+- **Stopping threshold effectiveness**: Is the threshold actually triggering stops, or is it effectively inactive?
+
+### 3. GPU resource analysis (if monitoring data exists)
+
+Check for `docs/LOGS/gpu_monitor_*<sweep_id>*.csv`. If found:
+
+1. Stop the monitoring session if still running:
+   ```bash
+   tmux kill-session -t "sweep-monitor-<short_id>" 2>/dev/null
+   ```
+
+2. Read the CSV and present:
+
+   **Per-GPU summary**:
+   | GPU | Util% (mean/p95) | Memory (mean/max) | Power (mean) |
+   |-----|------------------|-------------------|--------------|
+
+   **Key observations**:
+   - Memory stability (any signs of leaks?)
+   - GPU idle valleys during batch loading
+   - Whether any GPU was underutilized enough to share
+
+3. Include in the log entry under `### Resource usage`.
+
+If no monitoring data exists, skip this section silently.
+
+### 4. Insight extraction
+
+Derive from the analysis:
 
 - **Best parameter configuration**: Recommended hyperparameter combination
-- **Next step suggestions**: Whether further exploration is needed, or search range can be narrowed
+- **Next step suggestions**: Further exploration needed, or narrow the range?
 - **Unexpected findings**: Results contradicting hypotheses or interesting patterns
 
-### 4. Record
+### 5. Record
 
-Append results to the `### Results` section of the corresponding entry in `docs/LOGS/log_sweep.md`:
+Present results in conversation first, then after user confirmation append to
+the corresponding entry in `docs/LOGS/log_sweep.md`:
 
 ```markdown
 ### Results
 
-**Best run**: `<run_id>` (val/prior_loss: <value>)
+**Best run**: `<run_id>` (<metric_name>: <value>)
 - <parameter configuration>
 
 **Parameter impact** (by mean metric, descending):
-| Parameter | Value | Mean Loss | Std |
-|-----------|-------|-----------|-----|
-| ...       | ...   | ...       | ... |
+| Parameter | Value | Mean | Std |
+|-----------|-------|------|-----|
+| ...       | ...   | ...  | ... |
 
 **Findings**:
 - <key findings in bullet points>
-
-**Early stopping assessment**:
-- Stop step: mean <value>K (range <min>K–<max>K)
-- Patience consumption: <analysis result>
-- min_delta_relative effectiveness: <analysis result>
-- Recommended changes: <proposed changes or "current settings are appropriate">
 
 **Next steps**:
 - <recommended follow-ups>
 ```
 
+If early stopping assessment or resource usage data is available, append those sections too.
+
+## Error handling
+
+- If wandb API connection fails, suggest checking `wandb login` status
+- If the sweep has no completed runs yet, report status and suggest waiting
+- If runs crashed, extract error messages from run logs when possible
+
 ## Rules
 
-- Assume `wandb login` has already been completed for wandb API access
 - Retrieve entity name from `wandb.Api().default_entity`
+- Infer the optimization metric from the sweep config — do not hardcode metric names
 - Local `wandb/` directory run data may also be used supplementarily
 - Round numbers to 4 significant digits
-- Present analysis results in conversation first, then append to logs after user confirmation
-- Exclude skipped runs (runtime ≈ 0s, from unified sweep pruning) from analysis
+- Exclude skipped runs (runtime ≈ 0s) from analysis
+- Present results in conversation first, then append to logs after user confirmation
