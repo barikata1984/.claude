@@ -16,34 +16,46 @@ Extract the day's work from docs/ and git log, and generate a report for managem
 
 ### 1. Determine target date and extract git log
 
-The server runs in PST (UTC-8). The offset from JST (UTC+9) is 17 hours.
-
-PST range for target date `YYYY-MM-DD` (JST):
-- Start: `YYYY-MM-(DD-1)T07:00:00` PST
-- End: `YYYY-MM-DDT07:00:00` PST
-
-Retrieve git log from both the osx_bilateral submodule and the parent repository:
+Compute the JST day boundaries using the system's timezone, then query git log with
+those boundaries. This avoids hardcoding timezone offsets.
 
 ```bash
-# osx_bilateral
-cd catkin_ws/src/osx_bilateral
-git log --since="<start>" --until="<end>" --format="%h %ai %s"
+# Target date in JST (default: today)
+TARGET="${1:-$(TZ=Asia/Tokyo date +%Y-%m-%d)}"
+START=$(TZ=Asia/Tokyo date -d "$TARGET 00:00" -u +%Y-%m-%dT%H:%M:%SZ)
+END=$(TZ=Asia/Tokyo date -d "$TARGET +1 day 00:00" -u +%Y-%m-%dT%H:%M:%SZ)
 
-# Parent repository
-cd /root/osx-ur
-git log --since="<start>" --until="<end>" --format="%h %ai %s"
+# Current repository
+git log --since="$START" --until="$END" --format="%h %ai %s"
+
+# Submodules (if any)
+git submodule foreach --quiet \
+  "git log --since='$START' --until='$END' --format='%h %ai %s' 2>/dev/null"
 ```
 
-### 2. Read sources
+This automatically handles month/year boundaries and works regardless of the
+server's system timezone.
 
-Read the following files:
+### 2. Collect sources
 
+Git log is the only required source — it always exists and provides an objective
+record of work. The docs/ files enrich the report but are not prerequisites.
+
+**Required**:
+- `git log` + `git diff` for each commit (from Step 1)
+
+**Optional** (use if present, skip silently if not):
 - `docs/TODO.md` — completed `[x]` and pending `[ ]` items
 - `docs/ISSUES.md` — newly registered and resolved issues
 - `docs/LOGS/log_*.md` — sections appended on the target date (identify via git diff or date headers)
 - `docs/PLAN.md` — if there were design changes
 
-Cross-reference git log commit messages with log content to determine the scope of work for the target date.
+If no git commits exist for the target date, do not generate a report — inform
+the user that no work was recorded and ask them to verify the date.
+
+Cross-reference git log commit messages with available docs/ content to determine
+the scope of work for the target date. When docs/ files are unavailable, infer
+topic structure from commit messages and diffs.
 
 ### 3. Topic integration (most important)
 
@@ -85,8 +97,8 @@ Integration rules:
 
 ---
 
-**Commits today**: N (osx_bilateral) + M (parent repository)
-**Final test status**: X passed, Y skipped
+**Commits today**: N (list repositories if multiple)
+**Final test status**: X passed, Y skipped (if available in logs)
 ```
 
 Granularity per topic:
@@ -106,9 +118,9 @@ Follow the citation conventions in `.claude/rules/references.md`.
 
 ## Rules
 
-- Language is Japanese (fixed)
+- Language: match the user's prompt language (Japanese if invoked in Japanese, English if in English)
 - Conclusion first. The manager should grasp the key point from the first sentence
 - Avoid verbose background explanations; focus on decisions and results
 - Include specific numbers ("improved by 3-5%" not "improved")
-- Always include test results
+- Include test results if recorded in docs/LOGS/ or commit messages. Do not run tests just for the report
 - Do not include work not recorded in logs (do not speculate)
