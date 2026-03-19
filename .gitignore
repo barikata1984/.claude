@@ -1,5 +1,30 @@
+# Credentials and secrets
+.credentials.json
+**/academic_cookies.json
+
 # Local settings (user-specific overrides)
 settings.local.json
 
-# Academic authentication cookies (session tokens - NEVER commit)
-**/academic_cookies.json
+# Environment-specific
+mcp-needs-auth-cache.json
+statusline-command.sh
+
+# Runtime / ephemeral data
+history.jsonl
+cache/
+debug/
+downloads/
+file-history/
+ide/
+image-cache/
+plans/
+plugins/
+projects/
+session-env/
+sessions/
+shell-snapshots/
+stats-cache.json
+statsig/
+telemetry/
+todos/
+backups/

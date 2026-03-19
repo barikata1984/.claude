@@ -53,7 +53,6 @@ For each topic group:
 - Commit messages in English, imperative mood
 - Match the style of recent `git log`
 - Exclude files containing secrets (`.env`, credentials, API keys, etc.) from commits and warn
-- Warn when committing directly to the main branch (`ros-o`)
 - Do not use `git add -A` or `git add .`; specify files individually
 - If a pre-commit hook fails, do not use `--amend`; fix the issue and create a new commit
 - Do not create empty commits

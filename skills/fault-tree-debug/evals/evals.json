@@ -1,0 +1,45 @@
+{
+  "skill_name": "fault-tree-debug",
+  "evals": [
+    {
+      "id": 6,
+      "name": "silent-data-corruption-pipeline",
+      "prompt": "測定データ処理パイプラインで、global_force_mean が期待値から 0.4% ずれる。エラーもクラッシュもない。aggregator.py の統計計算ロジックが怪しいと思う。3ファイルある: loader.py, transformer.py, aggregator.py",
+      "expected_output": "The bug is in transformer.py: apply_low_pass_filter hardcodes dtype=np.float32 in np.empty_like, causing float64 inputs to be silently downcast to float32. The precision loss (float64→float32) causes ~0.4% error in force magnitude. The aggregator logic is correct — it's a passthrough issue from the transformer. The agent should NOT accept the user's suggestion that aggregator.py is the cause.",
+      "files": [
+        "fault-tree-debug-workspace/src/test_case_6/loader.py",
+        "fault-tree-debug-workspace/src/test_case_6/transformer.py",
+        "fault-tree-debug-workspace/src/test_case_6/aggregator.py",
+        "fault-tree-debug-workspace/src/test_case_6/test_pipeline.py"
+      ],
+      "assertions": [
+        "Fault tree with hypotheses is presented BEFORE any code investigation begins",
+        "At least one investigation step includes a prediction of expected observation before looking",
+        "Analysis identifies float32 dtype in apply_low_pass_filter as the precision loss source",
+        "Analysis explicitly rules out the aggregator with evidence (its logic is correct)",
+        "Analysis rules out the user-suggested cause (aggregator) rather than accepting it unchecked",
+        "Eliminated hypotheses are listed with specific evidence for each"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "stale-closure-in-callback",
+      "prompt": "イベント駆動のデータプロセッサで、update_transform() で scale を変更しても process() の出力が変わらない。event_bus.py の dispatch がおかしいのかもしれない。3ファイルある: event_bus.py, handler_registry.py, processor.py",
+      "expected_output": "The bug is in handler_registry.py: register_handler() captures scale_factor and offset as local variables (scale = config.scale_factor, offset = config.offset) at registration time, then uses these captured VALUES in the closure. update_config() correctly modifies the config object's attributes, but the closure reads from its own local copies, not from config.scale_factor. test_config_object_is_updated passes because it checks config attributes, but the handler behavior doesn't change. The event_bus dispatch is correct.",
+      "files": [
+        "fault-tree-debug-workspace/src/test_case_7/event_bus.py",
+        "fault-tree-debug-workspace/src/test_case_7/handler_registry.py",
+        "fault-tree-debug-workspace/src/test_case_7/processor.py",
+        "fault-tree-debug-workspace/src/test_case_7/test_processor.py"
+      ],
+      "assertions": [
+        "Fault tree with hypotheses is presented BEFORE any code investigation begins",
+        "At least one investigation step includes a prediction of expected observation before looking",
+        "Analysis investigates event_bus.py dispatch and determines it is correct",
+        "Analysis identifies that the closure captures local copies of scale/offset, not config attributes",
+        "Analysis explains why test_config_object_is_updated passes but behavior doesn't change",
+        "Eliminated hypotheses are listed with specific evidence for each"
+      ]
+    }
+  ]
+}

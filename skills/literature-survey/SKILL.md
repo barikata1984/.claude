@@ -96,6 +96,13 @@ Use subagents to parallelize searches across different queries and sources when 
 Each subagent should handle a distinct search angle (e.g., one for the main topic,
 one for a related subtopic, one for survey papers).
 
+**Search logging requirement**: Every subagent must return a structured search log
+alongside its paper results. The log must record, for each search action performed:
+(1) the information source (e.g., WebSearch, Semantic Scholar API, arXiv API, ar5iv,
+IEEE Xplore), (2) the exact query string or URL used, (3) the number of results
+obtained, and (4) a brief note on relevance. This log is aggregated into the
+Survey Methodology → Search Log section of the final report.
+
 **DOI/URL requirement**: Every paper collected must have at least one of:
 - DOI (preferred): e.g., `10.1109/ICRA.2024.XXXXXXX`
 - URL: arXiv page, Semantic Scholar page, or publisher page
@@ -377,7 +384,29 @@ enabling cross-reference from this table to the detailed entry.
 
 ## Survey Methodology
 
-[What sources were searched, what queries were used, any limitations]
+### Search Log
+
+[Record the actual searches performed during this survey. Each entry is one
+search action (a WebSearch query, a Semantic Scholar API call, an arXiv API
+call, etc.). Group by search angle/subagent.]
+
+#### [Search Angle 1 Name]
+
+| # | Source | Query / URL | Results | Notes |
+|---|--------|-------------|---------|-------|
+| 1 | WebSearch | `"exact query string used"` | N hits, M relevant | [brief note on what was found/not found] |
+| 2 | Semantic Scholar API | `query=...&fields=...` | N results | [note] |
+| 3 | arXiv API | `search_query=all:...` | N results | [note] |
+| 4 | ar5iv | `https://ar5iv.labs.arxiv.org/html/XXXX.XXXXX` | success/fail | [used for limit field of Key] |
+| ... | ... | ... | ... | ... |
+
+#### [Search Angle 2 Name]
+...
+
+**Source summary**: [List all distinct information sources used (e.g., Google
+via WebSearch, Semantic Scholar API, arXiv API, ar5iv, IEEE Xplore via
+fetch_with_auth, OpenReview, specific project websites) and the approximate
+number of queries to each.]
 
 ### Hallucination Check Results
 
@@ -423,5 +452,6 @@ Before delivering results, verify:
 - [ ] Survey-level claims are traceable to specific paper-level annotations
 - [ ] Foundational works table includes #, paper, year, venue, and significance
 - [ ] Hallucination check completed — all papers verified via DOI/URL
-- [ ] Search methodology is documented so the user can extend the survey later
+- [ ] Search Log records every search action: source, exact query/URL, result count, and notes
+- [ ] Source summary lists all information sources used and query counts
 - [ ] Output language is consistent throughout — no mixing of languages
