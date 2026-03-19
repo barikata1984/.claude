@@ -225,44 +225,13 @@ sections via the following logic:
    - Avoid redundancy with Thesis, Foundation, and Progress sections; if a point
      was already made, reference it rather than restating it
 
-5. **seed** — novel research directions derived from the survey:
-   Propose concrete research ideas that emerge from the intersection of identified
-   gaps, existing foundations, and unrealized combinations of surveyed techniques.
-   The number of seeds is at the agent's discretion — propose as many as the
-   survey evidence supports, but no more.
+5. **seed** (conditional) — novel research directions derived from the survey:
+   **Include only when the user explicitly requests research proposals, next steps,
+   or seed ideas.** For reading lists, reference collections, or background surveys,
+   omit this section and end Survey Findings at Gap.
 
-   Each seed is a self-contained subsection with three required parts:
-
-   **(a) Academic contribution** — why this idea constitutes a research seed:
-   Articulate the specific academic contribution. Reference the gap(s) it addresses
-   and explain why the contribution would be novel relative to the surveyed literature.
-   The argument must be grounded in the survey evidence (thesis/foundation/progress/gap),
-   not speculation.
-
-   **(b) Required components** — what building blocks are needed:
-   Enumerate the concrete technical components (algorithms, representations, datasets,
-   hardware, theoretical results, etc.) required to realize the idea. Be specific
-   enough that a researcher could use this as a project planning checklist.
-
-   **(c) Readiness assessment** — what exists vs. what must be developed:
-   For each component listed in (b), classify it as:
-   - **Available**: already demonstrated in surveyed papers (cite the specific paper(s))
-   - **Adaptable**: exists in a related context but requires non-trivial modification
-     (state what modification is needed)
-   - **New development required**: does not exist and must be created (state the
-     core technical challenge)
-
-   This three-part structure ensures each seed is not merely a wish-list item but
-   a grounded, actionable research direction with a clear feasibility profile.
-
-   Before the individual seed subsections, write a **Seed Overview** that:
-   - Presents a table summarizing each seed's **premise** (what it assumes about the
-     current state of the field) and **approach** (what strategy it takes)
-   - Explains the relationships between seeds: which are independent, which are
-     complementary, which are mutually exclusive
-   - Proposes a **staged progression** — a concrete sequence in which the seeds could
-     be pursued, with rationale for the ordering (e.g., which seed provides foundations
-     for others, which can start immediately, which requires results from a prior seed)
+   When included, read `references/seed_format.md` for the detailed structure
+   (academic contribution, required components, readiness assessment for each seed).
 
 ### Phase 6: Reference Verification
 
@@ -285,202 +254,17 @@ responded to any triage prompts.
 
 ### Phase 7: Output Generation
 
-Produce the following file in `docs/SURVEYS/`:
+Produce the survey report in `docs/SURVEYS/<topic_slug>.md`.
 
-#### Main Report: `docs/SURVEYS/<topic_slug>.md`
+Read `references/report_template.md` for the complete report structure. The
+template includes all sections: metadata table, Research Landscape Overview,
+Survey Findings (Thesis/Foundation/Progress/Gap, and conditionally Seed),
+Paper Catalogue with category overview and per-paper annotations, and
+Survey Methodology (Search Log, DOI Resolution Log, Hallucination Check,
+Limit Field Coverage).
 
-```markdown
-# Literature Survey: [Topic]
-
-| | |
-|---|---|
-| **Date** | YYYY-MM-DD |
-| **Scope** | [Brief description of what was covered] |
-| **Papers found** | N |
-
-## Research Landscape Overview
-
-[2-3 paragraphs of factual background: major trends, how the area has evolved,
-key venues and research groups. This orients a reader unfamiliar with the topic.
-This section is descriptive, not argumentative.]
-
-## Survey Findings
-
-### Thesis
-
-[The survey's central claim about the field's fundamental unsolved problem,
-derived from cross-cutting paper-level theses. 1-2 paragraphs.]
-
-### Foundation
-
-[Shared technical building blocks and assumptions that the surveyed methods
-rely on. Derived from aggregating paper-level cores.]
-
-1. **[Foundation element]**: [Description and which papers depend on it]
-
-2. ...
-
-### Progress
-
-[Trajectory of significant advances, derived from aggregating paper-level
-diffs chronologically. Show the major capability transitions.]
-
-1. **[Advance]**: [What limitation was overcome, by which paper(s), when]
-
-2. ...
-
-### Gap
-
-[Each gap is a self-contained paragraph. Reference Paper Catalogue categories
-and prior sections to avoid redundancy. Close with the engineering consequence.]
-
-1. **[Gap title]**
-
-   [Paragraph: state the gap → reference categories/sections for evidence →
-   add only NEW details not covered elsewhere → engineering consequence.]
-
-2. ...
-
-### Seed
-
-[Novel research directions that emerge from the survey's gaps, foundations, and
-unrealized technique combinations. Each seed is a self-contained subsection.]
-
-#### Seed Overview
-
-[Summary table of all seeds with their premises and approaches.]
-
-| Seed | Premise | Approach |
-|------|---------|----------|
-| 1 | [What this seed assumes about the current state] | [What strategy it takes] |
-| 2 | ... | ... |
-| ... | ... | ... |
-
-[Narrative explaining relationships between seeds: independence, complementarity,
-mutual exclusivity. Then propose a staged progression — a concrete sequence for
-pursuing the seeds, with rationale for ordering.]
-
-#### Seed 1: [Descriptive title]
-
-##### Seed 1 — Academic Contribution
-
-[Why this idea is a viable research seed. Reference the specific gap(s) it
-addresses and argue novelty relative to the surveyed literature.]
-
-##### Seed 1 — Required Components
-
-[Enumerate the concrete technical building blocks needed to realize this idea.]
-
-1. [Component 1]
-2. [Component 2]
-3. ...
-
-##### Seed 1 — Readiness Assessment
-
-| Component | Status | Detail |
-|-----------|--------|--------|
-| [Component 1] | Available | [Paper(s) where demonstrated] |
-| [Component 2] | Adaptable | [What exists and what modification is needed] |
-| [Component 3] | New development required | [Core technical challenge] |
-
-#### Seed 2: [Descriptive title]
-...
-
-## Paper Catalogue
-
-### Category Overview
-
-[Narrative explaining how the surveyed papers cluster into categories.
-Describe what characterizes each category and how they relate to each other.]
-
-| Category | Description | Count |
-|----------|-------------|-------|
-| [Cat 1]  | [One-line description] | N |
-| [Cat 2]  | [One-line description] | N |
-| ...      | ...         | ... |
-
-### Foundational Works
-
-| # | Paper | Year | Venue | Significance |
-|---|-------|------|-------|-------------|
-| N | [Title] | YYYY | [Venue] | [Brief significance in this field] |
-| ... | ... | ... | ... | ... |
-
-The `#` column corresponds to the paper's number within its category section,
-enabling cross-reference from this table to the detailed entry.
-
-### [Category 1 Name]
-
-[Brief narrative connecting the papers in this category]
-
-1. [[Key]](../REFERENCES/MAIN.md#Key) — Authors, "Title" (Year)
-   - **DOI**: [Publisher DOI, e.g., `10.1109/ICRA.2024.XXXXXXX`] | **arXiv**: [ID if no publisher DOI]
-   - **thesis**: [The author's central claim — what they argue is true, not what the method does]
-   - **core**: [The essential element(s) without which the method would not work]
-   - **diff**: [Explicit contrast with prior work — what is new, what limitation is overcome]
-   - **limit**: [Constraints the authors acknowledge — from Limitations/Future Work sections]
-
-2. ...
-
-### [Category 2 Name]
-...
-
-## Survey Methodology
-
-### Search Log
-
-[Record the actual searches performed during this survey. Each entry is one
-search action (a WebSearch query, a Semantic Scholar API call, an arXiv API
-call, etc.). Group by search angle/subagent.]
-
-#### [Search Angle 1 Name]
-
-| # | Source | Query / URL | Results | Notes |
-|---|--------|-------------|---------|-------|
-| 1 | WebSearch | `"exact query string used"` | N hits, M relevant | [brief note on what was found/not found] |
-| 2 | Semantic Scholar API | `query=...&fields=...` | N results | [note] |
-| 3 | arXiv API | `search_query=all:...` | N results | [note] |
-| 4 | ar5iv | `https://ar5iv.labs.arxiv.org/html/XXXX.XXXXX` | success/fail | [used for limit field of Key] |
-| ... | ... | ... | ... | ... |
-
-#### [Search Angle 2 Name]
-...
-
-**Source summary**: [List all distinct information sources used (e.g., Google
-via WebSearch, Semantic Scholar API, arXiv API, ar5iv, IEEE Xplore via
-fetch_with_auth, OpenReview, specific project websites) and the approximate
-number of queries to each.]
-
-### DOI Resolution Log
-
-- Papers with publisher DOI resolved: N / M
-- Papers remaining arXiv-only: N (preprint: N, DOI not found: N)
-- Resolution sources used: [e.g., DBLP (N queries), Semantic Scholar (N), Crossref (N)]
-
-| Paper | arXiv ID | Publisher DOI | Source | Notes |
-|-------|----------|---------------|--------|-------|
-| [Short title] | XXXX.XXXXX | 10.XXXX/... | DBLP | [venue] |
-| [Short title] | XXXX.XXXXX | — | — | Preprint (not yet published) |
-| ... | ... | ... | ... | ... |
-
-### Hallucination Check Results
-
-- Papers checked: N
-- Passed: N
-- Failed and re-searched: N
-- Removed (unverifiable): N ([list titles if any])
-
-### Limit Field Coverage
-
-- Papers with limit recorded: N / M (X%)
-- Papers marked "limit not available": N, breakdown:
-
-| Category | Count | Papers | Action taken |
-|----------|-------|--------|-------------|
-| Paywall barrier | N | [list keys] | [e.g., fetch_with_auth attempted / user declined] |
-| Rendering failure | N | [list keys] | [e.g., retried with alternative methods / user declined] |
-| Survey/review paper | N | [list keys] | N/A (no Limitations section expected) |
-```
+If the user requested research proposals/seeds, also read
+`references/seed_format.md` for the Seed section structure.
 
 ## Reference Processing
 
@@ -502,9 +286,8 @@ Before delivering results, verify:
 - [ ] DOI Resolution phase completed — arXiv-only papers checked against DBLP/Semantic Scholar/Crossref for publisher DOIs
 - [ ] Papers are organized by category, not just listed chronologically
 - [ ] The overview section gives a reader unfamiliar with the topic a clear starting point
-- [ ] Survey Findings section contains thesis, foundation, progress, gap, and seed
-- [ ] Each seed has: academic contribution argument, required components list, and readiness assessment table
-- [ ] Seed proposals are grounded in survey evidence (gaps/foundations), not speculation
+- [ ] Survey Findings section contains thesis, foundation, progress, and gap
+- [ ] If user requested research proposals: seed section included (see `references/seed_format.md`)
 - [ ] Survey-level claims are traceable to specific paper-level annotations
 - [ ] Foundational works table includes #, paper, year, venue, and significance
 - [ ] Hallucination check completed — all papers verified via DOI/URL
