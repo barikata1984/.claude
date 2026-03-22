@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import sys
 import time
@@ -36,6 +37,7 @@ def search(
     limit: int = 20,
     fields: str = DEFAULT_FIELDS,
     offset: int = 0,
+    api_key: str | None = None,
 ) -> dict:
     """Query the Semantic Scholar paper search endpoint."""
     params: dict[str, str | int] = {
@@ -49,7 +51,10 @@ def search(
         params["year"] = year_range
 
     url = f"{API_BASE}?{urllib.parse.urlencode(params)}"
-    req = urllib.request.Request(url, headers={"User-Agent": "literature-survey-skill/1.0"})
+    headers = {"User-Agent": "literature-survey-skill/1.0"}
+    if api_key:
+        headers["x-api-key"] = api_key
+    req = urllib.request.Request(url, headers=headers)
 
     for attempt in range(MAX_RETRIES):
         try:
@@ -99,11 +104,13 @@ def main() -> None:
         "--fields", default=DEFAULT_FIELDS, help=f"Comma-separated fields (default: {DEFAULT_FIELDS})"
     )
     parser.add_argument("--offset", type=int, default=0, help="Pagination offset")
+    parser.add_argument(
+        "--api-key", default=None, help="API key (default: S2_API_KEY env var)"
+    )
     parser.add_argument("--raw", action="store_true", help="Output raw API response")
     args = parser.parse_args()
 
-    # Unauthenticated requests share a global pool; backoff handles throttling
-    # so no fixed pre-request sleep is needed
+    api_key = args.api_key or os.environ.get("S2_API_KEY")
 
     result = search(
         args.query,
@@ -112,6 +119,7 @@ def main() -> None:
         limit=args.limit,
         fields=args.fields,
         offset=args.offset,
+        api_key=api_key,
     )
 
     if args.raw:
