@@ -106,6 +106,16 @@ enabling cross-reference from this table to the detailed entry.
 
 ## Survey Methodology
 
+### Search Review Checkpoint
+
+[Record the checkpoint interaction from Phase 2.5.]
+
+- Papers presented to user: N
+- User additions: N ([list titles if any])
+- User removals: N ([list titles/directions if any])
+- Target count adjustment: [none / changed from X to Y]
+- Duplicates removed before checkpoint: N
+
 ### Search Log
 
 [Record the actual searches performed during this survey. Each entry is one
