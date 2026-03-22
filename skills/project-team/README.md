@@ -84,5 +84,5 @@
 
 ## 設計文書
 
-- ベストプラクティス: `~/.claude/project-team-bestpractice.md`
+- ベストプラクティス: `skills/project-team/docs/bestpractice.md`
 - 設計ログ: `docs/LOGS/log_project_team_skill.md`
