@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import sys
 import time
 import urllib.error
@@ -22,7 +23,9 @@ import urllib.request
 
 API_BASE = "https://api.semanticscholar.org/graph/v1/paper/search"
 DEFAULT_FIELDS = "title,authors,year,venue,citationCount,externalIds,abstract"
-MAX_RETRY_WAIT = 3
+MAX_RETRIES = 5
+BACKOFF_BASE = 2  # seconds
+BACKOFF_MAX = 60  # seconds
 
 
 def search(
@@ -48,14 +51,20 @@ def search(
     url = f"{API_BASE}?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": "literature-survey-skill/1.0"})
 
-    for attempt in range(2):
+    for attempt in range(MAX_RETRIES):
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return json.loads(resp.read().decode())
         except urllib.error.HTTPError as e:
-            if e.code == 429 and attempt == 0:
-                print(f"Rate limited, waiting {MAX_RETRY_WAIT}s...", file=sys.stderr)
-                time.sleep(MAX_RETRY_WAIT)
+            if e.code == 429 and attempt < MAX_RETRIES - 1:
+                # Exponential backoff with jitter: 2s, 4s, 8s, 16s, ...
+                delay = min(BACKOFF_BASE * (2**attempt) + random.uniform(0, 1), BACKOFF_MAX)
+                print(
+                    f"Rate limited (429), retry {attempt + 1}/{MAX_RETRIES - 1}"
+                    f" in {delay:.1f}s...",
+                    file=sys.stderr,
+                )
+                time.sleep(delay)
                 continue
             raise SystemExit(f"HTTP {e.code}: {e.reason}") from e
         except urllib.error.URLError as e:
@@ -93,8 +102,8 @@ def main() -> None:
     parser.add_argument("--raw", action="store_true", help="Output raw API response")
     args = parser.parse_args()
 
-    # Respect rate limit between calls
-    time.sleep(1)
+    # Unauthenticated requests share a global pool; backoff handles throttling
+    # so no fixed pre-request sleep is needed
 
     result = search(
         args.query,
