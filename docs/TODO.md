@@ -14,3 +14,21 @@
   - 移動対象: 注意事項、コンテナ環境、参照先、検証コマンド、学習・評価コマンド
   - 退避先: ~/_CLAUDE.md
 - [x] ユーザーレベル CLAUDE.md にスクラッチプロジェクトの標準ドキュメント構成を明記
+
+## project-team スキル
+
+### 設計（完了）
+
+- [x] チーム構成の調査・設計（人間2名 + エージェント3体）
+- [x] プロジェクトフェーズ構造の設計（Phase 0-8 + ループ A/B/C/D）
+- [x] 運用モデルの決定（セッション・チェックイン方式 = モデルC）
+- [x] ベストプラクティス文書の作成（`project-team-bestpractice.md`）
+- [x] 既存エージェントSE rule of thumb との整合性検証・修正反映
+
+### 実装（未着手）
+
+- [x] Step 1: エージェント定義 — `agents/pt-research.md`, `pt-engineer.md`, `pt-analyst.md`
+- [ ] Step 2: リファレンス — `references/handoff_protocol.md`, `phase_transitions.md`
+- [ ] Step 3: フェーズ定義 — `phases/phase1-research.md` 〜 `phase7-review.md`（6ファイル）
+- [ ] Step 4: `skills/project-team/SKILL.md`
+- [ ] Step 5: `settings.json` パーミッション更新
