@@ -1,8 +1,4 @@
 {
-  "statusLine": {
-    "type": "command",
-    "command": "bash /home/ak/.claude/statusline-command.sh"
-  },
   "permissions": {
     "allow": [
       "WebSearch",
@@ -23,7 +19,22 @@
       "Bash(git branch:*)",
       "Bash(git checkout:*)",
       "Bash(git stash:*)",
-      "Bash(catkin build:*)"
+      "Bash(catkin build:*)",
+      "Read(//home/atsushi/.claude/skills/literature-survey/references/**)",
+      "Read(//home/atsushi/.claude/rules/**)",
+      "Read(//home/atsushi/.claude/projects/-home-atsushi-workspace-obj_rep/**)",
+      "Read(//home/atsushi/.claude/projects/**)",
+      "Read(//home/atsushi/.claude/skills/commit/**)",
+      "Read(//home/atsushi/.claude/skills/push/**)",
+      "Read(//home/atsushi/.claude/**)",
+      "Bash(grep -v \"\\\\.md$\")",
+      "Bash(find /home/atsushi/.claude -name *.py -type f)",
+      "Edit(~/.claude/skills/literature-survey/**)",
+      "Bash(ls /home/atsushi/.claude/docs/*/)"
+    ],
+    "additionalDirectories": [
+      "/home/atsushi/.claude/projects/-home-atsushi-workspace-obj_rep/memory",
+      "/home/atsushi/.claude/skills/literature-survey"
     ]
   },
   "hooks": {
@@ -43,6 +54,13 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /home/ak/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
+  },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
       "source": {
@@ -50,8 +68,5 @@
         "repo": "anthropics/skills"
       }
     }
-  },
-  "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
   }
 }
