@@ -63,3 +63,22 @@ Step 1 → 2 → 3 → 4 → 5 の依存順序で作成
 - Analyst には統計的厳密性チェックリスト（検定前提、多重比較補正、効果量等）を組み込み
 - 出力形式はハンドオフプロトコル（bestpractice §3.6）に準拠
 - コーディング規約は CLAUDE.md のルールをそのまま Engineer に転記（DRY 違反だが、サブエージェントは CLAUDE.md を自動で読まないため明示が必要）
+
+## 2026-03-22: Step 1 英語化 + Step 2 完了 — リファレンス2ファイル
+
+### エージェント定義の英語化
+
+前セッションで日本語で作成した3体のエージェント定義を英語に書き直し。
+Memory ルール（`feedback_agent_definitions_english.md`）に従い、エージェント定義は英語で記述する。
+
+### Step 2 作成ファイル
+
+| ファイル | 内容 |
+| ---- | ---- |
+| `skills/project-team/references/handoff_protocol.md` | レポート形式、Status/Mode/Verdict 定義、相互批評ディスパッチ表 |
+| `skills/project-team/references/phase_transitions.md` | フェーズ完了条件、承認ゲート、ループ構造(A/B/C/D)、状態ファイル形式 |
+
+### 補足: VSCode 設定変更
+
+`git.autoRepositoryDetection: "openEditors"` を VSCode user settings に追加。
+シンボリックリンク経由で `~/workspace/dotfiles` が Source Control に表示される問題を解消。

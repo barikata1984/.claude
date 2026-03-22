@@ -25,10 +25,10 @@
 - [x] ベストプラクティス文書の作成（`project-team-bestpractice.md`）
 - [x] 既存エージェントSE rule of thumb との整合性検証・修正反映
 
-### 実装（未着手）
+### 実装
 
 - [x] Step 1: エージェント定義 — `agents/pt-research.md`, `pt-engineer.md`, `pt-analyst.md`
-- [ ] Step 2: リファレンス — `references/handoff_protocol.md`, `phase_transitions.md`
+- [x] Step 2: リファレンス — `references/handoff_protocol.md`, `phase_transitions.md`
 - [ ] Step 3: フェーズ定義 — `phases/phase1-research.md` 〜 `phase7-review.md`（6ファイル）
 - [ ] Step 4: `skills/project-team/SKILL.md`
 - [ ] Step 5: `settings.json` パーミッション更新
