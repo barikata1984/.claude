@@ -29,6 +29,6 @@
 
 - [x] Step 1: エージェント定義 — `agents/pt-research.md`, `pt-engineer.md`, `pt-analyst.md`
 - [x] Step 2: リファレンス — `references/handoff_protocol.md`, `phase_transitions.md`
-- [ ] Step 3: フェーズ定義 — `phases/phase1-research.md` 〜 `phase7-review.md`（6ファイル）
-- [ ] Step 4: `skills/project-team/SKILL.md`
-- [ ] Step 5: `settings.json` パーミッション更新
+- [x] Step 3: フェーズ定義 — `phases/phase1-research.md` 〜 `phase7-review.md`（6ファイル）
+- [x] Step 4: `skills/project-team/SKILL.md`
+- [x] Step 5: `settings.json` パーミッション更新（Step 4 で実施済み — `Edit/Write(~/.claude/skills/**)` 追加）
