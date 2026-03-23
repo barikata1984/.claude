@@ -4,14 +4,14 @@
       "Bash(*)",
       "WebSearch",
       "WebFetch",
-      "Read(//home/atsushi/.claude/**)",
+      "Read(~/.claude/**)",
       "Read(//tmp/**)",
       "Edit(~/.claude/skills/**)",
       "Write(~/.claude/skills/**)",
       "Skill(update-config)",
       "Skill(update-config:*)",
-      "Read(//home/atsushi/workspace/dotfiles/**)",
-      "Read(//home/atsushi/.config/Code/User/**)",
+      "Read(~/workspace/dotfiles/**)",
+      "Read(~/.config/Code/User/**)",
       "Edit(~/.claude/skills/project-team/**)"
     ],
     "deny": [
@@ -31,11 +31,9 @@
       "Bash(git restore:*)"
     ],
     "additionalDirectories": [
-      "/home/atsushi/.claude/projects/-home-atsushi-workspace-obj_rep/memory",
-      "/home/atsushi/.claude/skills/literature-survey",
-      "/home/atsushi/.claude",
-      "/home/atsushi/workspace/dotfiles",
-      "/home/atsushi/.config/Code/User"
+      "~/.claude/skills/literature-survey",
+      "~/workspace/dotfiles",
+      "~/.config/Code/User"
     ]
   },
   "hooks": {
@@ -57,7 +55,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash /home/ak/.claude/statusline-command.sh"
+    "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true
