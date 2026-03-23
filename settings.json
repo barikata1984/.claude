@@ -1,29 +1,41 @@
 {
-  "statusLine": {
-    "type": "command",
-    "command": "bash /home/ak/.claude/statusline-command.sh"
-  },
   "permissions": {
     "allow": [
+      "Bash(*)",
       "WebSearch",
       "WebFetch",
-      "Bash(python:*)",
-      "Bash(python3:*)",
-      "Bash(python -m pytest:*)",
-      "Bash(python3 -m pytest:*)",
-      "Bash(ruff:*)",
-      "Bash(git status:*)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git fetch:*)",
-      "Bash(git push:*)",
-      "Bash(git mv:*)",
-      "Bash(git branch:*)",
-      "Bash(git checkout:*)",
-      "Bash(git stash:*)",
-      "Bash(catkin build:*)"
+      "Read(//home/atsushi/.claude/**)",
+      "Read(//tmp/**)",
+      "Edit(~/.claude/skills/**)",
+      "Write(~/.claude/skills/**)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Read(//home/atsushi/workspace/dotfiles/**)",
+      "Read(//home/atsushi/.config/Code/User/**)",
+      "Edit(~/.claude/skills/project-team/**)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf ~:*)"
+    ],
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(rmdir:*)",
+      "Bash(unlink:*)",
+      "Bash(shred:*)",
+      "Bash(truncate:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(git push --force:*)",
+      "Bash(git checkout --:*)",
+      "Bash(git restore:*)"
+    ],
+    "additionalDirectories": [
+      "/home/atsushi/.claude/projects/-home-atsushi-workspace-obj_rep/memory",
+      "/home/atsushi/.claude/skills/literature-survey",
+      "/home/atsushi/.claude",
+      "/home/atsushi/workspace/dotfiles",
+      "/home/atsushi/.config/Code/User"
     ]
   },
   "hooks": {
@@ -43,6 +55,13 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /home/ak/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
+  },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
       "source": {
@@ -50,8 +69,5 @@
         "repo": "anthropics/skills"
       }
     }
-  },
-  "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
   }
 }

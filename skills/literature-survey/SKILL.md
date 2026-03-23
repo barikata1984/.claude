@@ -88,6 +88,28 @@ fast, has no rate limits, and reliably finds papers across all venues.
 - If the tool returns a session-expiry error, inform the user that cookie re-export is needed
   (see `.claude/mcp/academic-fetch/README.md` for the workflow)
 
+**Structured metadata retrieval** via bundled scripts (in `scripts/`):
+
+The skill includes two API search scripts that return structured JSON with citation
+counts, DOIs, and venue information. Use these alongside WebSearch — WebSearch is
+better for broad discovery, while the scripts provide precise metadata for scoring
+and deduplication.
+
+- `scripts/search_semantic_scholar.py` — Semantic Scholar Academic Graph API
+  ```bash
+  python scripts/search_semantic_scholar.py --query "TOPIC" --year-from 2022 --limit 30
+  ```
+  Returns: title, authors, year, venue, citationCount, doi, arxivId
+
+- `scripts/search_openalex.py` — OpenAlex API (250M+ works)
+  ```bash
+  python scripts/search_openalex.py --query "TOPIC" --year-from 2022 --sort cited_by_count:desc
+  ```
+  Returns: title, authors, year, venue, citedByCount, doi, arxivId
+
+Run these scripts early in the search process to obtain citation counts for all
+candidate papers. The counts are used for scoring in Phase 2.5.
+
 Use subagents to parallelize searches across different queries and sources when possible.
 Each subagent should handle a distinct search angle (e.g., one for the main topic,
 one for a related subtopic, one for survey papers).
@@ -110,6 +132,66 @@ Survey Methodology → Search Log section of the final report.
   neither publisher DOI nor arXiv ID is available.
 
 Papers for which none of these can be found should be excluded.
+
+### Deduplication
+
+Multiple search angles will inevitably find the same paper. Deduplicate before
+proceeding to Phase 2.5:
+
+- **Primary match**: DOI or arXiv ID (normalize before comparing — strip URL
+  prefixes like `https://doi.org/` or `https://arxiv.org/abs/`)
+- **Fallback match**: Title comparison after normalization (lowercase, strip
+  punctuation and whitespace)
+- **Merge strategy**: When duplicates are found, keep the entry with the richest
+  metadata (publisher DOI > arXiv ID > URL-only)
+- **Logging**: Record the total number of duplicates removed in the search log
+
+### Phase 2.5: Search Review Checkpoint
+
+Before investing effort in paper-level analysis (Phase 3), present the search
+results to the user for review. This checkpoint exists because Phase 3 is the
+most token- and time-intensive part of the workflow — the paper list should be
+confirmed before analysis begins.
+
+**Present the following to the user:**
+
+A paper list grouped by temporal tier, sorted within each tier by citation count
+(descending):
+
+```
+## Search Results (N papers found, target: M)
+
+### Tier 1 — Recent (2023-2026): N papers
+| # | Title | Year | Venue | Citations |
+|---|-------|------|-------|-----------|
+| 1 | ...   | 2025 | NeurIPS | 42      |
+
+### Tier 2 — Established (2016-2022): N papers
+| # | Title | Year | Venue | Citations |
+|---|-------|------|-------|-----------|
+
+### Tier 3 — Foundational (~2015): N papers
+| # | Title | Year | Venue | Citations |
+|---|-------|------|-------|-----------|
+
+### Coverage Summary
+- Search angles used: N (list them)
+- Top venues represented: ...
+- Duplicates removed: N
+```
+
+**Scoring criteria** (used for sort order and for pruning when count exceeds target):
+
+1. **Citation count** (primary) — from Semantic Scholar or OpenAlex
+2. **Venue tier** (secondary) — top-tier conference/journal > workshop > preprint
+3. **Recency** (tertiary) — newer papers first within the same tier
+
+**Ask the user:**
+- Are there known papers that should be added?
+- Should any subtopics or directions be excluded?
+- Should the target count be adjusted?
+
+Do not proceed to Phase 3 until the user approves the paper list.
 
 ### Phase 3: Paper-Level Analysis
 
@@ -136,6 +218,12 @@ After collecting papers, analyze each individually and organize into themes:
      When the full text is unavailable, supplement with: (a) Semantic Scholar TLDR or
      abstract hints, (b) limitations noted by citing papers. If no limit information can
      be found from any source, write "limit not available" rather than guessing.
+
+     **No speculation**: The limit field must contain only what the authors themselves
+     explicitly state in the paper. Do not infer, deduce, or generate limitations
+     based on general knowledge of the method or field. This rule exists because
+     fabricated limitations are indistinguishable from real ones and undermine the
+     survey's reliability.
 
 ### Phase 4: DOI Resolution
 
@@ -282,7 +370,10 @@ Additional steps:
 Before delivering results, verify:
 
 - [ ] All three temporal tiers are represented
+- [ ] Search Review Checkpoint (Phase 2.5) completed — user approved the paper list before analysis
+- [ ] Duplicates removed and count recorded in search log
 - [ ] Each paper has: title, authors, year, venue/source, publisher DOI (or arXiv ID if unpublished), and thesis/core/diff/limit
+- [ ] limit fields contain only author-stated limitations (no LLM speculation)
 - [ ] DOI Resolution phase completed — arXiv-only papers checked against DBLP/Semantic Scholar/Crossref for publisher DOIs
 - [ ] Papers are organized by category, not just listed chronologically
 - [ ] The overview section gives a reader unfamiliar with the topic a clear starting point

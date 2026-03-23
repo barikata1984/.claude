@@ -28,3 +28,4 @@ statsig/
 telemetry/
 todos/
 backups/
+__pycache__/
