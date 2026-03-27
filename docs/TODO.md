@@ -32,3 +32,20 @@
 - [x] Step 3: フェーズ定義 — `phases/phase1-research.md` 〜 `phase7-review.md`（6ファイル）
 - [x] Step 4: `skills/project-team/SKILL.md`
 - [x] Step 5: `settings.json` パーミッション更新（Step 4 で実施済み — `Edit/Write(~/.claude/skills/**)` 追加）
+
+## research-framing / literature-survey スキル（Phase A）
+
+### 配置・動作確認（HANDOFF.md ステップ1〜3）
+
+- [x] ステップ1: ファイル配置確認（既に正しいパスに配置済み）
+- [x] ステップ2: 依存ファイル存在確認（6ファイル全OK、`venues_robotics.md` はユーザー手動配置）
+- [x] ステップ3: 動作確認 — モードBフル実行で全項目PASS
+
+### 残課題（HANDOFF.md より）
+
+- [ ] skill-creator による research-framing の eval 実施
+- [ ] `seed_format.md` の内容確認（実験環境制約の反映）
+- [ ] research-framing 本文の汎用化（RA-L以外の文脈対応）
+- [ ] 検索スクリプトのベニューフィルタ確認（search_semantic_scholar.py 等）
+- [ ] Phase B〜D スキル設計・実装
+- [ ] eval セット拡張（20件以上）

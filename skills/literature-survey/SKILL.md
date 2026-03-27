@@ -1,6 +1,25 @@
 ---
 name: literature-survey
-description: "Conduct a comprehensive academic literature survey on a given research topic. Searches the web systematically for papers from recent to historical, producing a structured Markdown report with summaries. Use this skill whenever the user asks for a literature review, survey, related work search, prior art investigation, or wants to know what research exists on X. Also trigger when the user says things like papers about, survey the field of, what is the state of the art in, find relevant publications, prior work, related work, or any request to systematically gather academic references."
+description: >
+  Use this skill for any request to systematically find, collect, or synthesize
+  academic papers on a topic. This skill MUST be used — do not attempt literature
+  surveys by running ad-hoc web searches without this skill.
+
+  Trigger on any of the following, even if the user does not use the word "survey":
+  - Asks for a literature review, related work, or prior art on any topic
+  - Wants to know what research exists on X, or what the state of the art is
+  - Wants to find papers to cite, or needs a reference list for a paper section
+  - Says things like "survey the field", "find relevant papers", "what has been done on",
+    "are there papers about", "who else has worked on", "what are the key papers in"
+  - Needs to identify research gaps or open problems in a field
+  - Wants to understand how a field has evolved or what the current trends are
+  - Is preparing a Related Work section and needs systematic coverage
+  - Needs to verify novelty of a research idea against existing work
+
+  Produces a structured report in docs/SURVEYS/ with paper catalogue, survey-level
+  findings (thesis, foundation, progress, gap), and optionally research seed proposals.
+  For robotics topics, automatically applies venue-prioritized search using
+  references/venues_robotics.md (CoRL, ICRA, IROS, RA-L, RSS, etc.).
 ---
 
 # Literature Survey Skill
@@ -32,7 +51,27 @@ placeholder descriptions in English; translate them to match the output language
 
 ### Phase 1: Scope Definition
 
-Before searching, clarify the survey scope with the user if not already clear:
+**Read the conversation context first.**
+
+Before asking the user anything, check whether the following parameters are
+already established in the conversation history:
+
+- **Core topic**: A research description, take-home message, or problem statement
+- **Depth**: Whether adjacent fields should be included (broad) or the core topic
+  only (focused)
+- **Seed**: Whether research proposals / next-step ideas are needed
+- **Constraints**: Experimental environment, hardware, or resource limits relevant
+  to feasibility assessment
+
+If all four are present and unambiguous, output a single confirmation line
+(e.g., "Surveying [topic], focused depth, no seed — proceeding to search.")
+and move directly to Phase 2.
+
+If some are missing, ask only about the missing ones. Do not re-ask what is
+already established.
+
+If invoked standalone with no prior context, clarify the full scope
+interactively:
 
 - **Core topic**: The specific research question or area
 - **Breadth**: Should adjacent fields be included?
@@ -67,7 +106,11 @@ Use multiple complementary search approaches to maximize coverage:
 2. **Survey discovery**: Search for existing survey papers on the topic — these are goldmines for finding references you might miss
 3. **Citation chain following**: When you find a key paper, look at what it cites and what cites it
 4. **Author tracking**: If a few researchers dominate the field, search their recent publications
-5. **Venue-specific search**: Check top venues (conferences/journals) known for this area
+5. **Venue-specific search**: Check top venues (conferences/journals) known for this area.
+   If the topic falls in robotics, robot learning, manipulation, or adjacent fields
+   (e.g., sim-to-real transfer, physical property estimation, human-robot interaction),
+   read `references/venues_robotics.md` before executing venue-specific searches.
+   Use the venue lists, search strategy notes, and DOI patterns defined there.
 
 For each search, use WebSearch to find papers and WebFetch to access abstracts
 or arXiv pages for details. WebSearch is the primary discovery tool — it is

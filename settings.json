@@ -12,7 +12,10 @@
       "Skill(update-config:*)",
       "Read(~/workspace/dotfiles/**)",
       "Read(~/.config/Code/User/**)",
-      "Edit(~/.claude/skills/project-team/**)"
+      "Edit(~/.claude/skills/project-team/**)",
+      "Read(//root/**)",
+      "Skill(research-framing)",
+      "Skill(research-framing:*)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
@@ -33,7 +36,10 @@
     "additionalDirectories": [
       "~/.claude/skills/literature-survey",
       "~/workspace/dotfiles",
-      "~/.config/Code/User"
+      "~/.config/Code/User",
+      "/tmp",
+      "/root",
+      "/home/ak/.claude/docs"
     ]
   },
   "hooks": {
