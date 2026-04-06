@@ -32,3 +32,9 @@
 - [x] Step 3: フェーズ定義 — `phases/phase1-research.md` 〜 `phase7-review.md`（6ファイル）
 - [x] Step 4: `skills/project-team/SKILL.md`
 - [x] Step 5: `settings.json` パーミッション更新（Step 4 で実施済み — `Edit/Write(~/.claude/skills/**)` 追加）
+
+## Literature Survey
+
+- [x] Robotic Pick-and-Place: Grasping and Stable Object Placement (2026-04-06)
+  - 48論文収録、6カテゴリ、Survey Findings (thesis/foundation/progress/gap) 完了
+  - 出力: `docs/SURVEYS/robotic_pick_and_place.md`, `docs/REFERENCES/MAIN.md`
