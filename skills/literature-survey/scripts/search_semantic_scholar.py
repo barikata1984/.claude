@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# DEPRECATED: This CLI script is superseded by the academic-search MCP server
+# (~/.claude/mcp/academic-search/server.py). The MCP server provides the same
+# functionality via the search_semantic_scholar tool with credential isolation.
+# This file is kept as a reference implementation.
 """Search Semantic Scholar Academic Graph API for papers.
 
 Returns structured JSON with title, authors, year, venue, citation count,

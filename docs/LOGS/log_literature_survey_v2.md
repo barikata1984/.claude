@@ -71,3 +71,97 @@ Semantic Scholar API のレート制限を調査:
 
 - API キーあり: 429 なしで即座に結果返却（連続呼び出しも OK）
 - API キーなし: 指数バックオフで 2-3回リトライ後に成功
+
+## 2026-04-06: クレデンシャル隔離 + OA アクセスパイプライン + MCP サーバー化
+
+### 背景
+
+`pass` (GPG) + `~/.zshenv` 方式では (1) シェル起動のたびに GPG パスフレーズ入力が必要、
+(2) `S2_API_KEY` がエージェントの環境変数に平文露出、という問題があった。
+組織内でスキルを共有するにあたり、ゼロベースでクレデンシャル管理のベストプラクティスを構成した。
+
+### エビデンス調査
+
+4つの一次情報源から原則を抽出:
+
+| ID | 情報源 | 種別 |
+|----|--------|------|
+| E1 | Anthropic "Securely deploying AI agents" | 公式セキュリティガイド |
+| E2 | Errico et al. arXiv:2511.20920 "Securing the MCP" | 学術論文 |
+| E3 | OWASP Top 10 for LLM 2025 — LLM07 | 業界標準 |
+| E4 | OWASP AI Agent Security Cheat Sheet | 実装ガイド |
+
+導出した原則: P1 クレデンシャル外部化、P2 セキュリティ境界分離、P3 仲介者パターン、P4 最小権限。
+「MCP サーバーがベスト」と断言した文献は存在しない。MCP は確立された原則を
+Claude Code で実現する自然な機構として位置づけた（推論であることを明記）。
+
+成果物: `docs/bestpractice_credential_isolation.md`
+
+### 論文アクセスルートの調査
+
+arXiv, Unpaywall, S2 openAccessPdf, OpenAlex, CORE, 出版社 API, PMC, Google Scholar を調査。
+Robotics/ML 分野では arXiv (85-95%) + Unpaywall でほぼカバー可能。
+Cookie ベースの academic-fetch はペイウォール論文の最終フォールバックに格下げ。
+
+### academic-search MCP サーバーの実装
+
+S2 検索 + OA URL 解決を単一の MCP サーバーで提供。MCP の「1ドメイン=1サーバー」
+原則に従い、S2 API キーとレートリミッターを共有する2ツールを統合。
+
+| ツール | 機能 |
+|--------|------|
+| `search_semantic_scholar` | S2 検索（openAccessPdf フィールド追加） |
+| `resolve_oa_url` | Unpaywall → S2 OA → arXiv PDF のカスケード解決 |
+
+構成:
+- `~/.claude/mcp/academic-search/start.sh` — `pass` → 環境変数注入 → `exec uv run`
+- `~/.claude/mcp/academic-search/server.py` — FastMCP, 2 tools, async レートリミット
+- `claude mcp add --scope user` で登録（`mcp.json` ではなく `~/.claude.json`）
+
+### 変更ファイル
+
+| ファイル | 操作 |
+|---------|------|
+| `mcp/academic-search/start.sh` | 新規 |
+| `mcp/academic-search/server.py` | 新規 |
+| `skills/literature-survey/SKILL.md` | MCP ツール参照 + OA パイプライン追加 + Phase 4 更新 |
+| `~/.zshenv` | `S2_API_KEY` の export 削除 |
+| `scripts/search_semantic_scholar.py` | deprecated コメント追加 |
+| `docs/bestpractice_credential_isolation.md` | 新規 |
+
+### 検証結果
+
+- MCP サーバー: Connected（academic-search, academic-fetch 両方）
+- `search_semantic_scholar`: 検索成功、`openAccessPdf` フィールド含む
+- `resolve_oa_url`: arXiv PDF フォールバック動作確認、Unpaywall は email 未登録のためスキップ
+- クレデンシャル隔離: VSCode 再起動後 `echo $S2_API_KEY` が空であることを確認
+
+### 未着手・検討中
+
+(なし — 以下のセッションで対応済み)
+
+---
+
+## 2026-04-06: Phase 3a/3b 分割実装
+
+### 実施内容
+
+- SKILL.md の Phase 3 を Phase 3a (OA 先行処理) + Phase 3b (ペイウォール出版社グループ単位) に分割
+- OA 解決セクションに Phase 3a/3b の用途注記を追加
+- Quality Checklist に Phase 3a/3b チェック項目を追加
+- report_template.md の Limit Field Coverage テーブルを "Paywall (fetched in 3b)" / "Paywall (skipped)" に分割
+
+### 設計判断
+
+- **Cookie 自動読み込み (旧 Issue #1) は不要と判断**: Phase 3b の時点でユーザーは出版社リストを認識済みなので、意図的に `save-cookies.sh` を実行できる。Phase 3a/3b 分割単体で UX は十分改善される
+- **Phase 3b は出版社グループ単位のループ**: 出版社ごとに Cookie エクスポート → 当該出版社の全論文を `fetch_with_auth` で一括処理。出版社単位で skip も可能
+- `pass insert api/unpaywall-email` は実施済み（Unpaywall カスケード有効化）
+
+### 変更ファイル
+
+| ファイル | 変更 |
+|----------|------|
+| `skills/literature-survey/SKILL.md` | Phase 3 → 3a/3b 分割、OA 注記、Quality Checklist |
+| `skills/literature-survey/references/report_template.md` | Limit Field Coverage テーブル |
+| `docs/TODO.md` | Phase 3a/3b 完了、Unpaywall 完了、Cookie 自動読み込み削除 |
+| `docs/ISSUES.md` | 全イシュー解決済みでクリア |

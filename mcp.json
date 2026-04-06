@@ -2,7 +2,11 @@
   "mcpServers": {
     "academic-fetch": {
       "command": "uv",
-      "args": ["run", ".claude/mcp/academic-fetch/server.py"]
+      "args": ["run", "/home/atsushi/.claude/mcp/academic-fetch/server.py"]
+    },
+    "academic-search": {
+      "command": "bash",
+      "args": ["/home/atsushi/.claude/mcp/academic-search/start.sh"]
     }
   }
 }

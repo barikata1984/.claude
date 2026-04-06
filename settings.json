@@ -12,7 +12,10 @@
       "Skill(update-config:*)",
       "Read(//home/atsushi/workspace/dotfiles/**)",
       "Read(//home/atsushi/.config/Code/User/**)",
-      "Edit(~/.claude/skills/project-team/**)"
+      "Edit(~/.claude/skills/project-team/**)",
+      "Read(//home/atsushi/Downloads/**)",
+      "Read(//home/atsushi/workspace/object-representation/docs/SURVEYS/**)",
+      "Read(//home/atsushi/**)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
@@ -69,5 +72,6 @@
         "repo": "anthropics/skills"
       }
     }
-  }
+  },
+  "effortLevel": "high"
 }
