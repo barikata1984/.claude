@@ -38,3 +38,28 @@
 - [x] Robotic Pick-and-Place: Grasping and Stable Object Placement (2026-04-06)
   - 48論文収録、6カテゴリ、Survey Findings (thesis/foundation/progress/gap) 完了
   - 出力: `docs/SURVEYS/robotic_pick_and_place.md`, `docs/REFERENCES/MAIN.md`
+
+## academic-search MCP サーバー
+
+- [x] クレデンシャル隔離ベストプラクティス文書作成
+- [x] academic-search MCP サーバー実装 (search_semantic_scholar + resolve_oa_url)
+- [x] SKILL.md 更新 (MCP ツール参照 + OA パイプライン)
+- [x] クレデンシャル隔離検証
+- [x] `pass insert api/unpaywall-email` で Unpaywall 用メールアドレス登録
+- [x] Phase 3a/3b 分割 (OA 論文を先行処理、ペイウォール論文を出版社グループ単位でバッチ処理)
+
+- [x] Dynamic Manipulation with CoM and Inertia Tensor (2026-04-06)
+  - 50論文収録、5カテゴリ (Pushing/Estimation/Grasping/In-hand Dynamic/Extrinsic Dexterity)
+  - Survey Findings (thesis/foundation/progress/gap) 完了
+  - 出力: `docs/SURVEYS/dynamic_manipulation_com_inertia.md`
+
+## Literature Survey スキル改善 (2026-04-06)
+
+- [x] ベストプラクティス文献に基づく乖離分析
+- [x] コンテクスト・実行時間のコスト分析
+- [x] Step 1: SKILL.md リファクタリング (references/ 分離)
+- [x] Step 2: コンテクスト流入制御 (P2/P4/P5 統合)
+- [x] Step 3: 乖離改善追加 (RQ, キーワード, 比較表, 用語, Threats to Validity 等)
+- [x] Step 4: `scripts/resolve_dois.py` 新設
+- [x] `scripts/extract_sections.py` 新設 + Phase 3 改訂
+- [ ] テストケースでの実行評価

@@ -12,12 +12,33 @@ Use this template when generating the survey report in Phase 7.
 | **Date** | YYYY-MM-DD |
 | **Scope** | [Brief description of what was covered] |
 | **Papers found** | N |
+| **Research Questions** | RQ1: ... / RQ2: ... / RQ3: ... |
+
+## Abstract
+
+[4 sentences following this structure:
+1. Current state of the field (1-2 sentences)
+2. What this survey contributes (1 sentence)
+3. Key findings — concrete results, not vague claims (1 sentence)
+4. How the findings were validated — search scope and method (1 sentence)]
 
 ## Research Landscape Overview
 
 [2-3 paragraphs of factual background: major trends, how the area has evolved,
 key venues and research groups. This orients a reader unfamiliar with the topic.
 This section is descriptive, not argumentative.]
+
+## Terminology and Background
+
+[Map the terminology variations used across the surveyed papers. Many research
+areas use multiple terms for the same concept, or the same term with different
+meanings depending on context. Clarifying these upfront prevents reader
+confusion and documents the keyword mapping used during search.]
+
+| Term | Synonyms / Variants | Scope in this survey |
+|------|---------------------|----------------------|
+| [term 1] | [variant A, variant B, abbreviation] | [how this term is used here] |
+| [term 2] | ... | ... |
 
 ## Survey Findings
 
@@ -77,6 +98,62 @@ Describe what characterizes each category and how they relate to each other.]
 | [Cat 1]  | [One-line description] | N |
 | [Cat 2]  | [One-line description] | N |
 | ...      | ...         | ... |
+
+### Comparison Table
+
+[Cross-cutting comparison of key papers. Adapt the columns to the topic
+domain. The purpose is to enable at-a-glance comparison across the most
+important dimensions — a reader should be able to identify which papers
+are most relevant to their specific needs.]
+
+| Paper | Method Category | System Type | Sensors | Metrics | Environment | Real HW | Code |
+|-------|----------------|-------------|---------|---------|-------------|---------|------|
+| A et al. (2024) | [cat] | [type] | [sensors] | [metrics] | [env] | Yes/No | Yes/No |
+| B et al. (2023) | ... | ... | ... | ... | ... | ... | ... |
+
+Evidence level column (simplified from Shaw 2003):
+- **R**: Real-world experiment with comparison
+- **S**: Simulation-only experiment
+- **B**: Both simulation and real-world
+- **T**: Theoretical / analytical only
+
+### Quantitative Trends
+
+[Tabulate from paper metadata — no new searches needed.]
+
+#### Publication Count by Year
+
+| Year | Count |
+|------|-------|
+| 2026 | N |
+| 2025 | N |
+| ... | ... |
+
+#### Method Category Distribution
+
+| Category | Count | % |
+|----------|-------|---|
+| [Cat 1] | N | X% |
+| ... | ... | ... |
+
+#### Experimental Setting Breakdown
+
+| Setting | Count | % |
+|---------|-------|---|
+| Simulation only | N | X% |
+| Real hardware only | N | X% |
+| Both | N | X% |
+
+### Concept Matrix
+
+[Maps key concepts (rows) to papers (columns). Derive concepts from
+category assignments and thesis/core annotations.]
+
+| Concept | Paper A | Paper B | Paper C | ... |
+|---------|---------|---------|---------|-----|
+| [concept 1] | X | | X | |
+| [concept 2] | | X | X | |
+| ... | | | | |
 
 ### Foundational Works
 
@@ -165,7 +242,34 @@ number of queries to each.]
 
 | Category | Count | Papers | Action taken |
 |----------|-------|--------|-------------|
-| Paywall barrier | N | [list keys] | [e.g., fetch_with_auth attempted / user declined] |
+| Paywall (fetched in 3b) | N | [list keys] | Cookies provided, fetch_with_auth succeeded |
+| Paywall (skipped) | N | [list keys] | User chose to skip publisher group |
 | Rendering failure | N | [list keys] | [e.g., retried with alternative methods / user declined] |
 | Survey/review paper | N | [list keys] | N/A (no Limitations section expected) |
+
+### Threats to Validity
+
+[Discuss limitations of this survey itself — not the surveyed papers'
+limitations, but constraints on how this survey was conducted.]
+
+- **Search scope**: Which databases were searched, which were not. Language
+  restrictions applied (e.g., English-only). Time period covered.
+- **Publication bias**: The degree to which preprints and grey literature
+  were included to counter positive-result bias in peer-reviewed venues.
+- **Selection bias**: How inclusion/exclusion criteria may have systematically
+  excluded relevant work (e.g., excluding certain robot types or venues).
+- **Analysis limitations**: Single-reviewer analysis (AI-assisted), potential
+  for misinterpretation of papers not read in full text (paywall).
+
+## Conclusion
+
+[Structured conclusion addressing each Research Question posed in Phase 1:]
+
+1. **RQ1**: [1-2 sentence answer summarizing what the survey found]
+2. **RQ2**: [...]
+3. **RQ3**: [...]
+
+[1 paragraph on practical implications — what practitioners should take away.]
+
+[1 paragraph on the most promising research directions identified.]
 ```

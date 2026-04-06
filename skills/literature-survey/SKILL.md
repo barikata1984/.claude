@@ -30,16 +30,28 @@ placeholder descriptions in English; translate them to match the output language
 
 ## Workflow
 
-### Phase 1: Scope Definition
+### Phase 1: Research Design
 
-Before searching, clarify the survey scope with the user if not already clear:
+Before searching, establish the survey's scope and boundaries with the user:
 
 - **Core topic**: The specific research question or area
+- **Research Questions (RQs)**: Formulate 2-4 concrete questions the survey
+  will answer. RQs give the survey a clear purpose beyond "collect papers"
+  and guide search, analysis, and synthesis. Example:
+  - RQ1: What algorithmic approaches have been proposed for [problem]?
+  - RQ2: Under what conditions are these approaches evaluated?
+  - RQ3: What are the unresolved technical challenges?
 - **Breadth**: Should adjacent fields be included?
 - **Time emphasis**: Default is recent-first with historical coverage (see Phase 2)
 - **Target count**: Default 30-60 papers, adjustable
+- **Inclusion / Exclusion criteria**: Define the scope boundary upfront:
+  - Inclusion: e.g., peer-reviewed papers + major preprints, specific
+    robot types, specific task domains
+  - Exclusion: e.g., poster-only publications, non-English papers,
+    papers outside the target domain
 
-If the user's request is already specific enough, skip the clarification and proceed.
+If the user's request is already specific enough, propose the RQs and
+criteria for confirmation rather than asking open-ended questions.
 
 ### Phase 2: Search Strategy
 
@@ -47,7 +59,9 @@ Search systematically in three temporal tiers:
 
 **Tier 1 — Recent (last 2-3 years): Exhaustive**
 - Search for the latest preprints, conference papers, and journal articles
-- Include workshop papers and technical reports if relevant
+- Include workshop papers, technical reports, and theses if relevant
+- Actively include preprints to counter publication bias (positive results
+  are overrepresented in peer-reviewed venues)
 - This tier gets the most effort — aim for near-complete coverage of the topic
 
 **Tier 2 — Established (3-10 years): High-impact focus**
@@ -59,6 +73,19 @@ Search systematically in three temporal tiers:
 - Classic papers that defined the field or subfield
 - Only include if they are still widely cited or conceptually essential
 
+### Keyword Construction
+
+Before executing searches, derive a structured keyword set from the RQs:
+
+1. Extract key concepts from each RQ (population, intervention, outcome)
+2. For each concept, list synonyms, abbreviations, and spelling variants
+3. Combine with Boolean operators to form search strings
+
+Example: `("multi-robot" OR "multi-agent" OR "swarm") AND ("task allocation"
+OR "task assignment") AND ("cooperation" OR "coordination")`
+
+Record the final search strings in the Search Log.
+
 ### Search Execution
 
 Use multiple complementary search approaches to maximize coverage:
@@ -69,50 +96,15 @@ Use multiple complementary search approaches to maximize coverage:
 4. **Author tracking**: If a few researchers dominate the field, search their recent publications
 5. **Venue-specific search**: Check top venues (conferences/journals) known for this area
 
-For each search, use WebSearch to find papers and WebFetch to access abstracts
-or arXiv pages for details. WebSearch is the primary discovery tool — it is
-fast, has no rate limits, and reliably finds papers across all venues.
+WebSearch is the primary discovery tool — it is fast, has no rate limits, and
+reliably finds papers across all venues. Use it alongside the structured
+metadata tools (Semantic Scholar MCP, OpenAlex script) described in
+`references/search_sources.md`. Read that file at the start of Phase 2 for
+tool-specific details (API formats, MCP parameters, OA resolution priority).
 
-**arXiv search** for preprints:
-- `https://export.arxiv.org/api/query?search_query=all:TOPIC&sortBy=submittedDate&sortOrder=descending&max_results=20`
-
-**ar5iv** for full-text access (arXiv papers only):
-- `https://ar5iv.labs.arxiv.org/html/PAPER_ID` (e.g., `https://ar5iv.labs.arxiv.org/html/2206.15469`)
-- HTML rendering of arXiv PDFs — use to access Limitations/Future Work sections for the `limit` field
-- Not all papers are available; fall back to abstract/Semantic Scholar if ar5iv returns an error
-
-**Authenticated publisher access** (paywalled papers):
-- Use the `fetch_with_auth` MCP tool to access full-text HTML from IEEE, Elsevier, Springer, and ACM
-- The tool uses institutional authentication cookies exported from the user's browser
-- Use this primarily to populate the `limit` field for papers where ar5iv and abstracts are insufficient
-- If the tool returns a session-expiry error, inform the user that cookie re-export is needed
-  (see `.claude/mcp/academic-fetch/README.md` for the workflow)
-
-**Structured metadata retrieval** via bundled scripts (in `scripts/`):
-
-The skill includes two API search scripts that return structured JSON with citation
-counts, DOIs, and venue information. Use these alongside WebSearch — WebSearch is
-better for broad discovery, while the scripts provide precise metadata for scoring
-and deduplication.
-
-- `scripts/search_semantic_scholar.py` — Semantic Scholar Academic Graph API
-  ```bash
-  python scripts/search_semantic_scholar.py --query "TOPIC" --year-from 2022 --limit 30
-  ```
-  Returns: title, authors, year, venue, citationCount, doi, arxivId
-
-- `scripts/search_openalex.py` — OpenAlex API (250M+ works)
-  ```bash
-  python scripts/search_openalex.py --query "TOPIC" --year-from 2022 --sort cited_by_count:desc
-  ```
-  Returns: title, authors, year, venue, citedByCount, doi, arxivId
-
-Run these scripts early in the search process to obtain citation counts for all
-candidate papers. The counts are used for scoring in Phase 2.5.
-
-Use subagents to parallelize searches across different queries and sources when possible.
-Each subagent should handle a distinct search angle (e.g., one for the main topic,
-one for a related subtopic, one for survey papers).
+Use subagents to parallelize searches across different queries and sources.
+Each subagent should handle a distinct search angle (e.g., one for the main
+topic, one for a related subtopic, one for survey papers).
 
 **Search logging requirement**: Every subagent must return a structured search log
 alongside its paper results. The log must record, for each search action performed:
@@ -122,16 +114,9 @@ obtained, and (4) a brief note on relevance. This log is aggregated into the
 Survey Methodology → Search Log section of the final report.
 
 **DOI/URL requirement**: Every paper collected must have at least one of:
-- **Publisher DOI** (preferred): e.g., `10.1109/ICRA.2024.XXXXXXX`, `10.1007/...`
-  This is the DOI assigned by the publisher (IEEE, ACM, Springer, PMLR, etc.),
-  NOT the arXiv DOI (`10.48550/arXiv.XXXX.XXXXX`). Many ML papers appear first
-  on arXiv but are later published at conferences with a different, authoritative DOI.
-- **arXiv ID**: e.g., `2407.04620` — acceptable as a fallback, but always attempt
-  to resolve to a publisher DOI in Phase 4 (DOI Resolution).
-- **URL**: Publisher page, OpenReview page, or project page — use only when
-  neither publisher DOI nor arXiv ID is available.
-
-Papers for which none of these can be found should be excluded.
+publisher DOI (preferred), arXiv ID (fallback), or URL (last resort). See
+`references/search_sources.md` § DOI Types for details. Papers for which
+none of these can be found should be excluded.
 
 ### Deduplication
 
@@ -186,140 +171,210 @@ A paper list grouped by temporal tier, sorted within each tier by citation count
 2. **Venue tier** (secondary) — top-tier conference/journal > workshop > preprint
 3. **Recency** (tertiary) — newer papers first within the same tier
 
+Before presenting, apply the inclusion/exclusion criteria defined in
+Phase 1 and note any papers excluded with reasons.
+
 **Ask the user:**
 - Are there known papers that should be added?
 - Should any subtopics or directions be excluded?
+- Should the inclusion/exclusion criteria be adjusted?
 - Should the target count be adjusted?
 
 Do not proceed to Phase 3 until the user approves the paper list.
 
-### Phase 3: Paper-Level Analysis
+### Phase 3a: Open-Access Paper Analysis
 
-After collecting papers, analyze each individually and organize into themes:
+Classify the approved papers by full-text accessibility, then process OA papers first.
 
-1. **Identify themes**: Group papers by subtopic, methodology, or contribution type
-2. **Trace the evolution**: Show how the field progressed over time
-3. **Highlight connections**: Note where papers build on, extend, or contradict each other
-4. **Annotate each paper** with four structured fields:
-   - **thesis**: The author's central claim — not what the method does, but what the
-     author argues is true. Frame as an argumentative stance (e.g., "dense physical
-     features from interaction are necessary for manipulation, visual appearance alone
-     is insufficient" rather than "proposes a method to assign dense physical features").
-   - **core**: The essential, irreplaceable element(s) of the method. Without this, the
-     approach would not work. Be specific (e.g., "differentiable rendering loss that
-     back-propagates through the physics simulator" not just "differentiable rendering").
-   - **diff**: Explicit contrast with prior work. Name the predecessor(s) and state what
-     limitation is overcome or what new capability is introduced. This is a factual record
-     of accomplished advances. Avoid vague statements like "improves over previous methods".
-   - **limit**: Constraints or unsolved problems the authors explicitly acknowledge —
-     typically from the Limitations or Future Work sections. Record only what the authors
-     themselves state; do not mix in the reviewer's subjective critique. Where diff records
-     limitations that *were* overcome, limit records those that *remain*.
-     When the full text is unavailable, supplement with: (a) Semantic Scholar TLDR or
-     abstract hints, (b) limitations noted by citing papers. If no limit information can
-     be found from any source, write "limit not available" rather than guessing.
+**Step 1 — Classify papers:**
 
-     **No speculation**: The limit field must contain only what the authors themselves
-     explicitly state in the paper. Do not infer, deduce, or generate limitations
-     based on general knowledge of the method or field. This rule exists because
-     fabricated limitations are indistinguishable from real ones and undermine the
-     survey's reliability.
+For each approved paper, determine full-text access status:
+
+1. If `openAccessPdf` was returned by `search_semantic_scholar`, classify as **OA**.
+2. Otherwise, call `resolve_oa_url` with the paper's DOI / arXiv ID / S2 ID.
+   - If `best_url` is non-null → **OA**
+   - If `best_url` is null → **Paywall**
+
+Record the classification and the resolved URL for each paper.
+
+**Step 2 — Extract key sections (deterministic):**
+
+For arXiv papers, run the section extraction script to obtain structured
+content without reading full text:
+
+```bash
+python3 scripts/extract_sections.py --input oa_papers.json --output sections.json
+```
+
+The script fetches ar5iv HTML and extracts: abstract, introduction,
+conclusion, limitations, future work, tables (as Markdown), and figure
+captions. This replaces full-text reading for most papers — the extracted
+sections contain the information needed for all four annotation fields.
+
+For non-arXiv OA papers (e.g., publisher HTML), fall back to WebFetch on
+the OA URL, but instruct the subagent to focus on the same sections.
+
+**Step 3 — Annotate via subagents:**
+
+Distribute the extracted sections across subagents in batches of 15-20
+papers each. Because each paper is now represented by its key sections
+(~2,000-5,000 tokens) rather than full text (~10,000-15,000 tokens),
+larger batches are feasible.
+
+Each subagent receives the pre-extracted sections and returns **only** a
+JSON array — no intermediate reasoning or raw content:
+
+```json
+[
+  {
+    "key": "Author2024_keyword",
+    "title": "...", "authors": "...", "year": 2024,
+    "venue": "...", "doi": "...", "arxiv_id": "...", "oa_url": "...",
+    "thesis": "1-2 sentences",
+    "core": "1-2 sentences",
+    "diff": "1-2 sentences",
+    "limit": "1-2 sentences"
+  }
+]
+```
+
+**Annotation field definitions:**
+
+- **thesis**: The author's central claim — not what the method does, but what
+  the author argues is true. Frame as an argumentative stance (e.g., "dense
+  physical features from interaction are necessary for manipulation, visual
+  appearance alone is insufficient" rather than "proposes a method to assign
+  dense physical features").
+- **core**: The essential, irreplaceable element(s) of the method. Without
+  this, the approach would not work. Be specific (e.g., "differentiable
+  rendering loss that back-propagates through the physics simulator" not
+  just "differentiable rendering").
+- **diff**: Explicit contrast with prior work. Name the predecessor(s) and
+  state what limitation is overcome or what new capability is introduced.
+  Avoid vague statements like "improves over previous methods".
+- **limit**: Constraints or unsolved problems the authors explicitly
+  acknowledge — from the extracted Limitations/Future Work sections.
+  Record only what the authors themselves state. If the extraction script
+  could not find a Limitations section, supplement with abstract hints or
+  write "limit not available" rather than guessing.
+
+  **No speculation**: Fabricated limitations are indistinguishable from
+  real ones and undermine the survey's reliability.
+
+After all subagents return, merge their JSON arrays into a unified paper
+list. Then identify themes, trace the evolution, and highlight connections
+across the full set.
+
+**Step 3 — Report paywall papers to user:**
+
+After processing all OA papers, present a summary of paywall papers grouped by
+publisher:
+
+```
+## Paywall Papers (N papers, M publishers)
+
+| Publisher | Count | Papers |
+|-----------|-------|--------|
+| IEEE Xplore | 3 | [Title1], [Title2], [Title3] |
+| Elsevier | 2 | [Title4], [Title5] |
+| Springer | 1 | [Title6] |
+
+Phase 3b will process these publisher-by-publisher.
+For each publisher:
+1. Log in via your browser
+2. Export cookies via Cookie-Editor (Export → JSON → copies to clipboard)
+3. Run: bash ~/.claude/mcp/academic-fetch/save-cookies.sh
+4. Say "ready" to process that publisher's papers
+
+You can also say "skip" for any publisher to mark those papers as
+"limit not available (paywall)" and move on.
+```
+
+If there are no paywall papers, skip Phase 3b entirely and proceed to Phase 4.
+
+### Phase 3b: Paywall Paper Analysis
+
+Process paywall papers one publisher group at a time:
+
+```
+for each publisher group (IEEE, Elsevier, Springer, ACM, ...):
+  1. Ask the user to export cookies for this publisher + run save-cookies.sh
+  2. User says "ready" → process all papers from this publisher via fetch_with_auth
+  3. Annotate with the same four fields (thesis/core/diff/limit)
+  4. If fetch_with_auth returns session-expiry → ask user to re-export cookies
+  5. User says "skip" → mark all papers from this publisher as
+     "limit not available (paywall)"
+```
+
+After all publisher groups are processed (or skipped), merge Phase 3a and 3b
+results into a unified set of annotated papers. Update the themes and connections
+identified in Phase 3a to incorporate newly analyzed paywall papers.
+
+### Phase 3 → 5 Transition: Context Consolidation
+
+Before proceeding to Phase 4, consolidate the analysis state. At this point,
+only the following information is needed for the remaining phases:
+
+1. **Paper metadata table**: key, title, authors, year, venue, DOI/arXiv ID
+2. **Annotations**: thesis/core/diff/limit per paper (1-2 sentences each)
+3. **Category assignments**: which papers belong to which thematic category
+4. **Unresolved DOIs**: list of papers needing Phase 4 resolution
+
+All raw search results, full-text content, and intermediate reasoning from
+Phase 2-3 subagents have already been consumed and should not be carried
+forward. If the conversation context has grown large, summarize the above
+into a compact working state before continuing.
 
 ### Phase 4: DOI Resolution
 
-Many ML/AI papers first appear on arXiv but are later published at conferences
-(ICML, NeurIPS, ICLR, CoRL, IROS, etc.) or in journals (JMLR, Science Robotics,
-IJRR, etc.) with a separate, authoritative publisher DOI. The arXiv DOI
-(`10.48550/arXiv.XXXX.XXXXX`) is not the same as the publisher DOI — the
-publisher DOI is what should appear in formal citations.
+Many ML/AI papers first appear on arXiv but are later published at venues
+with a separate publisher DOI. The arXiv DOI (`10.48550/arXiv.XXXX.XXXXX`)
+is not the publisher DOI — the publisher DOI should appear in formal citations.
 
-After collecting and analyzing papers (Phases 2-3), resolve each paper's
-identifier to its best available DOI. Process papers **sequentially** (not in
-parallel) to respect API rate limits.
+Run the DOI resolution script on all papers that currently only have an
+arXiv ID or URL:
 
-For each paper that currently only has an arXiv ID or URL:
+```bash
+python3 scripts/resolve_dois.py --input papers.json --output resolved.json
+```
 
-1. **DBLP API** (first choice — fast, no authentication, generous rate limit):
-   - `https://dblp.org/search/publ/api?q=TITLE&format=json`
-   - Returns venue, year, and DOI for conference/journal publications
-   - Match on title similarity (DBLP normalizes titles)
+The script queries DBLP, `resolve_oa_url` MCP tool, and Crossref in cascade,
+respecting rate limits. Resolution priority: publisher DOI > arXiv ID > URL.
 
-2. **Semantic Scholar API** (second choice — richer metadata, stricter rate limit):
-   - `https://api.semanticscholar.org/graph/v1/paper/ArXiv:ARXIV_ID?fields=externalIds,venue,year,citationCount`
-   - The `externalIds` field contains both `ArXiv` and `DOI` keys when available
-   - Also useful for citation counts to gauge impact
-   - **Rate limit**: 1 request/second without API key. Process one paper at a time
-     with a brief pause between requests. If you receive a 429 error, wait 3 seconds
-     and retry once. Do not retry more than once per paper — fall back to DBLP or
-     Crossref instead.
-
-3. **Crossref API** (fallback — broadest coverage, slower):
-   - `https://api.crossref.org/works?query.title=TITLE&rows=3`
-   - Returns publisher DOI for most published works
-   - Match carefully on title and authors to avoid false positives
-
-**Resolution priority**: Publisher DOI > arXiv ID > URL-only.
-
-Record the resolution results in the DOI Resolution Log section of the final
-report (see Phase 7 template). For papers that remain arXiv-only after this
-phase, note whether the paper is a preprint (not yet published at a venue) or
-whether the publisher DOI simply could not be found.
+Record the resolution results in the DOI Resolution Log section of the
+final report (see Phase 7 template).
 
 ### Phase 5: Survey-Level Synthesis
 
-Derive survey-level findings by cross-cutting the paper-level annotations. This is the
-primary intellectual contribution of the survey — it transforms a collection of papers
-into actionable research insight.
+Derive survey-level findings by cross-cutting the paper-level annotations.
+This is the primary intellectual contribution of the survey — it transforms
+a collection of papers into actionable research insight.
 
-The four paper-level axes (thesis/core/diff/limit) aggregate into four survey-level
-sections via the following logic:
+Read `references/synthesis_guide.md` for detailed writing guidelines for
+each section. The four paper-level axes aggregate into survey-level sections:
 
-1. **thesis** — the field's fundamental unsolved problem:
-   Paper-level theses will reveal agreements, contradictions, and tensions. Synthesize
-   these into a central claim about what the field's fundamental unsolved problem is.
-   Example: "The core tension is between pre-task estimation accuracy and interaction
-   cost — no existing approach resolves this without compromising one or the other."
+1. **thesis** — synthesize paper-level theses into the field's fundamental
+   unsolved problem
+2. **foundation** — aggregate paper-level cores into shared technical
+   building blocks
+3. **progress** — aggregate paper-level diffs chronologically into a
+   trajectory of solved problems
+4. **gap** — identify structural unsolved problems from the frontier of
+   diffs and converging limits
+5. **seed** (conditional) — include only when the user explicitly requests
+   research proposals. Read `references/seed_format.md` for structure.
 
-2. **foundation** — the shared technical substrate:
-   Aggregate paper-level cores to identify what technical building blocks the field
-   relies on. These are the shared substrates — methods, representations, or
-   assumptions — without which the majority of surveyed approaches would not function.
-   For each stated foundation, verify that it genuinely holds across the surveyed papers;
-   if a paper contradicts it, narrow the claim accordingly.
+Additionally, produce these cross-cutting analyses from the consolidated
+paper metadata (no new searches needed):
 
-3. **progress** — the trajectory of solved problems:
-   Aggregate paper-level diffs chronologically to trace how the field has advanced.
-   Identify the most significant capability transitions — where a limitation of earlier
-   work was definitively overcome. This section shows the trajectory of solved problems.
-
-4. **gap** — structural unsolved problems and engineering consequences:
-   Identify what remains unsolved by examining two sources:
-   (a) the frontier of paper-level diffs — limitations that the most recent papers
-       still have not overcome, and
-   (b) paper-level limits — constraints that multiple papers independently acknowledge.
-   Converging limits across papers are stronger evidence of structural gaps than
-   isolated mentions.
-
-   **Writing style**: Each gap is a self-contained paragraph (not a bulleted list).
-   The paragraph should:
-   - Open with a concise statement of what is not yet achieved
-   - Reference the Paper Catalogue categories or prior Survey Findings sections
-     (e.g., "As Category D shows, ...") to avoid re-explaining what individual
-     papers do — the reader has already encountered those details
-   - Mention specific papers only when adding NEW information not covered
-     elsewhere (e.g., a specific metric, a specific failure mode relevant to the gap)
-   - Close with the engineering consequence — what becomes possible if the gap
-     is closed
-   - Avoid redundancy with Thesis, Foundation, and Progress sections; if a point
-     was already made, reference it rather than restating it
-
-5. **seed** (conditional) — novel research directions derived from the survey:
-   **Include only when the user explicitly requests research proposals, next steps,
-   or seed ideas.** For reading lists, reference collections, or background surveys,
-   omit this section and end Survey Findings at Gap.
-
-   When included, read `references/seed_format.md` for the detailed structure
-   (academic contribution, required components, readiness assessment for each seed).
+6. **Quantitative trends** — tabulate from paper metadata:
+   - Publication count by year
+   - Distribution across method categories
+   - Experimental setting breakdown (simulation / real hardware / both)
+   - Top venues by paper count
+7. **Concept matrix** — a table mapping key concepts (rows) to papers
+   (columns) showing which papers address which concepts. Derive concepts
+   from the category assignments and thesis/core annotations.
 
 ### Phase 6: Reference Verification
 
@@ -344,15 +399,18 @@ responded to any triage prompts.
 
 Produce the survey report in `docs/SURVEYS/<topic_slug>.md`.
 
-Read `references/report_template.md` for the complete report structure. The
-template includes all sections: metadata table, Research Landscape Overview,
-Survey Findings (Thesis/Foundation/Progress/Gap, and conditionally Seed),
-Paper Catalogue with category overview and per-paper annotations, and
-Survey Methodology (Search Log, DOI Resolution Log, Hallucination Check,
-Limit Field Coverage).
-
+Read `references/report_template.md` for the complete report structure.
 If the user requested research proposals/seeds, also read
 `references/seed_format.md` for the Seed section structure.
+
+Generate the report in sections to avoid hitting output limits and to
+maintain quality across the full document:
+
+1. **Metadata + Research Landscape Overview + Survey Findings**
+   (Thesis/Foundation/Progress/Gap, and conditionally Seed)
+2. **Paper Catalogue** — generate one category at a time, appending each
+3. **Survey Methodology** (Search Log, DOI Resolution Log, Hallucination
+   Check, Limit Field Coverage)
 
 ## Reference Processing
 
@@ -367,21 +425,5 @@ Additional steps:
 
 ## Quality Checklist
 
-Before delivering results, verify:
-
-- [ ] All three temporal tiers are represented
-- [ ] Search Review Checkpoint (Phase 2.5) completed — user approved the paper list before analysis
-- [ ] Duplicates removed and count recorded in search log
-- [ ] Each paper has: title, authors, year, venue/source, publisher DOI (or arXiv ID if unpublished), and thesis/core/diff/limit
-- [ ] limit fields contain only author-stated limitations (no LLM speculation)
-- [ ] DOI Resolution phase completed — arXiv-only papers checked against DBLP/Semantic Scholar/Crossref for publisher DOIs
-- [ ] Papers are organized by category, not just listed chronologically
-- [ ] The overview section gives a reader unfamiliar with the topic a clear starting point
-- [ ] Survey Findings section contains thesis, foundation, progress, and gap
-- [ ] If user requested research proposals: seed section included (see `references/seed_format.md`)
-- [ ] Survey-level claims are traceable to specific paper-level annotations
-- [ ] Foundational works table includes #, paper, year, venue, and significance
-- [ ] Hallucination check completed — all papers verified via DOI/URL
-- [ ] Search Log records every search action: source, exact query/URL, result count, and notes
-- [ ] Source summary lists all information sources used and query counts
-- [ ] Output language is consistent throughout — no mixing of languages
+Before delivering results, read `references/quality_checklist.md` and verify
+all items.
