@@ -590,10 +590,10 @@ Khorshidi et al. — arXiv, 2024
 
 > 接触中のロボットに対する物理整合性保証付きパラメータ同定手法。Spot四脚ロボットでのジョイントトルク計測を用いた検証を実施。
 
-### RSS2025_safe_id
+### Zhang2025_safe_id
 
 **Provably-Safe, Online System Identification**
-(Univ. Michigan) — RSS, 2025
+Bohao Zhang, Zichang Zhou, Ram Vasudevan — RSS, 2025
 [arXiv](https://arxiv.org/abs/2504.21486)
 
 > ロボットマニピュレータがペイロードパラメータを同定しながら安全性保証を維持する証明可能安全なオンライン同定フレームワーク。
