@@ -53,6 +53,17 @@
   - Survey Findings (thesis/foundation/progress/gap) 完了
   - 出力: `docs/SURVEYS/dynamic_manipulation_com_inertia.md`
 
+- [x] robotic_pick_and_place.md レビュー・修正 (2026-04-07)
+  - 用語統一（サブミリメートル→1mm以下）
+  - 6-DoFusion limit/Gap 精密化（ground-truth SDF前提、推定SDFロバスト性未検証）
+  - Nadeau & Kelly limit/Gap 精密化（CAD形状+一律密度仮定、推定慣性パラメータ感度分析未実施）
+  - UOP-Net/AnyPlace limit 追加（訓練データの物理特性ランダマイズ未報告、幾何重心/質量重心乖離への非対応）
+  - Gap 4 再構成（事前知識の種類と推定困難度の区別を明確化）
+
+- [ ] F/Tセンサ × 安定配置計画 追加文献調査
+  - 目的: 研究ストーリーの新規性・実現可能性検証
+  - プロンプト確定済み（`docs/LOGS/log_survey_review_and_research_direction.md` 末尾参照）
+
 ## Literature Survey スキル改善 (2026-04-06)
 
 - [x] ベストプラクティス文献に基づく乖離分析
