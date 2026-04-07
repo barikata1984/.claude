@@ -65,11 +65,10 @@
   - 新規性確認: F/T推定×配置計画の統合研究は存在しない
   - Seed 3件提案 (End-to-end pipeline, Uncertainty-aware placement, Active CoM refinement)
   - 出力: `docs/SURVEYS/ft_estimation_placement.md`
-- [ ] literature-survey スキル改善 (ISSUES 4件の反映)
-  - 並列サブエージェント上限3 + 優先度付きバッチ起動
-  - コンテキスト予算計画ステップ追加
-  - Phase 2 での DOI 即時検証
-  - Phase 3a/3b 境界チェックポイント明示化
+- [ ] literature-survey スキル改善 (ISSUES 3件の反映)
+  - イシュー 2 (並列サブエージェント): 根本解決策なし（Claude Code 側の制約）
+  - イシュー 3 (コンテキスト予算): 根本解決策なし（API 不在）、中間ファイル書き出しは緩和策
+  - イシュー 4 (DOI 検証遅延): Phase 7 で漏れた6件の失敗モード調査が先決
 
 ## Literature Survey スキル改善 (2026-04-06)
 
