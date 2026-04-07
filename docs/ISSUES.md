@@ -1,5 +1,19 @@
 # Issues
 
+## ft_estimation_placement: Unverified Claim on Uniform-Density Training Data
+
+ft_estimation_placement.md の Thesis および Gap 3 で、学習ベース配置手法（AnyPlace, UOP-Net, Placeit!, 6-DoFusion）が「均一密度シミュレーションで訓練データを生成している」と記述しているが、**各手法の原論文でデータセットレベルの裏付けを取っていない**。前回サーベイ（robotic_pick_and_place.md）で「可能性が高い」と推測した内容を、本サーベイで確定的事実として引き継いだ。
+
+「密度ランダマイズが報告されていない」と「均一密度を使用している」は別の主張であり、後者を前者から推論するのは過剰。各手法の原論文でシミュレーション物体の密度/質量パラメータ設定を確認し、記述を以下のいずれかに修正する必要がある:
+
+- 均一密度を確認 → 現状維持
+- 密度ランダマイズを確認 → 主張を撤回し Gap を再構成
+- 密度パラメータの記述がない → 「報告なし」に修正（現在の「均一密度で生成」から弱める）
+
+**対象論文**: AnyPlace (Zhao 2025), UOP-Net (Noh 2024), Placeit! (Ferrad 2025), 6-DoFusion (Yoneda 2024)
+
+---
+
 ## literature-survey: Parallel Subagent Orchestration Issues
 
 literature-survey (2026-04-07, F/T estimation + placement) の Phase 2 で、5つの検索サブエージェントを同時起動したところ、1つがユーザーにより拒否され、最も重要な検索角度（RQ2: 新規性確認）の結果が欠落した。後から補完検索を実施したが手戻りが発生。
