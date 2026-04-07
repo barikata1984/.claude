@@ -409,3 +409,419 @@ Sriram Yenamandra, Arun Ramachandran, et al. — CoRL, 2023
 arXiv: `2306.11565` | [arXiv](https://arxiv.org/abs/2306.11565)
 
 > Open-Vocabulary Mobile Manipulation統合ベンチマーク。実世界成功率~20%で改善の方向性を明示。
+
+---
+
+## F/T Sensor-Based Inertial Parameter Estimation
+
+### Atkeson1986_foundational
+
+**Estimation of Inertial Parameters of Manipulator Loads and Links**
+C. Atkeson, C. An, J. Hollerbach — IJRR, 1986
+DOI: `10.1177/027836498600500306`
+
+> F/Tセンサによる操作対象の慣性パラメータ同定の先駆的定式化。線形回帰モデルによる10パラメータ推定の基礎を確立。
+
+### Gautier1992_excitation
+
+**Exciting Trajectories for the Identification of Base Inertial Parameters of Robots**
+Maxime Gautier, W. Khalil — IJRR, 1992
+DOI: `10.1177/027836499201100408`
+
+> ロボット基底慣性パラメータ同定のための励起軌道設計理論を体系化。観測行列の条件数最小化による最適励起の枠組みを提供。
+
+### Swevers1997_optimal
+
+**Optimal Robot Excitation and Identification**
+J. Swevers, C. Ganseman, D. Tükel, J. De Schutter, H. Van Brussel — IEEE TRA, 1997
+DOI: `10.1109/70.631234`
+
+> 有限フーリエ級数軌道によるロボット最適励起と慣性パラメータ同定の実験的検証。産業ロボット同定の標準的方法論を確立。
+
+### Swevers2002_experimental
+
+**An Experimental Robot Load Identification Method for Industrial Application**
+J. Swevers, W. Verdonck, B. Naumer, S. Pieters, E. Biber — IJRR, 2002
+DOI: `10.1177/027836402761412449`
+
+> 産業応用に向けたロボットペイロード同定の実験的手法。リアルタイム計測と最小二乗同定を組み合わせた実用的プロトコルを提案。
+
+### Duan2022_ft_payload
+
+**Payload Identification and Gravity/Inertial Compensation for Six-Dimensional Force/Torque Sensor**
+Jinjun Duan, Zhouchi Liu, Yiming Bin, Kunkun Cui, Zhendong Dai — Sensors (MDPI), 2022
+DOI: `10.3390/s22020439`
+
+> 6軸F/Tセンサのペイロード同定と重力・慣性補償を統合した手法。ロバスト軌道設計でF/Tセンサ読み取りから10慣性パラメータを高精度に推定。
+
+### Lambert2023_real2sim
+
+**Identifying Objects' Inertial Parameters for Real2Sim Assets**
+Nathan Lambert, Franziska Meier, Paloma Sodhi, Michael Kaess — MIT CSAIL, 2023
+URL: [PDF](https://groups.csail.mit.edu/robotics-center/public_papers/Lambert23.pdf)
+
+> シミュレーション資産の実世界転移に向けた物体慣性パラメータの同定手法。Real2Simギャップ解消に対するデータ駆動アプローチ。
+
+### Robert2026_spectral
+
+**Spectral Identification of Inertial Parameters in Forced Sinusoidal Regimes**
+Robert, C., Krut, S., Company, O., Vissiere, A., Noire, P., Pierrot, F. — ASME JDSMC, 2026
+DOI: `10.1115/1.4070775`
+
+> ヘキサポッド並列ロボットによる強制正弦波励起と周波数領域Newton-Euler解法により、再位置決めなしで全慣性パラメータをスペクトル同定。
+
+### Tian2024_excitation
+
+**Excitation Trajectory Optimization for Dynamic Parameter Identification Using Virtual Constraints**
+Tian et al. — ICRA, 2024
+DOI: `10.1109/ICRA57147.2024.10610950` | [arXiv](https://arxiv.org/abs/2401.16566)
+
+> 仮想制約を用いた動力学パラメータ同定のための励起軌道最適化。ハンズオンロボットシステムへの適用でリアルタイム同定精度を向上。
+
+### Lee2021_geometric_excitation
+
+**Optimal Excitation Trajectories for Mechanical Systems Identification**
+Lee, Lee, Park — Automatica, 2021
+DOI: `10.1016/j.automatica.2021.109773`
+
+> 幾何学的アプローチによる機械系同定最適励起軌道の理論的枠組み。条件数最小化と物理的制約の両立を実現。
+
+### Hartwig2025_human_demo
+
+**Estimation of Payload Inertial Parameters from Human Demonstrations by Hand Guiding**
+Hartwig, Lienhardt, Henrich — arXiv, 2025
+[arXiv](https://arxiv.org/abs/2507.15604)
+
+> ハンドガイディングによる人間デモンストレーションからペイロード慣性パラメータを推定。専用キャリブレーション軌道不要でコボット現場導入を容易化。
+
+### Kubus2008_rtls
+
+**On-line Estimation of Inertial Parameters Using a Recursive Total Least-Squares Approach**
+D. Kubus, T. Kröger, F. Wahl — IROS, 2008
+DOI: `10.1109/IROS.2008.4650672`
+
+> 再帰的全最小二乗法によるリアルタイム慣性パラメータ推定。データ行列のノイズを明示的に扱い、約1.5秒で10パラメータを同定。
+
+### Farsoni2018_realtime_kf
+
+**Real-Time Identification of Robot Payload Using a Multirate Quaternion-Based Kalman Filter and Recursive Total Least-Squares**
+Farsoni, Landi, Ferraguti, Secchi, Bonfe — ICRA, 2018
+DOI: `10.1109/ICRA.2018.8461167`
+
+> マルチレートクォータニオンKFとRTLSを組み合わせたリアルタイムペイロード同定。異なるサンプリング周波数の慣性・運動学センサデータを融合。
+
+### Gaz2017_coefficients
+
+**Payload Estimation Based on Identified Coefficients of Robot Dynamics**
+C. Gaz, A. De Luca — IROS, 2017
+DOI: `10.1109/IROS.2017.8206142`
+
+> 同定済みロボット動力学係数からのペイロード推定手法。標準動力学モデルとの係数差分を利用した実用的アプローチ。
+
+### Chu2017_space
+
+**Inertial Parameter Identification Using Contact Force for Space Manipulator**
+Z. Chu, J. Ma, Y. Hou, F. Wang — Acta Astronautica, 2017
+DOI: `10.1016/j.actaastro.2016.11.019`
+
+> 宇宙マニピュレータの接触力情報を用いた未知物体慣性パラメータ同定。軌道上サービシング向けにノイズ下でのロバスト同定を実現。
+
+### Uchida2025_space_rls
+
+**Online Inertia Parameter Estimation for Unknown Objects Grasped by a Manipulator Towards Space Applications**
+Uchida, Richard, Uno, Olivares-Mendez, Yoshida — arXiv, 2025
+[arXiv](https://arxiv.org/abs/2512.21886)
+
+> 宇宙ロボット応用に向けたグラスプ中の未知物体オンライン慣性パラメータ推定。再帰的最小二乗法を用いた軌道上リアルタイム同定。
+
+### Foster2024_humanoid_adaptation
+
+**Physically Consistent Online Inertial Adaptation for Humanoid Loco-manipulation**
+Foster, McCrory et al. — IROS, 2024
+[arXiv](https://arxiv.org/abs/2405.07901)
+
+> 拡張カルマンフィルタによる慣性パラメータ推定と全身コントローラを組み合わせ、重量ペイロードを持つヒューマノイドのロコマニピュレーションを実現。
+
+### Bai2025_sensorless_hri
+
+**Sensorless Human–Robot Interaction: Real-Time Estimation of Co-Grasped Object Mass and Human Wrench for Compliant Interaction**
+Bai et al. — Advanced Intelligent Systems, 2025
+DOI: `10.1002/aisy.202400616`
+
+> 外乱オブザーバとEKFを統合し、専用センサなしで共把持物体の質量と人間の力レンチをリアルタイム推定するHRIフレームワーク。
+
+### Nadeau2024_bias
+
+**Automated Continuous Force-Torque Sensor Bias Estimation**
+Philippe Nadeau, Miguel Rogel Garcia, Emmett Wise, Jonathan Kelly — arXiv, 2024
+[arXiv](https://arxiv.org/abs/2403.01068)
+
+> ロボット操作中の6軸F/Tセンサバイアスドリフトを継続的に自動推定。慣性パラメータ同定の前処理として精度向上に直接貢献。
+
+### Sousa2014_lmi
+
+**Physical Feasibility of Robot Base Inertial Parameter Identification: A Linear Matrix Inequality Approach**
+Cristóvão D. Sousa, Rui Cortesão — IJRR, 2014
+DOI: `10.1177/0278364913514870`
+
+> 慣性パラメータの物理的整合性条件をLMI（線形行列不等式）として定式化。SDP技術で実行不可能な推定値の最近傍整合解を算出。
+
+### Traversaro2016_manifold
+
+**Identification of Fully Physical Consistent Inertial Parameters Using Optimization on Manifolds**
+S. Traversaro, S. Brossette, A. Escande, F. Nori — IROS, 2016
+DOI: `10.1109/IROS.2016.7759801` | [arXiv](https://arxiv.org/abs/1610.08703)
+
+> 多様体上の最適化により完全に物理整合性のある慣性パラメータを同定。iCubヒューマノイドでの検証で非整合推定の問題を解消。
+
+### Janot2021_sdp
+
+**Sequential Semidefinite Programming for Physically and Statistically Consistent Robot Identification**
+A. Janot, P. Wensing — Control Engineering Practice, 2021
+DOI: `10.1016/j.conengprac.2020.104699`
+
+> 逐次半正定値計画法により物理整合性と統計的一致性を同時に満たすロボット慣性パラメータ同定を実現。
+
+### Khorshidi2024_contact_id
+
+**Physically-Consistent Parameter Identification of Robots in Contact**
+Khorshidi et al. — arXiv, 2024
+[arXiv](https://arxiv.org/abs/2409.09850)
+
+> 接触中のロボットに対する物理整合性保証付きパラメータ同定手法。Spot四脚ロボットでのジョイントトルク計測を用いた検証を実施。
+
+### RSS2025_safe_id
+
+**Provably-Safe, Online System Identification**
+(Univ. Michigan) — RSS, 2025
+[arXiv](https://arxiv.org/abs/2504.21486)
+
+> ロボットマニピュレータがペイロードパラメータを同定しながら安全性保証を維持する証明可能安全なオンライン同定フレームワーク。
+
+### Nadeau2022_fast_cobot
+
+**Fast Object Inertial Parameter Identification for Collaborative Robots**
+Philippe Nadeau, Matthew Giamou, Jonathan Kelly — ICRA, 2022
+DOI: `10.1109/ICRA46639.2022.9916213` | [arXiv](https://arxiv.org/abs/2203.00830)
+
+> 協調ロボット向け高速物体慣性パラメータ同定。F/Tセンサと最小二乗推定を組み合わせ、短時間の探索動作で10パラメータを同定。
+
+### Nadeau2023_visual_parts
+
+**The Sum of Its Parts: Visual Part Segmentation for Inertial Parameter Identification of Manipulated Objects**
+Philippe Nadeau, Matthew Giamou, Jonathan Kelly — ICRA, 2023
+DOI: `10.1109/ICRA48891.2023.10160394` | [arXiv](https://arxiv.org/abs/2302.06685)
+
+> 視覚的部品分割で物体形状事前知識を同定に統合。F/T計測と幾何情報の融合により同定精度とサンプル効率を向上。
+
+### Baek2024_humanoid_learning
+
+**Online Learning-Based Inertial Parameter Identification of Unknown Object for Model-Based Control of Wheeled Humanoids**
+Donghoon Baek, Bo Peng, Saurabh Gupta, Joao Ramos — arXiv, 2024
+[arXiv](https://arxiv.org/abs/2309.09810)
+
+> 車輪付きヒューマノイドのモデルベース制御向けオンライン学習による慣性パラメータ同定。操作中リアルタイムで物体パラメータを更新しコントローラを適応。
+
+### Chen2025_differentiable
+
+**Learning Object Properties Using Robot Proprioception via Differentiable Robot-Object Interaction**
+Peter Yichen Chen, Liu, Ma et al. — ICRA, 2025
+[arXiv](https://arxiv.org/abs/2410.03920)
+
+> 微分可能ロボット-物体インタラクションにより、外部センサなしでジョイントエンコーダのみから物体質量・弾性率等の物性を学習。
+
+### Shan2024_fast_calibration
+
+**Fast Payload Calibration for Sensorless Contact Estimation Using Model Pre-training**
+Shilin Shan, Quang-Cuong Pham — IEEE RA-L, 2024
+[arXiv](https://arxiv.org/abs/2409.03369)
+
+> モデル事前学習を活用したセンサレス接触推定向け高速ペイロードキャリブレーション。新規ペイロードへの迅速な適応を実現。
+
+### Jin2025_ugraph
+
+**Learning to Double Guess: An Active Perception Approach for Estimating the Center of Mass of Arbitrary Objects (U-GRAPH)**
+Shengmiao Jin, Yuchen Mo, Wenzhen Yuan — ICRA, 2025
+[arXiv](https://arxiv.org/abs/2502.02663)
+
+> ベイズニューラルネットワークで不確実性を定量化しCoM推定の情報豊富な探索を誘導するアクティブ知覚フレームワーク。
+
+### RobotScale2023
+
+**RobotScale: A Framework for Adaptable Estimation of Static and Dynamic Object Properties with Object-dependent Sensitivity Tuning**
+various — IEEE RO-MAN, 2023
+DOI: `10.1109/RO-MAN57019.2023.10309315`
+
+> 物体依存感度チューニングを用いた静的・動的物体特性の適応的推定フレームワーク。多様な物体に対する慣性パラメータ推定の汎用化に取り組む。
+
+### Wang2021_fingertip
+
+**Parameter Estimation and Object Gripping Based on Fingertip Force/Torque Sensors**
+Wang, Zang, Zhang et al. — Measurement, 2021
+DOI: `10.1016/j.measurement.2021.109479`
+
+> 指先F/Tセンサを用いた物体パラメータ推定と把持制御の統合。把持中のリアルタイム慣性パラメータ同定により安定把持を実現。
+
+### Yu2022_bias_gravity
+
+**Bias Estimation and Gravity Compensation for Wrist-Mounted Force/Torque Sensor**
+Yongqiang Yu, Ran Shi, Yunjiang Lou — IEEE Sensors Journal, 2022
+DOI: `10.1109/JSEN.2021.3056943`
+
+> 手首搭載F/Tセンサのバイアス推定と重力補償のための統合手法。センサ-ロボット間変換未知の状態での回転キャリブレーションを実現。
+
+### Farsoni2019_safety
+
+**Safety-Oriented Robot Payload Identification Using Collision-Free Path Planning and Decoupling Motions**
+Farsoni, Ferraguti et al. — Robotics and Computer-Integrated Manufacturing, 2019
+DOI: `10.1016/j.rcim.2019.04.011`
+
+> 衝突回避経路計画と分離動作を用いた安全指向ペイロード同定。人間-ロボット共存環境での安全な同定軌道設計手法を提案。
+
+### Farsoni2022_hrc
+
+**Complete and Consistent Payload Identification During Human-Robot Collaboration: A Safety-Oriented Procedure**
+S. Farsoni, M. Bonfè — Springer (Human-Friendly Robotics 2021), 2022
+DOI: `10.1007/978-3-030-96359-0_2`
+
+> HRC中の完全かつ一致したペイロード同定のための安全指向手順。同定精度と人間安全性の両立を実証。
+
+### Liu2025_twostage
+
+**A Two-Stage Payload Dynamic Parameter Identification Method for Interactive Industrial Robots With Large Components**
+Mingxuan Liu et al. — IEEE TASE, 2025
+DOI: `10.1109/TASE.2025.3557064`
+
+> 大型コンポーネントを持つ産業ロボット向け2段階ペイロード動力学パラメータ同定。制限付き全最小二乗法（RRTLS）による低消費電力オンライン同定を実現。
+
+---
+
+## Stable Placement Planning (Additional)
+
+### Lerner2024_ft_placement
+
+**Precise Object Placement Using Force-Torque Feedback**
+Osher Lerner, Zachary Tam, Michael Equi — arXiv, 2024
+[arXiv](https://arxiv.org/abs/2404.17668)
+
+> F/Tフィードバックを用いた高精度物体配置。計画誤差とセンサノイズに対してロバストな配置制御を実証し、F/T情報の配置精度向上への直接的寄与を示す。
+
+### Ferrad2025_placeit
+
+**Placeit! A Framework for Learning Robot Object Placement Skills**
+Ferrad, Huber et al. — arXiv, 2025
+[arXiv](https://arxiv.org/abs/2510.09267)
+
+> 進化計算ベースの配置スキル学習フレームワーク。120回の実世界デプロイで90%成功率を達成し、SOTA手法を大幅に上回る汎化性能を示す。
+
+### Haustein2019_placement
+
+**Object Placement Planning and Optimization for Robot Manipulators**
+Joshua A. Haustein, Kaiyu Hang, Johannes Stork, Danica Kragic — arXiv, 2019
+[arXiv](https://arxiv.org/abs/1907.02555)
+
+> 把持状態での物体配置の動作計画と最適化手法。クラッター環境での配置目標最適化と衝突回避を統合した計画フレームワーク。
+
+---
+
+## Adjacent — CoM-Informed Manipulation
+
+### Kubus2007_recognition
+
+**On-line Rigid Object Recognition and Pose Estimation Based on Inertial Parameters**
+D. Kubus, T. Kröger, F. Wahl — IROS, 2007
+DOI: `10.1109/IROS.2007.4399184`
+
+> F/T・加速度・角速度センサ融合による把持物体のオンライン剛体認識とポーズ推定。慣性パラメータを物体識別に活用する先駆的手法。
+
+### Kanoulas2018_com_grasp
+
+**Center-of-Mass-Based Grasp Pose Adaptation Using 3D Range and Force/Torque Sensing**
+Dimitrios Kanoulas, Jinoh Lee, Darwin G. Caldwell, Nikos G. Tsagarakis — IJHR, 2018
+DOI: `10.1142/S0219843618500135` | [arXiv](https://arxiv.org/abs/1802.06392)
+
+> 3DレンジセンサとF/Tセンシングを組み合わせたCoMベース把持ポーズ適応。外受容・固有受容センサ融合による動的把持調整手法。
+
+### Feng2020_com_grasp
+
+**Center-of-Mass-Based Robust Grasp Planning Using Tactile-Visual Sensors**
+Feng et al. — ICRA, 2020
+DOI: `10.1109/ICRA40945.2020.9196815` | [arXiv](https://arxiv.org/abs/2006.00906)
+
+> 触覚-視覚センサ融合によるCoMベースロバスト把持計画。スリップ検出76.88%精度と把持成功率31%向上を達成し、CoM情報の把持安定化への有効性を実証。
+
+### Feng2024_com_regrasp
+
+**Center-of-Mass-Based Object Regrasping: A Reinforcement Learning Approach and the Effects of Perception Modality**
+Feng et al. — IEEE RA-L, 2024
+DOI: `10.1109/LRA.2024.3439540`
+
+> RLとCoMベース再把持の統合。視覚・指先触覚・手首F/Tセンサの知覚モダリティが再把持効率に与える影響を体系的に比較検証。
+
+### Kang2025_cog_grasping
+
+**Foundation Model-Driven Grasping of Unknown Objects via Center of Gravity Estimation**
+Kang, He, Gong, Liu, Bai — arXiv, 2025
+[arXiv](https://arxiv.org/abs/2507.19242)
+
+> 拡散モデルによる重心推定を活用した未知物体把持。従来のキーポイントベース手法に対し49%高い成功率を達成。
+
+### Dutta2025_visuotactile
+
+**Predictive Visuo-Tactile Interactive Perception Framework for Object Properties Inference**
+Anirvan Dutta, Etienne Burdet, Mohsen Kaboli — IEEE T-RO, 2025
+DOI: `10.1109/TRO.2025.3531816` | [arXiv](https://arxiv.org/abs/2411.09020)
+
+> 視触覚インタラクティブ知覚フレームワークで質量・CoM・剛性・摩擦係数・形状を推定。能動形状知覚メカニズムにより探索行動を自律的に制御。
+
+### Watanabe2025_ftact
+
+**FTACT: Force Torque Aware Action Chunking Transformer for Pick-and-Reorient**
+Watanabe, Alvarez, Ferreiro, Savkin, Sano — arXiv, 2025
+[arXiv](https://arxiv.org/abs/2509.23112)
+
+> F/T感知をAction Chunking Transformerに統合したマルチモーダル模倣学習。F/T情報がボトル再方向づけタスクの成功率を顕著に向上することを実証。
+
+### Ye2026_flyaware
+
+**FlyAware: Inertia-Aware Aerial Manipulation via Vision-Based Estimation and Post-Grasp Adaptation**
+Ye et al. — IEEE RA-L, 2026
+[arXiv](https://arxiv.org/abs/2601.22686)
+
+> 視覚ベース慣性特性推定とグラスプ後適応制御を組み合わせた慣性aware空中操作。ペイロード変動と構成変化への適応メカニズムを提案。
+
+### Kruzliak2024_interactive
+
+**Interactive Learning of Physical Object Properties Through Robot Manipulation and Database of Object Measurements**
+Kruzliak, Hartvich, Patni et al. — IROS, 2024
+DOI: `10.1109/IROS58592.2024.10802249` | [arXiv](https://arxiv.org/abs/2404.07344)
+
+> ロボット操作を通じた物理的物体特性（材質・質量・体積・剛性）のインタラクティブ学習フレームワーク。計測データベースの自動構築と物体モデリングを統合。
+
+---
+
+## Surveys — Inertial Parameter Identification
+
+### Mavrakis2020_survey
+
+**Estimation and Exploitation of Objects' Inertial Parameters in Robotic Grasping and Manipulation: A Survey**
+N. Mavrakis, R. Stolkin — Robotics and Autonomous Systems, 2020
+DOI: `10.1016/j.robot.2019.103374` | [arXiv](https://arxiv.org/abs/1911.04397)
+
+> ロボット把持・操作における物体慣性パラメータ推定と活用に関する包括的サーベイ。F/Tセンサベース手法から学習ベース手法まで体系的にレビュー。
+
+### Leboutet2021_birdy
+
+**Inertial Parameter Identification in Robotics: A Survey (BIRDy)**
+Leboutet, Roux, Janot et al. — Applied Sciences (MDPI), 2021
+DOI: `10.3390/app11094303`
+
+> ロボティクスにおける慣性パラメータ同定の包括的サーベイ（BIRDyツールボックス）。古典的同定手法から最新の学習・物理整合性手法まで網羅。
+
+### Swevers2007_tutorial
+
+**Dynamic Model Identification for Industrial Robots**
+J. Swevers, W. Verdonck, J. De Schutter — IEEE Control Systems Magazine, 2007
+DOI: `10.1109/MCS.2007.904659`
+
+> 産業ロボット動力学モデル同定の実践チュートリアル。励起軌道設計・パラメータ推定・検証の全工程を体系的に解説。

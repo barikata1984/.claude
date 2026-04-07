@@ -1,5 +1,37 @@
 # Issues
 
+## literature-survey: Parallel Subagent Orchestration Issues
+
+literature-survey (2026-04-07, F/T estimation + placement) の Phase 2 で、5つの検索サブエージェントを同時起動したところ、1つがユーザーにより拒否され、最も重要な検索角度（RQ2: 新規性確認）の結果が欠落した。後から補完検索を実施したが手戻りが発生。
+
+**原因**: 5並列はユーザーの承認負荷が高く、全サブエージェントに優先度の概念がなく、長時間実行時の進捗が不可視。
+
+**Fix (SKILL.md)**: (1) 検索サブエージェントは最大3並列に制限 (2) RQ直結の検索角度を最初のバッチで確実に完了させ、残りを2バッチ目で起動 (3) `run_in_background` で進捗をユーザーに報告
+
+---
+
+## literature-survey: Context Budget Planning Absent
+
+55本のサーベイでコンテキスト消費が懸念されたが、Phase 2 開始前にコンテキスト配分計画がなかった。ユーザーから「トークン的な余裕はあるか」と指摘されて初めて戦略を検討した。
+
+**Fix (SKILL.md)**: (1) Phase 1 に「コンテキスト予算計画」ステップを追加 — 目標論文数からPhase別トークン消費を概算し、中間ファイル書き出しポイント・サブエージェントモデル選択・Paywall処理方針を事前決定 (2) 中間ファイル書き出しをワークフロー必須ステップにする
+
+---
+
+## literature-survey: DOI Verification Deferred Too Late
+
+Phase 4 で Yu2022 と Swevers2002 の DOI 誤りが発覚。MAIN.md 更新時にさらに6件修正。Phase 2 の検索段階で検証していれば手戻りを回避できた。
+
+**Fix (SKILL.md)**: (1) Phase 2 の検索サブエージェントに DOI 即時検証を義務付け (2) Phase 2.5 チェックポイントテーブルに DOI 検証状態列 (`Verified / Unverified / arXiv-only`) を追加
+
+---
+
+## literature-survey: Paywall Decision Point Not Formalized
+
+Phase 3b で23本のペイウォール処理方針をユーザーに委ねたが、OA 32本の分析から「アブストラクトベースで十分」という判断材料は Phase 3a 完了時点で揃っていた。
+
+**Fix (SKILL.md)**: (1) Phase 3a 完了時に OA カバレッジ分析に基づく paywall 処理推奨を自動生成 (2) Phase 3a/3b 境界に明示的チェックポイントを追加し、処理方針をユーザーと合意してから進行
+
 ## academic-fetch: Cookie-based Paywall Bypass Failure
 
 ### Summary

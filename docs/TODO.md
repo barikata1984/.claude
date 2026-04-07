@@ -60,9 +60,16 @@
   - UOP-Net/AnyPlace limit 追加（訓練データの物理特性ランダマイズ未報告、幾何重心/質量重心乖離への非対応）
   - Gap 4 再構成（事前知識の種類と推定困難度の区別を明確化）
 
-- [ ] F/Tセンサ × 安定配置計画 追加文献調査
-  - 目的: 研究ストーリーの新規性・実現可能性検証
-  - プロンプト確定済み（`docs/LOGS/log_survey_review_and_research_direction.md` 末尾参照）
+- [x] F/Tセンサ × 安定配置計画 文献調査 (2026-04-07)
+  - 55論文収録、7カテゴリ (Classical/Online/Consistency/Cobot/Placement/Adjacent/Survey)
+  - 新規性確認: F/T推定×配置計画の統合研究は存在しない
+  - Seed 3件提案 (End-to-end pipeline, Uncertainty-aware placement, Active CoM refinement)
+  - 出力: `docs/SURVEYS/ft_estimation_placement.md`
+- [ ] literature-survey スキル改善 (ISSUES 4件の反映)
+  - 並列サブエージェント上限3 + 優先度付きバッチ起動
+  - コンテキスト予算計画ステップ追加
+  - Phase 2 での DOI 即時検証
+  - Phase 3a/3b 境界チェックポイント明示化
 
 ## Literature Survey スキル改善 (2026-04-06)
 

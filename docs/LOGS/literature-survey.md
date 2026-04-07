@@ -38,3 +38,34 @@
 - D: Generalist Robot Policies (8 papers)
 - E: SE(3) Grasp & Motion Optimization (5 papers)
 - F: Task Planning & Benchmarks (5 papers)
+
+## 2026-04-07: F/T Sensor-Based Inertial Parameter Estimation and Placement Planning
+
+**Scope**: F/Tセンサベース慣性パラメータ推定と安定配置計画への応用。全年次（1986-2026）、Tier分けで重み付け。Seed提案あり（3件）。
+
+**Search**:
+
+- 検索角度: 5（F/T推定主要, 安定配置+物理, サーベイ+引用, 動的励起手法, 隣接領域）
+- 検索クエリ総数: ~130
+- 重複除去前: ~130 → 重複除去後: 55
+- OA論文32本は ar5iv/MDPI経由で全文分析、ペイウォール23本はアブストラクトベースで注釈
+
+**Output**:
+
+- レポート: `docs/SURVEYS/ft_estimation_placement.md` (55 papers, 7 categories, ~760 lines)
+- MAIN.md: 48エントリ追加（412→828行）、DOI検証で6件の修正
+- 中間データ: `docs/SURVEYS/_ft_estimation_placement_papers.json`, `_ft_estimation_placement_annotations.json`
+
+**Key Findings**:
+
+- **RQ2（新規性）確認**: F/Tベース慣性推定と安定配置計画を直接統合した先行研究は存在しない
+- 最も近い研究: Nadeau et al. (2022, 推定) + Nadeau & Kelly (2025, 配置) — 同一グループだが未統合
+- Lerner et al. (2024): F/Tフィードバック配置を実現するがCoM推定を含まない
+- 3つのSeed提案: (1) End-to-end pipeline, (2) Uncertainty-aware placement, (3) Active CoM refinement
+
+**Implications**:
+
+- 研究提案の新規性が文献調査により裏付けられた
+- Seed 1（Nadeau推定+Nadeau配置の統合）が最も直接的で実現可能性の高い出発点
+- 推定精度→配置安定性の感度分析が最初の学術的貢献となりうる
+- 非均一密度物体のベンチマーク作成も付随的貢献

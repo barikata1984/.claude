@@ -1,0 +1,230 @@
+{
+  "phase": "3a_complete",
+  "oa_papers_annotated": 32,
+  "annotations": [
+    {
+      "key": "Jin2025_ugraph",
+      "thesis": "Accurate 3D center-of-mass estimation for arbitrary real-world objects requires active, uncertainty-driven selection of a second measurement orientation rather than a single F/T reading, because sensor inaccuracies and object variability make any single measurement insufficient.",
+      "core": "A Bayesian Neural Network maps 6D F/T readings plus gripper orientation to a 3D CoM estimate with uncertainty, and a companion ActiveNet scores candidate second-measurement orientations to maximally reduce that uncertainty; the two estimates are fused via Bayesian posterior update.",
+      "diff": "Prior methods (Hyland et al. pushing, McGovern et al. simulation-only) address at most 2D CoM or restricted object classes; U-GRAPH is the first to handle 3D CoM for arbitrary unseen real objects via continuous-orientation active perception.",
+      "limit": "Performance degrades for objects outside the training weight range (43.4-613.2 g) and large slips remain problematic for heavy or offset-CoM objects; the optimal number of sequential measurements for guaranteed convergence is left for future work."
+    },
+    {
+      "key": "Uchida2025_space_rls",
+      "thesis": "Reliable inertial parameter estimation for free-floating space robots requires combining momentum-conservation-based regression with log-determinant divergence regularization to enforce physical consistency of the pseudo-inertia matrix.",
+      "core": "A momentum-based regressor eliminates explicit acceleration dependence while a geometric (log-determinant divergence) regularization term on the pseudo-inertia matrix enforces positive-definiteness, absent from earlier space-robotics RLS formulations.",
+      "diff": "Prior space-robotics estimators (Abiko et al., Xu et al.) used momentum conservation but did not guarantee physical consistency; this work is the first to apply geometric regularization from ground robotics to the free-floating orbital case.",
+      "limit": "Assumes rigid structures (flexibility neglected), identifiability depends on trajectory richness, and requires future validation on real hardware."
+    },
+    {
+      "key": "Chen2025_differentiable",
+      "thesis": "Object physical properties (mass, elastic modulus) can be identified exclusively from robot joint-encoder data by solving an inverse problem through differentiable simulation, without requiring external sensors or vision.",
+      "core": "Robot mechanical reactions at joint encoders during object manipulation are used as observations in a differentiable physics simulator that backpropagates through simulation to recover object parameters.",
+      "diff": "Prior work identified robot properties from robot-specific data or object properties from object-specific sensor data; this method extracts object properties from robot-side proprioceptive measurements alone.",
+      "limit": "Paper was removed from arXiv by administrators due to licensing issues; explicit author-stated limitations unavailable."
+    },
+    {
+      "key": "RSS2025_safe_id",
+      "thesis": "It is possible to simultaneously guarantee collision-free operation and produce rigorous overapproximative bounds on end-effector inertial parameters during online robot motion by combining a provably-safe trajectory planner with a momentum-based interval-arithmetic identification method.",
+      "core": "A momentum-based regressor paired with perturbation-theoretic interval arithmetic computes conservative but rigorous parameter bounds; a degree-5 Bezier curve planner generates exciting trajectories that are provably safe under collision constraints.",
+      "diff": "Prior exciting-trajectory methods optimized regressor conditioning but ignored safety during identification; the only prior safe-identification work used sampling-based planners that could not guarantee safety between samples.",
+      "limit": "Degree-5 Bezier curves yield larger condition numbers than Fourier-based trajectories; log-Cholesky parameterization complicates tighter interval bound computation; identification is performed prior to task execution, increasing total completion time."
+    },
+    {
+      "key": "Hartwig2025_human_demo",
+      "thesis": "Payload inertial parameters can be extracted from the non-contact phases of ordinary hand-guided demonstrations, eliminating dedicated calibration trajectories, though inertia tensor estimation remains unreliable without sufficient angular excitation.",
+      "core": "Newton-Euler equations are fitted to F/T sensor and kinematic data from free-motion segments of hand-guided demonstrations using nonlinear least-squares (TLS, Ceres/Levenberg-Marquardt); no purpose-designed excitation required.",
+      "diff": "Kubus et al. and related methods rely on specially designed sinusoidal trajectories; this work accepts lower accuracy in exchange for using arbitrary human demonstrations, accessible to non-expert users.",
+      "limit": "Not all hand-guiding motions provide sufficient angular excitation; inertia tensor errors exceed 200-1200% in experiments; cannot match results from deliberately designed trajectories."
+    },
+    {
+      "key": "Nadeau2024_bias",
+      "thesis": "Continuous online estimation of F/T sensor bias drift is achievable with a three-stage Kalman pipeline that models jerk as the process noise entry point, provided the inertial parameters of the attached gripper are known.",
+      "core": "A joint-state Kalman filter using a jerk-noise model feeds kinematic estimates into a bias-estimation Kalman filter tracking both bias and its drift rate.",
+      "diff": "Prior online bias estimation methods did not integrate a principled jerk-noise kinematic model; this provides a continuously operating pipeline rather than periodic recalibration.",
+      "limit": "Assumes the inertial parameters of the gripper attached distally to the F/T sensor are known with certainty; uncertainty in gripper properties would corrupt bias estimates."
+    },
+    {
+      "key": "Shan2024_fast_calibration",
+      "thesis": "Offline pre-training of payload-adaptive neural network models across diverse payload configurations enables online payload calibration in under 4 seconds by learning to predict payload residuals rather than absolute dynamics.",
+      "core": "A Payload-adaptive Model (PaPM) encodes a short calibration trajectory into a compact Payload Indicator vector conditioning a single unified MLP to predict the residual between loaded and unloaded robot dynamics.",
+      "diff": "Prior pre-training work (Selingue et al. 2023) required knowing payload mass beforehand; PaPM extracts payload features autonomously from the calibration trajectory.",
+      "limit": "Relies on substantial training data limiting portability; payload parameterization adjusts only mass and CoM, excluding inertia variations; restricted to low-speed collaborative operation."
+    },
+    {
+      "key": "Tian2024_excitation",
+      "thesis": "Excitation trajectory optimization for dynamic parameter identification can be made computationally tractable with self-collision avoidance by replacing condition-number minimization with a Frobenius-norm-based surrogate admitting symbolic O(n)-complexity gradients.",
+      "core": "Theorem 1 establishes that the sum of Frobenius norms of a Gramian matrix and its inverse upper-bounds the condition number; this surrogate is embedded in a two-step IPOPT optimizer with collision-avoidance constraints.",
+      "diff": "Stürz et al. (2017) optimized for individual end-effectors without collision avoidance; Tika et al. (2020) achieved condition number 57,890 vs. this method's 51.",
+      "limit": "Two-step IPOPT with reject-sampling cannot guarantee global optimality; joint A1 exhibits up to 1.5 Nm torque error due to limited motion range."
+    },
+    {
+      "key": "Baek2024_humanoid_learning",
+      "thesis": "A humanoid robot can identify full inertial parameters of a grasped object in under 0.5 seconds using only proprioceptive joint data, via LSTM networks trained in simulation with a three-stage sim-to-real pipeline.",
+      "core": "Robot system ID via particle swarm optimization aligns simulation to real robot, Gaussian processes model residual errors, and an LSTM trained on 5,000 simulated trajectories with physics-consistency-regularized loss infers all inertial parameters from a 0.5-second shaking motion.",
+      "diff": "Prior learning-based methods identified only mass and CoM; F/T sensor methods are slow (35s excitation) and drift-prone; this is the first to estimate the full inertial parameter set without F/T sensors in under one second.",
+      "limit": "Inertia matrix approximated as diagonal; estimation is trajectory-dependent and lacks real-time adaptability; performance degrades for larger objects."
+    },
+    {
+      "key": "Foster2024_humanoid_adaptation",
+      "thesis": "Humanoid robots can reliably execute loco-manipulation tasks with unknown payloads if inertial parameters are estimated online via an EKF with log-Cholesky parameterization guaranteeing physical consistency by construction.",
+      "core": "Log-Cholesky parameterization maps inertial parameters to unconstrained space where any estimate corresponds to a physically realizable rigid body; embedded in an EKF updating a condensed subset relative to an offline-identified nominal model.",
+      "diff": "Most prior inertial identification operates offline without guaranteeing physical consistency of online estimates; earlier adaptive control methods require tight coupling to specific controllers.",
+      "limit": "Imperfect offline nominal parameters introduce state-dependent biases; contact transients during locomotion cause parameter estimate spikes requiring manually tuned innovation gating."
+    },
+    {
+      "key": "Khorshidi2024_contact_id",
+      "thesis": "Whole-body inertial parameter identification of floating-base robots in contact can be solved as a convex LMI optimization using only joint torque measurements, by projecting dynamics into the null space of contact constraints.",
+      "core": "Projecting floating-base whole-body dynamics regressor into the null space of the contact Jacobian removes dependence on unmeasured contact forces, reducing identification to a convex LMI problem with physical-consistency constraints.",
+      "diff": "Prior methods required full F/T sensing at end-effectors or force plates; this extends Wensing et al.'s LMI framework from fixed-base to floating-base robots in contact without external force sensors.",
+      "limit": "Contact parameters are not yet included in the identification problem; integration with adaptive MPC controllers remains future work."
+    },
+    {
+      "key": "Nadeau2022_fast_cobot",
+      "thesis": "Standard least-squares identification fails for cobots because safety speed limits produce gravity-dominated low-SNR dynamics; a Point Mass Discretization method that adaptively blends gravity-only and full Newton-Euler models recovers accurate mass and CoM from as little as 1.5 seconds of cobot-speed motion.",
+      "core": "PMD parameterizes the object as discrete point masses (positions from known shape), solves a convex program, and blends a gravity-only reduced model with the full dynamic model via a tanh-based weighting function of a dynamism signal.",
+      "diff": "Atkeson et al. (1986) and Kubus et al. (2008, RTLS) are noise-sensitive and yield unphysical results at low speeds; PMD is the first to handle the full cobot velocity regime with guaranteed physical consistency.",
+      "limit": "Requires prior knowledge of object shape for point mass positioning; full inertia tensor is not identifiable from gravity-dominated motion alone (only mass and CoM observable)."
+    },
+    {
+      "key": "Nadeau2023_visual_parts",
+      "thesis": "Inertial parameter identification for collaborative robots can be performed accurately using only slow stop-and-go motions if visual part segmentation reduces the problem from 10 unknowns to per-part masses recoverable from static F/T readings.",
+      "core": "Homogeneous Part Segmentation combines surface-based point cloud clustering with volumetric Hierarchical Tetrahedra Clustering to segment objects into uniform-density parts; once part geometry is known, only per-part mass is estimated from F/T readings at static poses.",
+      "diff": "Prior methods (OLS, GEO) require dynamic excitation and solve for all 10 parameters jointly, producing physically inconsistent estimates under low-excitation motions; this exploits visual structure to reduce unknowns so static poses suffice.",
+      "limit": "Requires homogeneous-part-density assumption; fails when parts with different densities are incorrectly merged. Static poses identify only mass and CoM, not the full inertia tensor."
+    },
+    {
+      "key": "Leboutet2021_birdy",
+      "thesis": "No single inertial parameter identification algorithm dominates across all operating conditions; systematic benchmarking with an open-source toolbox (BIRDy) is necessary to characterize trade-offs across 17 established methods.",
+      "core": "BIRDy is a robot-agnostic open-source MATLAB toolbox implementing 17 identification algorithms evaluated via Monte Carlo simulation on industrial manipulators and validated on real platforms.",
+      "diff": "Prior comparative studies were narrow in scope; BIRDy provides the first comprehensive, reproducible benchmark spanning classical, statistical, neural, and physically-constrained approaches.",
+      "limit": "Parallel robots and floating-base robots are not yet implemented; evaluation focuses on serial manipulators only."
+    },
+    {
+      "key": "Mavrakis2020_survey",
+      "thesis": "Inertial parameters of unknown objects can be estimated through three interaction levels (visual, exploratory, fixed-object) and this knowledge measurably improves robotic grasping and manipulation planning and control.",
+      "core": "The survey organizes literature into an estimation taxonomy (visual/exploratory/fixed-object) and an exploitation taxonomy (grasp planning, in-hand manipulation, pushing, throwing), mapping which estimation modality enables which manipulation capability.",
+      "diff": "Existing reviews covered robot self-identification or specific manipulation sub-tasks; this is the first survey to jointly cover both estimation and exploitation of external-object inertial parameters.",
+      "limit": "Excludes robot self-parameter identification. Planar pushing analysis covers only xy-plane, leaving several inertial parameters unidentifiable."
+    },
+    {
+      "key": "Duan2022_ft_payload",
+      "thesis": "Payload inertial parameters and gravity/inertial forces on a wrist-mounted 6-axis F/T sensor can be identified rapidly using Fourier-series excitation trajectories optimized for condition number, enabling both gravity and dynamic inertial compensation.",
+      "core": "Finite Fourier series trajectory designed by minimizing condition number of the observation matrix; 12 parameters solved via least squares with a co-located accelerometer providing inertial acceleration terms.",
+      "diff": "Prior gravity-compensation methods collected only a small number of static poses with poor accuracy; this handles both gravity and dynamic inertial compensation, reducing identification time from >60s to ~10s.",
+      "limit": "Requires a specialized force sensor with embedded accelerometers; dependent on accurate robot kinematic model."
+    },
+    {
+      "key": "Traversaro2016_manifold",
+      "thesis": "Standard physical consistency conditions (positive mass, positive-semidefinite inertia) are necessary but not sufficient; a fully physical consistent parametrization additionally enforcing inertia triangle inequalities is necessary and sufficient, achievable via manifold optimization.",
+      "core": "Inertial parameters reparametrized using principal axes orientation (SO(3)), principal moments, CoM, and mass; manifold optimization performed directly on this space, guaranteeing every point corresponds to a realizable rigid body by construction.",
+      "diff": "Prior SDP-based approaches enforced positive-semidefiniteness but ignored triangle inequalities on principal moments, permitting non-physical solutions; this provides the first necessary-and-sufficient parametrization.",
+      "limit": "Demonstrated only on single-body identification; extension to multibody structures is stated as future work."
+    },
+    {
+      "key": "Feng2020_com_grasp",
+      "thesis": "Closed-loop grasp replanning driven by slip detection and CoM estimation from combined tactile and torque data can recover stable grasps on unknown objects, achieving substantially higher success rates than vision-only planning.",
+      "core": "Three-stage pipeline: antipodal grasp sampling from depth images, slip detection via SVM on tactile sequences, and neural-network regrasp planner predicting CoM location from tactile and torque data.",
+      "diff": "Prior regrasp methods adjusted grip force under static contact assumptions or performed geometry-only adjustments; this is the first to use multi-sensor slip prediction to plan a new grasp pose during dynamic lifting.",
+      "limit": "Can only correct grasp pose in one rotational direction; dataset is small (14 training, 5 test objects)."
+    },
+    {
+      "key": "Kanoulas2018_com_grasp",
+      "thesis": "Iteratively combining geometric CoM estimation from 3D point clouds with proprioceptive CoM refinement from wrist F/T measurements allows convergence to a grasp near the true CoM, reducing wrist torque and improving reliability for heavy objects with irregular mass distributions.",
+      "core": "Exteroceptive stage voxelizes point cloud to estimate geometric CoM and selects handle grasp closest to it; proprioceptive stage uses lifted wrench to compute true CoM line and selects minimizing handle; stages iterate until torque falls below threshold.",
+      "diff": "Prior approaches used geometry alone (ignoring mass distribution) or single-modality sensing; this is the first to iteratively integrate exteroceptive and proprioceptive perception for CoM-guided grasp adaptation.",
+      "limit": "Requires objects on flat surfaces; assumes uniform density during voxelization. Limited to handle-like grasps, single-arm only."
+    },
+    {
+      "key": "Haustein2019_placement",
+      "thesis": "Integrated placement-motion planning with objective optimization via MCTS over a hierarchical arm/face/region structure outperforms naive rejection sampling in cluttered environments.",
+      "core": "Three-level AFR hierarchy organizes placement search space; MCTS with UCB1 exploits spatial feasibility correlation to sample collision-free stable configurations.",
+      "diff": "Prior placement work focused on identifying feasible surfaces but did not jointly optimize reachability among obstacles and user-defined objectives.",
+      "limit": "Excludes collision-free retreat constraint; assumes known grasp. Limited to horizontal surface placements."
+    },
+    {
+      "key": "Kruzliak2024_interactive",
+      "thesis": "A Bayesian network over physical properties combined with information-gain-driven exploratory action selection enables robots to efficiently extract object properties through manipulation, outperforming random action selection.",
+      "core": "Bayesian network links discrete material/category nodes with continuous physical property nodes; action selection maximizes expected entropy reduction over five robot actions.",
+      "diff": "Prior methods used fixed action sequences or relied on passive vision; this introduces active information-theoretic action selection that adaptively determines which actions to execute and when to stop.",
+      "limit": "Gripper force resolution threshold produces binary elasticity outputs for stiff objects; numerical instability arises when inferring categorical weights from continuous distributions."
+    },
+    {
+      "key": "Lambert2023_real2sim",
+      "thesis": "Standard robotic payload identification methods can be practically applied to generate simulation-ready 3D assets with accurate inertial parameters for Real2Sim pipelines, provided appropriate excitation trajectories and explicit friction modeling.",
+      "core": "Newton-Euler equations construct a regressor linear in inertial parameters; least-squares estimation with Fourier-series excitation identifies mass, CoM, and inertia tensor; friction (viscous, Coulomb, offset) explicitly modeled.",
+      "diff": "Existing Real2Sim pipelines ignore object dynamics or make simplifying mass-distribution assumptions; this is among the first to systematically apply payload identification for physically accurate simulation assets.",
+      "limit": "limit not available"
+    },
+    {
+      "key": "Nadeau2025_diffusion_placement",
+      "thesis": "Stability can be injected into diffusion-based placement generation at inference time via a physics-grounded robustness guidance signal, eliminating the need for simulation or retraining.",
+      "core": "A differentiable stability loss encoding contact quality, surface normal alignment, and scene robustness is used as guidance during diffusion sampling over point-cloud-conditioned placement poses, requiring no additional training.",
+      "diff": "Prior geometric methods require expensive per-candidate simulation; this replaces simulation with gradient-based guidance, achieving 47% faster runtime and 56% more robust placements.",
+      "limit": "Not evaluated on surfaces where sliding/rolling effects undermine stability; point cloud representation sometimes increases penetration errors; requires object models."
+    },
+    {
+      "key": "Nadeau2025_contact_robustness",
+      "thesis": "Selecting contact points first ranked by a physically-grounded static robustness metric yields faster and more stable placement planning than conventional pose-first sampling approaches.",
+      "core": "A static robustness heuristic combining friction-cone slip analysis and convex-hull toppling analysis weights contact point sampling, after which matching object points and valid poses are derived.",
+      "diff": "Prior planners sample poses first and evaluate stability afterward via simulation, resulting in 8-20x slower planning; this inverts the pipeline to prune search space upfront.",
+      "limit": "Uses pyramidal friction cone approximation; assumes placements are linear, monotone, and sequential so objects cannot be repositioned once placed."
+    },
+    {
+      "key": "Lerner2024_ft_placement",
+      "thesis": "Wrist-mounted F/T feedback can replace vision for the final contact phase of object stacking by detecting torque imbalance and iteratively repositioning toward stable equilibrium.",
+      "core": "Contact location and surface normal estimated from wrench equilibrium equations upon quasi-static touchdown; robot iteratively shifts object CoM over contact point until torques approach zero.",
+      "diff": "Unlike vision-only or learning-based placement methods, this directly closes a physical equilibrium loop using sensor measurements.",
+      "limit": "Achieves only 17% success when iterative adjustment steps are required due to algorithm divergence; restricted to largely flat objects and vertical approach directions."
+    },
+    {
+      "key": "Li2024_diff_contact",
+      "thesis": "Differentiating contact forces with respect to geometric parameters enables online estimation of object and environment geometry from F/T measurements, providing a unified framework for placement under diverse geometric uncertainties.",
+      "core": "A differentiable simulator propagates gradients of predicted contact wrenches through geometric parameters; particle-based gradient descent minimizes discrepancy between predicted and measured F/T readings.",
+      "diff": "Prior differentiable simulators do not support differentiation with respect to geometric parameters; existing contact-based estimation methods handle only specific uncertainty types.",
+      "limit": "Only quasi-static tasks feasible due to 3.36-second per-action compute time; limited to geometric uncertainty; requires manual specification of derivative functions for each URDF."
+    },
+    {
+      "key": "Lee2023_spots",
+      "thesis": "Combining physics-based stability simulation with LLM semantic reasoning produces contextually appropriate and physically stable placement candidates for semi-autonomous teleoperation.",
+      "core": "Real-to-sim scene reconstruction in MuJoCo evaluates candidate stability via perturbed forward dynamics; VLM/GPT assigns semantic suitability; kernel density estimation merges both scores.",
+      "diff": "Prior LLM-based placement methods rely on semantic reasoning alone and lack physical stability verification; SPOTS adds a physics simulation stage using significantly fewer tokens.",
+      "limit": "Requires accurate open-vocabulary object detection, known object supersets, and CAD models for real-to-sim reconstruction."
+    },
+    {
+      "key": "Ferrad2025_placeit",
+      "thesis": "Quality-diversity optimization can automatically generate large archives of diverse stable placement poses in simulation, enabling data-driven placement policies without manual data collection.",
+      "core": "CMA-MAE quality-diversity algorithm explores SE(3) placement parameter space in simulation; domain randomization with perturbations filters unstable equilibria.",
+      "diff": "Prior placement data generation relies on geometric heuristics or random sampling; QD optimization systematically covers the solution space and outperforms all baselines.",
+      "limit": "Performance highly dependent on simulation quality (mesh fidelity, inertial properties, contact modeling); restricted to rigid non-deformable objects."
+    },
+    {
+      "key": "Zhao2025_anyplace",
+      "thesis": "Decomposing object placement into VLM-guided high-level location proposal and diffusion-based low-level SE(3) pose prediction trained on synthetic data achieves generalizable placement across diverse real-world objects.",
+      "core": "Molmo VLM with SAM-2 segmentation identifies 2D placement keypoints; diffusion transformer predicts SE(3) transformations from cropped point clouds, trained entirely on synthetic data.",
+      "diff": "Prior methods (RPDiff) require task-specific real-world datasets; AnyPlace achieves 92.74% vs. 16.51% success on multi-modal insertion via synthetic-only training.",
+      "limit": "Grasp-pose compatibility is not guaranteed for all stable placements; low-level module lacks language conditioning."
+    },
+    {
+      "key": "Ye2026_flyaware",
+      "thesis": "Combining vision-based pre-grasp inertia estimation with post-grasp disturbance observer adaptation enables aerial manipulators to handle unknown payloads with order-of-magnitude faster convergence than estimation-only approaches.",
+      "core": "Pre-sensing uses RGB-D + IST-Net + GPT-4 density reasoning to predict mass and moment of inertia; disturbance observer refines post-grasp, feeding inertia-aware gain-scheduled controller.",
+      "diff": "Prior aerial manipulation relies solely on post-grasp estimation requiring 20+ seconds convergence; FlyAware's two-stage pipeline reduces this to ~2 seconds with 28.2% RMSE improvement.",
+      "limit": "Assumes object CoM coincides with geometric frame origin and neglects manipulator mass/inertia; requires internet access for GPT API."
+    },
+    {
+      "key": "Kang2025_cog_grasping",
+      "thesis": "Estimating an object's center of gravity via diffusion-based semantic correspondence from a small annotated database enables stable grasping of tools with non-uniform mass distribution.",
+      "core": "CLIP retrieves visually similar annotated objects; DIFT performs semantic correspondence to transfer CoG annotations; GraspNet poses filtered to prioritize those nearest estimated CoG.",
+      "diff": "Conventional affordance-based grasping ignores mass distribution and achieves only 27% success on uneven-density tools; CoG-guided filtering raises success to 76% without physical sensors.",
+      "limit": "Dataset covers only ten tool categories; generalization limited to visually similar objects."
+    },
+    {
+      "key": "Watanabe2025_ftact",
+      "thesis": "Augmenting the Action Chunking Transformer with 6-DOF wrist F/T signals improves contact-rich manipulation tasks where visual observability is insufficient to detect contact state transitions.",
+      "core": "6-DOF F/T readings concatenated with joint states as additional encoder inputs to ACT transformer alongside camera images.",
+      "diff": "Prior ACT-based imitation learning uses vision and proprioception only; this integrates F/T for single-arm gripper-based retail manipulation.",
+      "limit": "Evaluation limited to one task family (bottle pick-and-reorient); generalization to broader task diversity not demonstrated."
+    }
+  ]
+}
