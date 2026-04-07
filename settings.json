@@ -84,5 +84,6 @@
         "repo": "anthropics/skills"
       }
     }
-  }
+  },
+  "effortLevel": "high"
 }
