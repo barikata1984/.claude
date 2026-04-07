@@ -30,6 +30,13 @@ placeholder descriptions in English; translate them to match the output language
 
 ## Workflow
 
+### Subagent Model Policy
+
+All subagents launched during the survey must use the **middle-class model**
+(the tier between the highest-capability and lowest-cost models in the
+current lineup). This balances annotation quality against cost and context
+efficiency.
+
 ### Phase 1: Research Design
 
 Before searching, establish the survey's scope and boundaries with the user:
@@ -265,22 +272,45 @@ After all subagents return, merge their JSON arrays into a unified paper
 list. Then identify themes, trace the evolution, and highlight connections
 across the full set.
 
-**Step 3 — Report paywall papers to user:**
+**Step 3 — OA coverage analysis and paywall processing recommendation:**
 
-After processing all OA papers, present a summary of paywall papers grouped by
-publisher:
+After processing all OA papers, analyze coverage and present a recommendation
+before proceeding to Phase 3b:
+
+1. **Coverage analysis**: For each thematic category and RQ, count OA vs
+   Paywall papers. Identify categories where Paywall papers are the sole
+   or majority source.
+2. **Annotation coverage**: Calculate the percentage of papers with complete
+   annotations (all four fields filled) from OA alone.
+3. **Recommendation**: Based on the above, propose one of:
+   - **Skip all**: OA coverage is sufficient across all categories/RQs
+   - **Selective fetch**: List specific Paywall papers that fill coverage
+     gaps (e.g., sole paper in a category, high-citation foundational work)
+   - **Full fetch**: OA coverage has significant gaps requiring most
+     Paywall papers
+
+Present the analysis and recommendation to the user:
 
 ```
-## Paywall Papers (N papers, M publishers)
+## Paywall Processing Recommendation
 
-| Publisher | Count | Papers |
-|-----------|-------|--------|
-| IEEE Xplore | 3 | [Title1], [Title2], [Title3] |
-| Elsevier | 2 | [Title4], [Title5] |
-| Springer | 1 | [Title6] |
+### OA Coverage Analysis
+- Total: N papers (OA: X, Paywall: Y)
+- Categories with OA-only coverage: [list]
+- Categories requiring Paywall papers: [list, with reason]
+- Annotation completeness (OA only): Z%
 
-Phase 3b will process these publisher-by-publisher.
-For each publisher:
+### Recommendation: [Skip all / Selective fetch / Full fetch]
+[1-2 sentence justification]
+
+### Paywall Papers (Y papers, M publishers)
+
+| Publisher | Count | Papers | Priority |
+|-----------|-------|--------|----------|
+| IEEE Xplore | 3 | [Title1], ... | [High/Low] |
+| Elsevier | 2 | [Title4], ... | [High/Low] |
+
+For publishers you want to fetch:
 1. Log in via your browser
 2. Export cookies via Cookie-Editor (Export → JSON → copies to clipboard)
 3. Run: bash ~/.claude/mcp/academic-fetch/save-cookies.sh

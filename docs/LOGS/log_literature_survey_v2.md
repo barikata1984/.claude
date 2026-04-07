@@ -165,3 +165,37 @@ S2 検索 + OA URL 解決を単一の MCP サーバーで提供。MCP の「1ド
 | `skills/literature-survey/references/report_template.md` | Limit Field Coverage テーブル |
 | `docs/TODO.md` | Phase 3a/3b 完了、Unpaywall 完了、Cookie 自動読み込み削除 |
 | `docs/ISSUES.md` | 全イシュー解決済みでクリア |
+
+---
+
+## 2026-04-07: ISSUES レビュー + SKILL.md 改善
+
+literature-survey 実行後に記録された ISSUES 5件（#1 均一密度未検証、#2 並列制御、
+#3 コンテキスト予算、#4 DOI 検証遅延、#5 Paywall 判断）の Fix 適用状況を検証し、
+未適用の Fix を精査・適用した。
+
+ISSUES.md に「Fix (SKILL.md)」と記載されていたが、実際に SKILL.md に反映されていたのは
+Issue #5 のチェックポイント部分のみ（部分適用）。他は全て未適用だった。
+
+### Issue 別対応
+
+| Issue | 対応 |
+| ----- | ---- |
+| #1 均一密度未検証 | ユーザーが ISSUES.md から削除（プロジェクト側イシュー） |
+| #2 並列制御 | Phase 3a は自然に 2-4 並列に収まるため制限不要と判断。Phase 2 のみ対象。SKILL.md 適用は保留 |
+| #3 コンテキスト予算 | 根本解決不可（API 不在）。Fix を「コンテキスト保護設計」に書き直し: サブエージェント返却要約化 + 中間ファイル書き出し必須化 + Phase 5 ファイル読み直し |
+| #4 DOI 検証遅延 | Phase 2 での即時検証は不可能（DOI が揃わない）。Fix を Phase 4 解決結果検証 + Phase 6 漏れ防止に書き直し。さらにユーザーが「Phase 6 の失敗モード調査が先決」と判断し、次のアクションに変更 |
+| #5 Paywall 判断 | OA カバレッジ分析 + 3段階推奨生成（Skip all / Selective fetch / Full fetch）を SKILL.md Phase 3a Step 3 に適用 → Issue 解消・削除 |
+
+### SKILL.md 適用内容
+
+1. **Subagent Model Policy** 新設 — 全サブエージェントにミドルクラスモデル（現 Sonnet 4.6）を指定。将来のモデルラインナップ変更にも対応するため抽象表現を採用
+2. **Phase 3a Step 3** 改修 — 「Report paywall papers」→「OA coverage analysis and paywall processing recommendation」に名称変更。カバレッジ分析テーブル + 3段階推奨 + Publisher Priority 列を追加
+
+### 変更ファイル一覧
+
+| ファイル | 変更 |
+| -------- | ---- |
+| `skills/literature-survey/SKILL.md` | Subagent Model Policy 新設、Phase 3a Step 3 改修 |
+| `docs/ISSUES.md` | #1 削除、#3/#4 Fix 書き直し、#5 適用済み→削除、ラベル「対策案 (未実装)」に統一 |
+| `docs/TODO.md` | スキル改善タスク更新 |

@@ -65,10 +65,14 @@
   - 新規性確認: F/T推定×配置計画の統合研究は存在しない
   - Seed 3件提案 (End-to-end pipeline, Uncertainty-aware placement, Active CoM refinement)
   - 出力: `docs/SURVEYS/ft_estimation_placement.md`
-- [ ] literature-survey スキル改善 (ISSUES 3件の反映)
-  - イシュー 2 (並列サブエージェント): 根本解決策なし（Claude Code 側の制約）
-  - イシュー 3 (コンテキスト予算): 根本解決策なし（API 不在）、中間ファイル書き出しは緩和策
-  - イシュー 4 (DOI 検証遅延): Phase 7 で漏れた6件の失敗モード調査が先決
+- [ ] literature-survey スキル改善 (ISSUES 反映)
+  - [x] Subagent Model Policy 追加（ミドルクラスモデル指定）
+  - [x] Issue #5 (Paywall 判断): OA カバレッジ分析 + 推奨生成を SKILL.md に適用 → Issue 解消
+  - [x] Issue #3 (コンテキスト予算): Fix を「コンテキスト保護設計」に書き直し（ISSUES.md）
+  - [x] Issue #4 (DOI 検証遅延): Fix を実態に合わせて書き直し（ISSUES.md）
+  - [ ] Issue #2 (並列サブエージェント): Phase 2 への最大3並列制限を SKILL.md に適用
+  - [ ] Issue #3: 対策案を SKILL.md に適用
+  - [ ] Issue #4: Phase 6 の失敗モード調査（ログ・中間ファイルへのアクセスが必要）
 
 ## Literature Survey スキル改善 (2026-04-06)
 
