@@ -825,3 +825,392 @@ J. Swevers, W. Verdonck, J. De Schutter — IEEE Control Systems Magazine, 2007
 DOI: `10.1109/MCS.2007.904659`
 
 > 産業ロボット動力学モデル同定の実践チュートリアル。励起軌道設計・パラメータ推定・検証の全工程を体系的に解説。
+
+---
+
+## Category G — Deformable Object Physical Property Recovery
+
+### Weiss2020_sparseConstraints
+
+**Correspondence-Free Material Reconstruction using Sparse Surface Constraints**
+Martin Weiss et al. — CVPR, 2020
+arXiv: `1910.01812` | [arXiv](https://arxiv.org/abs/1910.01812)
+
+> 対応点追跡なしに単一視点深度列から弾性パラメータを復元。Sparse Surface Constraintによる微分可能逆問題定式化。
+
+### Jatavallabhula2021_gradSim
+
+**gradSim: Differentiable Simulation for System Identification and Visuomotor Control**
+Krishna Murthy Jatavallabhula et al. — ICLR, 2021
+arXiv: `2104.02646` | [arXiv](https://arxiv.org/abs/2104.02646)
+
+> 微分可能レンダリング＋物理の統合により、ビデオピクセルから物理パラメータへの勾配逆伝播を初実現。
+
+### Feng2022_vibrationTomography
+
+**Visual Vibration Tomography: Estimating Interior Material Properties from Monocular Video**
+Berthy Feng et al. — CVPR, 2022 (Oral)
+arXiv: `2104.02735` | [arXiv](https://arxiv.org/abs/2104.02735)
+
+> 表面振動モードの単眼ビデオ観察とFEMモーダル解析の逆問題として、物体内部のYoung's modulus・密度分布を復元。
+
+### Qiao2022_NeuPhysics
+
+**NeuPhysics: Editable Neural Geometry and Physics from Monocular Videos**
+Yi-Ling Qiao et al. — NeurIPS, 2022
+arXiv: `2210.12352` | [arXiv](https://arxiv.org/abs/2210.12352)
+
+> Neural SDF＋微分可能FEMにより単眼ビデオから3D形状・物理パラメータを同時再構築し、インタラクティブ編集を実現。
+
+### Guan2022_NeuroFluid
+
+**NeuroFluid: Fluid Dynamics Grounding with Particle-Driven Neural Radiance Fields**
+Shanyan Guan et al. — ICML, 2022 (Spotlight)
+arXiv: `2203.01762` | [arXiv](https://arxiv.org/abs/2203.01762)
+
+> 粒子駆動NeRFレンダラとの端-端最適化により、粒子軌跡正解なしにピクセル観察から流体の粘性・密度を推定。
+
+### Li2023_PACNeRF
+
+**PAC-NeRF: Physics Augmented Continuum Neural Radiance Fields for Geometry-Agnostic System Identification**
+Xuan Li et al. — ICLR, 2023
+arXiv: `2303.05512` | [arXiv](https://arxiv.org/abs/2303.05512)
+
+> NeRF＋MPMハイブリッド表現で形状未知条件下のマルチビュービデオから弾性率・粘性等を同時復元する初の手法。
+
+### Xie2024_PhysGaussian
+
+**PhysGaussian: Physics-Integrated 3D Gaussians for Generative Dynamics**
+Tianyi Xie et al. — CVPR, 2024 (Highlight)
+arXiv: `2311.12198` | [arXiv](https://arxiv.org/abs/2311.12198)
+
+> 3DGaussianカーネルにMPM物理属性を直接付与し「what you see is what you simulate」パラダイムを確立。
+
+### Chen2024_GIC
+
+**GIC: Gaussian-Informed Continuum for Physical Property Identification and Simulation**
+Junhao Cai et al. — NeurIPS, 2024 (Oral)
+arXiv: `2406.14927` | [arXiv](https://arxiv.org/abs/2406.14927)
+
+> 明示的3DGaussianと暗黙的連続体の双方向監視でPAC-NeRFを大幅に超える物性同定精度を達成。
+
+### Feng2024_PIENeRF
+
+**PIE-NeRF: Physics-based Interactive Elastodynamics with NeRF**
+Tianhao Feng et al. — CVPR, 2024
+arXiv: `2311.13099` | [arXiv](https://arxiv.org/abs/2311.13099)
+
+> NeRF密度場上のメッシュレスQ-GMLS離散化で、メッシュなしの超弾性インタラクティブシミュレーションを実現。
+
+### Zhong2024_SpringGaus
+
+**Reconstruction and Simulation of Elastic Objects with Spring-Mass 3D Gaussians**
+Licheng Zhong et al. — ECCV, 2024
+DOI: `10.1007/978-3-031-72627-9_23` | arXiv: `2403.09434`
+
+> Spring-Massと3DGSの統合。外観学習と物理学習の分離によるサンプル効率的なper-point物性推定。
+
+### Liu2024_Physics3D
+
+**Physics3D: Learning Physical Properties of 3D Gaussians via Video Diffusion**
+Fangfu Liu et al. — arXiv, 2024
+arXiv: `2406.04338` | [arXiv](https://arxiv.org/abs/2406.04338)
+
+> Video Diffusion SDSによる粘弾性パラメータ蒸留。弾性のみのPhysDreamerを材料空間で拡張。
+
+### Huang2025_DreamPhysics
+
+**DreamPhysics: Learning Physics-Based 3D Dynamics with Video Diffusion Priors**
+Tianyu Huang et al. — AAAI, 2025
+arXiv: `2406.01476` | [arXiv](https://arxiv.org/abs/2406.01476)
+
+> SDS損失＋フレーム補間＋対数勾配最適化により、Video DiffusionからMPM-Gaussianへの安定的物理プライオア蒸留。
+
+### Hong2026_PIDG
+
+**Physics-Informed Deformable Gaussian Splatting: Towards Unified Constitutive Laws for Time-Evolving Material Field**
+Haoqin Hong et al. — AAAI, 2026
+arXiv: `2511.06299` | [arXiv](https://arxiv.org/abs/2511.06299)
+
+> Cauchy運動量方程式残差制約をGaussian粒子に課し、既知構成則なしで単眼ビデオから物理整合的動的再構成。
+
+### Chopra2025_PhysGS
+
+**PhysGS: Bayesian-Inferred Gaussian Splatting for Physical Property Estimation**
+Abhinav Chopra et al. — arXiv, 2025
+arXiv: `2511.18570` | [arXiv](https://arxiv.org/abs/2511.18570)
+
+> Per-point物性のBayes反復推論。Vision-languageプライオアでシードし不確実性を明示モデル化。
+
+### Vasile2025_ASDiffMPM
+
+**Gaussian-Augmented Physics Simulation and System Identification with Complex Colliders**
+Federico Vasile et al. — NeurIPS, 2025
+arXiv: `2511.06846` | [arXiv](https://arxiv.org/abs/2511.06846)
+
+> 任意形状剛体コライダとの微分可能衝突処理でMPMを拡張。非平面境界条件下での物性推定を実現。
+
+### Jiang2025_PhysTwin
+
+**PhysTwin: Physics-Informed Reconstruction and Simulation of Deformable Objects from Videos**
+Hanxiao Jiang et al. — ICCV, 2025
+arXiv: `2503.17973` | [arXiv](https://arxiv.org/abs/2503.17973)
+
+> スパースRGB-Dビデオからspring-mass＋Gaussianスプラットでre-simulation可能なデジタルツインを構築。
+
+### Chen2025_Vid2Sim
+
+**Vid2Sim: Generalizable, Video-based Reconstruction of Appearance, Geometry and Physics for Mesh-free Simulation**
+Chuhao Chen et al. — CVPR, 2025
+arXiv: `2506.06440` | [arXiv](https://arxiv.org/abs/2506.06440)
+
+> VideoMAEベースのフィードフォワード物性予測＋Neural JacobianによるReduced-Order精緻化で汎化的復元。
+
+### Chen2026_EMPM
+
+**EMPM: Embodied MPM for Modeling and Simulation of Deformable Objects**
+Yunuo Chen et al. — RA-L, 2025
+arXiv: `2601.17251` | [arXiv](https://arxiv.org/abs/2601.17251)
+
+> 微分可能MPM＋3DGS統合で破壊・伸長・圧縮を含むelastoplastic挙動のモデリングと操作。
+
+### Zhu2024_latentIntuitive
+
+**Latent Intuitive Physics: Learning to Transfer Hidden Physics from A 3D Video**
+Xiangming Zhu et al. — ICLR, 2024
+arXiv: `2406.12769` | [arXiv](https://arxiv.org/abs/2406.12769)
+
+> 確率的潜在特徴として流体物性を推論し新規シーンに転移。明示的パラメータ推定なしの適応。
+
+### NVIDIA2025_VoMP
+
+**VoMP: Predicting Volumetric Mechanical Property Fields for Any 3D Asset**
+NVIDIA et al. — arXiv, 2025
+arXiv: `2510.22975` | [arXiv](https://arxiv.org/abs/2510.22975)
+
+> Geometry Transformerでper-voxelのE, ν, 密度をフィードフォワード予測。表現非依存の初のvolumetric物性予測。
+
+### Fan2025_PhysWorld
+
+**PhysWorld: From Real Videos to World Models of Deformable Objects via Physics-Aware Demonstration Synthesis**
+Yu Yang et al. — arXiv, 2025
+arXiv: `2510.21447` | [arXiv](https://arxiv.org/abs/2510.21447)
+
+> MPMデジタルツインから合成データ生成→GNN世界モデル学習で47倍高速推論。シミュレータ→データ→モデル戦略。
+
+### Li2022_DiffCloth
+
+**DiffCloth: Differentiable Cloth Simulation with Dry Frictional Contact**
+Yifei Li et al. — ACM ToG, 2022
+DOI: `10.1145/3527660` | arXiv: `2106.05306`
+
+> Projective DynamicsのSignorini-Coulomb摩擦拡張で接触リッチな布の微分可能シミュレーション。
+
+### Zheng2024_DiffCP
+
+**Differentiable Cloth Parameter Identification and State Estimation in Manipulation**
+Dongzhe Zheng et al. — RA-L, 2024
+DOI: `10.1109/LRA.2024.3357039` | arXiv: `2311.05141`
+
+> 異方性弾塑性MPMによるreal-to-sim-to-real布パラメータ同定と状態推定。
+
+### Sundaresan2022_DiffCloud
+
+**DiffCloud: Real-to-Sim from Point Clouds with Differentiable Simulation and Rendering of Deformable Objects**
+Priya Sundaresan et al. — IROS, 2022
+DOI: `10.1109/IROS47612.2022.9981101` | arXiv: `2204.03139`
+
+> 微分可能FEM＋微分可能点群レンダリングで実点群からオンザフライのシミュレーションパラメータ推定（約10分）。
+
+### Antonova2022_BayesianReal2Sim
+
+**A Bayesian Treatment of Real-to-Sim for Deformable Object Manipulation**
+Rika Antonova et al. — RA-L, 2022
+DOI: `10.1109/LRA.2022.3153856` | arXiv: `2112.05068`
+
+> RKHS-Netでキーポイントを分布埋め込みとしてエンコードし、柔軟物の弾性・摩擦のBayes事後推定。
+
+### Liu2022_DiffRope
+
+**Differentiable Robotic Manipulation of Deformable Rope-like Objects Using Compliant Position-based Dynamics**
+Fei Liu et al. — RA-L, 2022
+DOI: `10.1109/LRA.2023.3264766` | arXiv: `2202.09714`
+
+> 微分可能XPBDによるロープ剛性パラメータ同定と形状制御。Baxter/da Vinciロボットで検証。
+
+### Gong2024_BayesianCloth
+
+**Bayesian Differentiable Physics for Cloth Digitalization**
+Deshan Gong et al. — CVPR, 2024
+arXiv: `2402.17664` | [arXiv](https://arxiv.org/abs/2402.17664)
+
+> 変分Bayes推論で布のper-element不均一物性を少数ドレープテスト画像から学習。
+
+### Ru2025_FabricReal2Sim
+
+**Can Real-to-Sim Approaches Capture Dynamic Fabric Behavior for Robotic Fabric Manipulation?**
+Yingdong Ru et al. — IROS, 2025
+DOI: `10.1109/IROS60139.2025.11245811`
+arXiv: `2503.16310` | [arXiv](https://arxiv.org/abs/2503.16310)
+
+> 4つのreal-to-sim手法を比較し、未見動的タスクへの汎化失敗を系統的に実証。PINNベース手法を新規提案。
+
+### Yoon2025_ClothJCDE
+
+**Real-to-Sim High-Resolution Cloth Modeling: Physical Parameter Optimization Using Particle-Based Simulation with Robot Manipulation Data**
+Kang-il Yoon, Soo-Chul Lim — JCDE, 2025
+DOI: `10.1093/jcde/qwaf065` | [DOI](https://doi.org/10.1093/jcde/qwaf065)
+
+> Bayes最適化＋勾配降下ハイブリッドで布パラメータを最適化。複数布種類・タスクに汎化。
+
+### Chen2025_DER
+
+**Accurate Simulation and Parameter Identification of Deformable Linear Objects using Discrete Elastic Rods in Generalized Coordinates**
+Qi Jing Chen et al. — IROS, 2025
+DOI: `10.1109/IROS60139.2025.11247160` | arXiv: `2310.00911`
+
+> DERモデルのMuJoCo統合と曲げ・ねじり剛性の勾配ベース同定。ゼロショットsim-to-realワイヤフリング。
+
+### Kawaharazuka2022_VarStiffCloth
+
+**Dynamic Cloth Manipulation Considering Variable Stiffness and Material Change Using Deep Predictive Model With Parametric Bias**
+Kento Kawaharazuka et al. — Frontiers in Neurorobotics, 2022
+DOI: `10.3389/fnbot.2022.890695` | [DOI](https://doi.org/10.3389/fnbot.2022.890695)
+
+> パラメトリックバイアスLSTMで布材料特性をオンライン同定し、可変剛性筋骨格ロボットの動的布操作に適応。
+
+### Patni2024_elasticity
+
+**Online Elasticity Estimation and Material Sorting Using Standard Robot Grippers**
+Shubhan P. Patni et al. — IJAMT, 2024
+DOI: `10.1007/s00170-024-13678-6` | arXiv: `2401.08298`
+
+> 標準並行爪グリッパによる繰り返し圧縮＋Hunt-Crossleyモデルで相対的弾性判別とソーティング。
+
+### Burgess2024_youngs
+
+**Learning Object Compliance via Young's Modulus from Single Grasps with Camera-Based Tactile Sensors**
+Michael Burgess et al. — arXiv, 2024
+arXiv: `2406.15304` | [arXiv](https://arxiv.org/abs/2406.15304)
+
+> GelSight触覚＋ハイブリッドモデルで単一把持から10桁レンジのYoung's modulus推定。
+
+### Yao2023_vsf
+
+**Estimating Tactile Models of Heterogeneous Deformable Objects in Real Time**
+Shaoxiong Yao, Kris Hauser — ICRA, 2023
+DOI: `10.1109/ICRA48891.2023.10160731` | [PDF](https://motion.cs.illinois.edu/papers/ICRA2023_Yao_VolumeStiffnessField.pdf)
+
+> Volumetric Stiffness Fieldによる不均一柔軟物の空間的力応答のリアルタイム学習。
+
+### Kutsuzawa2024_stiffness
+
+**Learning-based Object Stiffness and Shape Estimation with Confidence Level in Multi-Fingered Hand Grasping**
+Gaku Kutsuzawa et al. — Frontiers in Neurorobotics, 2024
+DOI: `10.3389/fnbot.2024.1466630` | [DOI](https://doi.org/10.3389/fnbot.2024.1466630)
+
+> 多指ハンド固有受容感覚のみから剛性・形状を不確実性付き同時推定。確率的推論フレームワーク。
+
+### Chen2025_diffprop
+
+**Learning Object Properties Using Robot Proprioception via Differentiable Robot-Object Interaction**
+Peter Yichen Chen et al. — ICRA, 2025
+arXiv: `2410.03920` | [arXiv](https://arxiv.org/abs/2410.03920)
+
+> 微分可能ロボット-物体シミュレーションで関節エンコーダのみから質量・弾性率を逆同定。
+
+### Sanchez2020_BlindFEM
+
+**Blind Manipulation of Deformable Objects Based on Force Sensing and Finite Element Modeling**
+Jesus Sanchez et al. — Frontiers in Robotics and AI, 2020
+DOI: `10.3389/frobt.2020.00073` | [DOI](https://doi.org/10.3389/frobt.2020.00073)
+
+> F/Tセンサ＋四面体FEMのみで視覚なしに柔軟物の変形推定と制御を実証。
+
+### Yang2025_dpsi
+
+**Differentiable Physics-based System Identification for Robotic Manipulation of Elastoplastic Materials**
+Xintong Yang et al. — IJRR, 2025
+DOI: `10.1177/02783649251334661` | arXiv: `2411.00554`
+
+> 微分可能MPMで単一ロボットインタラクションからelastoplastic物性6パラメータを同定→長期操作計画。唯一の完全パイプライン。
+
+### Zhang2024_adaptigraph
+
+**AdaptiGraph: Material-Adaptive Graph-Based Neural Dynamics for Robotic Manipulation**
+Kaifeng Zhang et al. — RSS, 2024
+arXiv: `2407.07889` | [arXiv](https://arxiv.org/abs/2407.07889)
+
+> 物性条件付きGNNで4材料カテゴリにわたる動力学予測。テスト時few-shot逆最適化で未知物体に適応。
+
+### Ai2024_robopack
+
+**RoboPack: Learning Tactile-Informed Dynamics Models for Dense Packing**
+Bo Ai et al. — RSS, 2024
+arXiv: `2407.01418` | [arXiv](https://arxiv.org/abs/2407.01418)
+
+> Soft-Bubble触覚履歴からのlatent物理推定＋recurrent GNNで遮蔽下の密パッキング。
+
+### Shi2022_RoboCraft
+
+**RoboCraft: Learning to See, Simulate, and Shape Elasto-Plastic Objects with Graph Networks**
+Haochen Shi et al. — RSS 2022 / IJRR, 2024
+DOI: `10.1177/02783649231219020` | arXiv: `2205.02909`
+
+> RGB-Dから粒子分布ベースGNN動力学学習。10分の実データでdough整形操作。
+
+### Wu2026_rapid
+
+**Rapid Adaptation of Particle Dynamics for Generalized Deformable Object Mobile Manipulation**
+Bohan Wu et al. — arXiv, 2026
+arXiv: `2603.18246` | [arXiv](https://arxiv.org/abs/2603.18246)
+
+> RMAフレームワークの柔軟物拡張。特権的粒子埋め込みを視覚アダプタに蒸留し80%超の実機成功率。
+
+### Qiao2020_diffsim
+
+**Scalable Differentiable Physics for Learning and Control**
+Yi-Ling Qiao et al. — ICML, 2020
+DOI: `10.5555/3524938.3525665` | arXiv: `2007.02168`
+
+> メッシュベース微分可能物理。局所化衝突処理で粒子ベースの2桁のメモリ・計算削減。
+
+### Huang2021_PlasticineLab
+
+**PlasticineLab: A Soft-Body Manipulation Benchmark with Differentiable Physics**
+Zhiao Huang et al. — ICLR, 2021 (Spotlight)
+arXiv: `2104.03311` | [arXiv](https://arxiv.org/abs/2104.03311)
+
+> DiffTaiChiベースMPM上の弾塑性操作ベンチマーク。RLと勾配ベース最適化の体系的比較を提供。
+
+### Heiden2021_DiSECt
+
+**DiSECt: A Differentiable Simulation Engine for Autonomous Robotic Cutting**
+Eric Heiden et al. — RSS, 2021 (Best Student Paper)
+DOI: `10.15607/RSS.2021.XVII.067` | arXiv: `2105.12244`
+
+> 仮想節点アルゴリズムで再メッシュ不要の微分可能切断シミュレーション。数百パラメータの勾配ベース推定。
+
+### Si2024_difftactile
+
+**DiffTactile: A Physics-based Differentiable Tactile Simulator for Contact-rich Robotic Manipulation**
+Zilin Si et al. — ICLR, 2024
+arXiv: `2403.08716` | [arXiv](https://arxiv.org/abs/2403.08716)
+
+> FEM＋多材料＋ペナルティ接触の完全微分可能触覚シミュレータ。物性キャリブレーションとスキル学習を統合。
+
+### Li2019_dpinet
+
+**Learning Particle Dynamics for Manipulating Rigid Bodies, Deformable Objects, and Fluids**
+Yunzhu Li et al. — ICLR, 2019
+arXiv: `1810.01566` | [arXiv](https://arxiv.org/abs/1810.01566)
+
+> 動的インタラクショングラフ＋階層的粒子構造のDPI-Nets。剛体・柔軟物・流体の統一粒子動力学学習。
+
+### Millard2022_FEMParamEst
+
+**Parameter Estimation for Deformable Objects in Robotic Manipulation Tasks**
+David Millard et al. — ISRR 2022 / Springer SPAR vol. 27
+DOI: `10.1007/978-3-031-25555-7_16`
+
+> Collocation定式化によるFEMメッシュ上の材料パラメータ最適化。ロボット操作中のスパース点追跡から非破壊推定。

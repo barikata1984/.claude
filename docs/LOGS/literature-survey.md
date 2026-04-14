@@ -69,3 +69,49 @@
 - Seed 1（Nadeau推定+Nadeau配置の統合）が最も直接的で実現可能性の高い出発点
 - 推定精度→配置安定性の感度分析が最初の学術的貢献となりうる
 - 非均一密度物体のベンチマーク作成も付随的貢献
+
+---
+
+## 2026-04-08: Deformable Object Physical Property Recovery from Observation and Robotic Manipulation
+
+### Scope
+- トピック: ビデオ・観察記録からの柔軟物物性復元（弾性率、粘性等）を含む3D再構築、F/Tセンサからの柔軟物物性推定、復元物性に基づくロボット操作
+- 対象期間: 2020年以降（基盤的論文は2019年まで遡及）
+- 除外: 剛体慣性パラメータ同定（前回サーベイで網羅済み）、外科手術応用（ユーザリクエスト）
+- Seed提案: あり（3 seeds）
+
+### Search Process
+- 5つの検索角度で並列サブエージェントを実行:
+  1. 視覚ベース物性復元（NeRF/3DGS + 微分可能物理）: ~38 WebSearch queries
+  2. F/T・触覚ベース柔軟物物性推定: ~15 WebSearch queries
+  3. 物性活用柔軟物操作: ~10 WebSearch queries
+  4. サーベイ論文: ~13 WebSearch queries
+  5. 特定手法・会場検索: ~16 WebSearch queries
+- 合計約130クエリで92件の候補を収集、重複約35件を除去、52本に絞込
+- ユーザレビューで外科手術系3本を除外 → 最終49本（後の整理で48本に確定）
+
+### Output Files
+- `docs/SURVEYS/deformable_physics_reconstruction.md` — メインレポート（48本、6カテゴリ）
+- `docs/REFERENCES/MAIN.md` — Category G として48エントリ追加
+- `docs/SURVEYS/README.md` — エントリ追加
+
+### Key Findings
+
+**RQ1（視覚観察からの物性復元）**: 2020年のFEM逆問題から2025年の3DGS+MPMデジタルツインへ急速に発展。MPMが支配的物理バックボーン、表現はNeRF→3DGSへ移行。フィードフォワード予測（VoMP, Vid2Sim）やVideo Diffusion蒸留（Physics3D, DreamPhysics）が2025年の新潮流。
+
+**RQ2（F/T・力覚からの物性推定）**: 剛体慣性パラメータ同定と対照的に、**標準的な定式化が存在しない**。Hunt-Crossley（Patni2024）、VSF（Yao2023）、微分可能シミュレーション逆問題（Chen2025, DPSI）等が散発的に存在するのみ。
+
+**RQ3（復元物性のロボット操作活用）**: **極めて少ない**。明示的物性同定→操作計画の完全パイプラインはDPSI（Yang et al., IJRR 2025）のみ。AdaptiGraph, RoboPack, RoboCraft, RAPiDはlatent動力学適応で間接的に物性を活用。
+
+**RQ4（未解決ギャップ）**: (a) 視覚物性復元→操作の断絶、(b) F/Tベース柔軟物物性同定の標準定式化不在、(c) 不均一材料への未対応、(d) sim-to-real検証の不足、(e) 構成則自動選択のメタ問題。
+
+### Reference Verification
+- 48本中47本 PASS、1本 DOI typo修正（Liu2022_DiffRope: 3264749→3264766）
+- Fan2025_PhysWorld のキー名を修正（lead author は Yang）
+
+### Implications for Project
+
+- **前回サーベイ（ft_estimation_placement）との接続**: 剛体の慣性パラメータ同定の知見（回帰行列、励起軌道、物理整合性制約）を柔軟物に移植する研究方向が、本サーベイのSeed 1として独立に導出された。これは前回サーベイのGap 2（推定→配置の接続不在）の柔軟物版に相当する。
+- **Seed 1（F/Tベース構成則パラメータ回帰）**: 剛体のτ=Y(q,q̇,q̈)πに相当する柔軟物版の標準的回帰定式化は前例がなく、学術的新規性が高い
+- **Seed 2（推定→操作パイプライン）**: DPSIが唯一の先行事例だが5分の推定時間はリアルタイム操作に不十分。高速化が実用上の鍵
+- **Seed 3（不均一物性＋操作）**: Yao2023のVSFと前回サーベイのNadeau配置計画の統合が有望
