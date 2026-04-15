@@ -18,7 +18,7 @@ description: "Generate a structured summary note for an academic paper by readin
 
 ## 出力
 
-論文フォルダ内に `summary.md` を生成する。既に `summary.md` が存在する場合は、上書きしてよいかユーザーに確認する。
+論文フォルダ内に `{論文タイトル}.md` を生成する（例: `Foundation Model-Driven Grasping of Unknown Objects via Center of Gravity Estimation.md`）。論文タイトルはPDFから抽出した英語タイトルをそのまま使用する。既に同名ファイルが存在する場合は、上書きしてよいかユーザーに確認する。
 
 出力の形式・セクション構成・記述ルールは `references/template.md` に定義されている。
 ノート生成時は必ずこのテンプレートを読み込み、その形式に厳密に従うこと。
@@ -61,9 +61,9 @@ PDFを読み込み、以下のメタデータを抽出する：
 
 ### Step 4: 既存ノートの読み込み（自動リンク用）
 
-`literature/` ディレクトリ内の既存 `summary.md` をすべて読み込み、各ノートから以下を取得する：
+`literature/` ディレクトリ内の既存ノート（各フォルダ内の `.md` ファイル。`main.pdf` 以外）をすべて読み込み、各ノートから以下を取得する：
 - フォルダ名（= citekey）
-- 論文タイトル（`# ` 見出し、または frontmatter から推定）
+- 論文タイトル（`# ` 見出し = ファイル名）
 - Executive Summary
 - 著者リスト
 

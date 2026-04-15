@@ -84,11 +84,14 @@ Template Version: v2.0
 - 全セクションを日本語で記述
 - 以下は英語のまま: 論文タイトル、著者名、手法名・アーキテクチャ名、数式、BibTeX キー
 
+### ファイル名
+出力ファイル名は論文タイトル（英語）をそのまま使用する（例: `Foundation Model-Driven Grasping of Unknown Objects via Center of Gravity Estimation.md`）。`summary.md` は使用しない。
+
 ### 自動リンク
 Summary 本文中で既存ノートの論文に言及する場合、Obsidian wikiリンクを使用：
 ```
-[[FolderName/summary|[N]]]          ← 引用番号が分かる場合
-[[FolderName/summary|Author+ YYYY]] ← 引用番号が不明な場合
+[[FolderName/論文タイトル|[N]]]          ← 引用番号が分かる場合
+[[FolderName/論文タイトル|Author+ YYYY]] ← 引用番号が不明な場合
 ```
 既存ノートに存在しない論文へのリンクは生成しない。
 
