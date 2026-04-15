@@ -4,18 +4,10 @@
       "Bash(*)",
       "WebSearch",
       "WebFetch",
-      "Read(//home/atsushi/.claude/**)",
+      "Read(~/**)",
       "Read(//tmp/**)",
       "Edit(~/.claude/skills/**)",
-      "Write(~/.claude/skills/**)",
-      "Skill(update-config)",
-      "Skill(update-config:*)",
-      "Read(//home/atsushi/workspace/dotfiles/**)",
-      "Read(//home/atsushi/.config/Code/User/**)",
-      "Edit(~/.claude/skills/project-team/**)",
-      "Read(//home/atsushi/Downloads/**)",
-      "Read(//home/atsushi/workspace/object-representation/docs/SURVEYS/**)",
-      "Read(//home/atsushi/**)"
+      "Write(~/.claude/skills/**)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
@@ -34,11 +26,10 @@
       "Bash(git restore:*)"
     ],
     "additionalDirectories": [
-      "/home/atsushi/.claude/projects/-home-atsushi-workspace-obj_rep/memory",
-      "/home/atsushi/.claude/skills/literature-survey",
-      "/home/atsushi/.claude",
-      "/home/atsushi/workspace/dotfiles",
-      "/home/atsushi/.config/Code/User"
+      "~/.claude",
+      "~/workspace/dotfiles",
+      "~/.config/Code/User",
+      "/tmp"
     ]
   },
   "hooks": {
@@ -48,11 +39,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/format-python.sh"
+            "command": "~/.claude/hooks/format-python.sh"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/validate-references.sh"
+            "command": "~/.claude/hooks/validate-references.sh"
           }
         ]
       }
@@ -60,7 +51,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash /home/ak/.claude/statusline-command.sh"
+    "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true
