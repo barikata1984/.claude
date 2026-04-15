@@ -73,5 +73,6 @@
       }
     }
   },
-  "effortLevel": "high"
+  "effortLevel": "max",
+  "autoMemoryEnabled": false
 }
