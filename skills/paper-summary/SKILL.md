@@ -20,14 +20,14 @@ description: "Generate a structured summary note for an academic paper by readin
 
 論文フォルダ内に `{論文タイトル}.md` を生成する（例: `Foundation Model-Driven Grasping of Unknown Objects via Center of Gravity Estimation.md`）。論文タイトルはPDFから抽出した英語タイトルをそのまま使用する。既に同名ファイルが存在する場合は、上書きしてよいかユーザーに確認する。
 
-出力の形式・セクション構成・記述ルールは `references/template.md` に定義されている。
+出力の形式・セクション構成・記述ルールは、本スキルのベースディレクトリ内の `references/template.md`（絶対パス: `~/.claude/skills/paper-summary/references/template.md`）に定義されている。
 ノート生成時は必ずこのテンプレートを読み込み、その形式に厳密に従うこと。
 
 ## ワークフロー
 
 ### Step 1: テンプレートの読み込み
 
-`references/template.md` を読み込み、出力形式・記述ルール・参照情報（Venue略称リスト、命名規則）を把握する。
+`~/.claude/skills/paper-summary/references/template.md` を読み込み、出力形式・記述ルール・参照情報（Venue略称リスト、命名規則）を把握する。
 
 ### Step 2: 入力の検証とフォルダ名チェック
 
@@ -71,7 +71,7 @@ PDFを読み込み、以下のメタデータを抽出する：
 
 ### Step 5: サマリノートの生成
 
-PDFの内容を熟読し、`references/template.md` の形式に従ってサマリノートを生成する。
+PDFの内容を熟読し、`~/.claude/skills/paper-summary/references/template.md` の形式に従ってサマリノートを生成する。
 テンプレートに定義された全フィールド・全セクションを漏れなく出力すること。
 
 ### Step 6: 最終確認
