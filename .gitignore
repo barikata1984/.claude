@@ -10,6 +10,7 @@ mcp-needs-auth-cache.json
 statusline-command.sh
 
 # Runtime / ephemeral data
+.claude.json
 history.jsonl
 cache/
 debug/
