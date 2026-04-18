@@ -1,3 +1,8 @@
+---
+name: log-progress
+description: Update project documentation (docs/TODO.md, docs/LOGS/log_*.md, docs/ISSUES.md, docs/PLAN.md) based on the current conversation's progress, findings, and resolved issues. Checks off completed TODOs, appends new findings to the relevant append-only topic log, adds newly discovered issues, deletes resolved issues, and updates PLAN only if design decisions changed. Also used as a sub-step by /wrap-up-session. Use this skill whenever the user wants to record session progress, update project docs from conversation, capture findings before stopping, or says things like "log progress", "update docs", "record what we did", "進捗記録", "ログ更新", "TODO を更新". Do NOT trigger if the user also wants to commit and push — suggest /wrap-up-session instead.
+---
+
 # log-progress
 
 Update documentation based on conversation content at session end.

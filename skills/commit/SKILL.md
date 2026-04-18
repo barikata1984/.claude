@@ -1,3 +1,8 @@
+---
+name: commit
+description: Create git commits from session file changes grouped by topic using Conventional Commits format (feat/fix/refactor/docs/chore/style/test/perf/build/ci). Reviews conversation history to identify what was changed and why, categorizes changes into logical groups, generates accurate commit messages without requiring user confirmation when intent is clear from session context, stages files individually (never git add -A or git add .), and handles submodules/secrets with care. Also used as a sub-step by /commit-and-push. Use this skill whenever the user asks to commit changes, stage changes, create a commit, group changes into commits, or says things like "commit this", "commit the work", "make a commit", "コミット", "これコミットして". Do NOT trigger for "commit and push" — /commit-and-push handles that case.
+---
+
 # commit
 
 Create commits from session file changes or git diffs. Categorize changes by topic and commit using Conventional Commits format. Also used as part of `/commit-and-push`. Trigger on requests like "commit", "stage changes", "group changes".

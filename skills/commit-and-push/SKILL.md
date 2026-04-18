@@ -1,3 +1,8 @@
+---
+name: commit-and-push
+description: Commit session changes AND push them to the remote in one flow. Runs /commit to group and commit changes by topic, then /push to publish them to origin, finally displaying git status and recent log. Use this skill whenever the user wants to finish and publish a chunk of work, sync their branch with remote, or says things like "commit and push", "push my changes", "sync with remote", "publish these changes", "wrap this up and push", "コミットしてプッシュ", "変更を上げて". Prefer this over invoking /commit and /push separately whenever both actions are intended — this skill orchestrates them and shows the final state.
+---
+
 # commit-and-push
 
 An integrated command that runs `/commit` followed by `/push` in sequence. Commits session changes or git diffs and pushes to the remote. Trigger on requests like "commit and push", "push changes", "sync changes".

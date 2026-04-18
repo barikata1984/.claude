@@ -1,6 +1,6 @@
 ---
 name: sweep-config
-description: sweep-config
+description: Generate a wandb sweep config YAML (configs/sweep_*.yaml) from a planned experiment. Reads existing sweep configs in the project to match their style, infers parameter naming conventions from the training script, validates types against config classes (dataclass/pydantic), computes grid-search combination counts, and writes the file with an execution command summary. Use this skill whenever the user asks to generate or write a sweep config YAML, translate a planning result into a concrete wandb config, or move from /sweep plan to the actual YAML. Also trigger on phrases like "write the sweep config", "generate the YAML", "make a sweep config for these parameters", "convert this plan to config", "sweep の YAML を作って", or when the conversation already contains selected sweep parameters and values ready to be formalized.
 ---
 
 # sweep-config

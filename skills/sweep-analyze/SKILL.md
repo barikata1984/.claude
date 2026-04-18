@@ -1,6 +1,6 @@
 ---
 name: sweep-analyze
-description: sweep-analyze
+description: Retrieve and analyze wandb sweep results via the wandb API, identify the best run by the sweep's optimization metric, compute per-parameter impact, review learning curves, flag crashed or early-stopped runs, and optionally analyze GPU resource usage from recorded monitoring CSVs. Produces a findings section appended to docs/LOGS/log_sweep.md. Use this skill whenever a sweep has finished (or has enough completed runs) and the user wants to analyze results, pick the best hyperparameter configuration, understand which parameters mattered most, or says things like "analyze the sweep", "what were the best runs", "summarize the sweep results", "which hyperparameters worked", "スイープ結果を分析", "どの設定が良かった". Also trigger when the user provides a wandb sweep ID or references sweep results in conversation.
 ---
 
 # sweep-analyze

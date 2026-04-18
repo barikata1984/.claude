@@ -1,6 +1,6 @@
 ---
 name: sweep
-description: sweep
+description: Orchestrate wandb sweep experiments end-to-end - plan → config YAML → launch agents → analyze results. This is the top-level entry point that auto-detects the current phase from conversation context (plan needed, YAML to generate, agents to launch, or results to analyze) and routes to the right sub-skill (/sweep-config, /sweep-run, /sweep-analyze) or handles planning inline. Use this skill whenever the user mentions wandb sweeps, hyperparameter search, hyperparameter tuning, trying multiple values for training parameters, grid/random/bayesian search, or comparing model performance across hyperparameter settings. Also trigger on phrases like "I want to try different learning rates", "run a sweep for X", "sweep over batch sizes", "compare these hyperparameters", "ハイパラ探索", "スイープ", or any request to systematically explore an ML training configuration space.
 ---
 
 # sweep

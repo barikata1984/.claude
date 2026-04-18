@@ -1,6 +1,6 @@
 ---
 name: sweep-run
-description: sweep-run
+description: Launch wandb sweep agents in tmux sessions with GPU assignment and background nvidia-smi monitoring. Handles optional sweep registration from a YAML, displays current GPU availability, lets the user decide parallelism and GPU pinning via CUDA_VISIBLE_DEVICES, and starts a separate tmux monitor writing docs/LOGS/gpu_monitor_*.csv for later resource analysis. Use this skill whenever the user wants to start running a sweep, launch wandb agents, kick off experiments on multiple GPUs, or says things like "run the sweep", "launch agents", "start the experiment", "execute this sweep", "deploy to GPUs", "スイープを起動", "エージェント立ち上げ". Also trigger after /sweep-config completes when the YAML is ready, or when the user has a wandb sweep ID and asks what to do next.
 ---
 
 # sweep-run
