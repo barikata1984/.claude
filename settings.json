@@ -82,7 +82,7 @@
       "/tmp",
       "/opt/ros/one/lib/python3/dist-packages/baldor"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "hooks": {
     "PostToolUse": [
