@@ -4,6 +4,7 @@
       "Bash(*)",
       "WebSearch",
       "WebFetch",
+      "Read",
       "Read(~/**)",
       "Read(//tmp/**)",
       "Edit(~/.claude/skills/**)",
@@ -12,7 +13,32 @@
     ],
     "deny": [
       "Bash(rm -rf /:*)",
-      "Bash(rm -rf ~:*)"
+      "Bash(rm -rf ~:*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.envrc)",
+      "Read(**/id_rsa)",
+      "Read(**/id_ed25519)",
+      "Read(**/id_ecdsa)",
+      "Read(**/id_dsa)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/*.ppk)",
+      "Read(**/*.jks)",
+      "Read(**/service_account*.json)",
+      "Read(**/application_default_credentials.json)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.kube/config)",
+      "Read(~/.docker/config.json)",
+      "Read(~/.netrc)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)",
+      "Read(**/secrets.yaml)",
+      "Read(**/secrets.yml)",
+      "Read(**/secrets.json)",
+      "Read(**/*.secret)"
     ],
     "ask": [
       "Bash(rm:*)",
@@ -75,15 +101,16 @@
       "Bash(sudo docker network rm:*)",
       "Bash(sudo docker network prune:*)"
     ],
+    "defaultMode": "auto",
     "additionalDirectories": [
       "~/.claude",
       "~/workspace/dotfiles",
       "~/.config/Code/User",
       "/tmp",
       "/opt/ros/one/lib/python3/dist-packages/baldor"
-    ],
-    "defaultMode": "auto"
+    ]
   },
+  "model": "opusplan",
   "hooks": {
     "PostToolUse": [
       {
@@ -116,7 +143,7 @@
       }
     }
   },
-  "autoMemoryEnabled": false,
   "effortLevel": "xhigh",
-  "model": "opusplan"
+  "autoMemoryEnabled": false,
+  "skipAutoPermissionPrompt": true
 }
