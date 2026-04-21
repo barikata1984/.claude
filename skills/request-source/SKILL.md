@@ -1,11 +1,15 @@
 ---
 name: request-source
 description: >
-  Analyzes a specified response and generates a knowledge source block that
-  classifies the information used into three categories: internal knowledge,
-  external knowledge, and observations. Use when the user asks "what are your
-  sources?", "show me the basis for this", or when a knowledge source block
-  is missing from a response.
+  Generates a [知識ソース] knowledge source block for a specified Claude response,
+  classifying information as internal knowledge (training data), external knowledge
+  (retrieved via WebSearch/WebFetch), or observations (session logs, code, errors).
+  Always use this skill when: the user asks about sources, basis, or credibility of
+  a Claude response in any phrasing — including Japanese (「ソースは？」「内部知識？」
+  「根拠は？」「検索した？」「WebSearch した？」「ソースブロックがない」「知識ソースが欠けている」);
+  the user calls /request-source explicitly; a previous response is missing its
+  [知識ソース] block and needs retroactive annotation; or the user questions whether
+  information came from training data vs. actual web retrieval.
 ---
 
 Analyze the response specified in `$ARGUMENTS` and generate a knowledge source block.
