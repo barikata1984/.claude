@@ -169,7 +169,7 @@ enabling cross-reference from this table to the detailed entry.
 
 [Brief narrative connecting the papers in this category]
 
-1. [[Key]](../REFERENCES/MAIN.md#Key) — Authors, "Title" (Year)
+1. [[Key]](references/main.md#Key) — Authors, "Title" (Year)
    - **DOI**: [Publisher DOI, e.g., `10.1109/ICRA.2024.XXXXXXX`] | **arXiv**: [ID if no publisher DOI]
    - **thesis**: [The author's central claim — what they argue is true, not what the method does]
    - **core**: [The essential element(s) without which the method would not work]

@@ -449,7 +449,8 @@ responded to any triage prompts.
 
 ### Phase 7: Output Generation
 
-Produce the survey report in `docs/SURVEYS/<topic_slug>.md`.
+Produce the survey report in `literature/<topic_slug>.md`,
+creating the `literature/` directory if it does not exist.
 
 Read `references/report_template.md` for the complete report structure.
 If the user requested research proposals/seeds, also read
@@ -469,8 +470,9 @@ maintain quality across the full document:
 Follow the citation conventions in `.claude/rules/references.md`.
 
 Additional steps:
-1. **Update MAIN.md**: Add all papers from the Paper Catalogue to MAIN.md
-2. **Update SURVEYS/README.md**: Add a new entry to the table in `docs/SURVEYS/README.md`
+1. **Update references/main.md**: Add all papers from the Paper Catalogue to `literature/references/main.md`,
+   creating `literature/references/` if it does not exist
+2. **Update README.md**: Add a new entry to the table in `literature/README.md`
    after the survey is complete
 3. **Execution log**: Append to `docs/LOGS/literature-survey.md` with the search process,
    output file paths, and implications for the project
