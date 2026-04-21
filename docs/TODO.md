@@ -70,6 +70,8 @@
   - [x] Issue #5 (Paywall 判断): OA カバレッジ分析 + 推奨生成を SKILL.md に適用 → Issue 解消
   - [x] Issue #3 (コンテキスト予算): Fix を「コンテキスト保護設計」に書き直し（ISSUES.md）
   - [x] Issue #4 (DOI 検証遅延): Fix を実態に合わせて書き直し（ISSUES.md）
+  - [x] 出力パスを `literature/` 配下に統合 (2026-04-21)
+  - [ ] `rules/references.md` の `docs/REFERENCES/MAIN.md` パスを `literature/references/main.md` に更新
   - [ ] Issue #2 (並列サブエージェント): Phase 2 への最大3並列制限を SKILL.md に適用
   - [ ] Issue #3: 対策案を SKILL.md に適用
   - [ ] Issue #4: Phase 6 の失敗モード調査（ログ・中間ファイルへのアクセスが必要）

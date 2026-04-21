@@ -158,3 +158,26 @@
 - `skills/literature-survey/SKILL.md` — 上記6件の修正
 - `skills/literature-survey/venues_robotics.md` — 削除（誤配置）
 - `docs/TODO.md` — 対応 TODO を `[x]` に
+
+---
+
+## 2026-04-21: 出力パス変更（literature/ ディレクトリへ統合）
+
+### 変更内容
+
+出力先を `docs/SURVEYS/` / `docs/REFERENCES/` から `literature/` 配下に統合。
+
+| 出力 | 旧パス | 新パス |
+|------|--------|--------|
+| サーベイレポート | `docs/SURVEYS/<topic_slug>.md` | `literature/<topic_slug>.md` |
+| 参考文献DB | `docs/REFERENCES/MAIN.md` | `literature/references/main.md` |
+| インデックス | `docs/SURVEYS/README.md` | `literature/README.md` |
+
+`literature/references/` をサブディレクトリとして挟む理由: 将来の拡張（トピック別・サーベイ別参照リスト等）に備えた名前空間確保。
+
+### 変更ファイル
+- `skills/literature-survey/SKILL.md` — Phase 7 出力先・Reference Processing パスを更新
+- `skills/literature-survey/references/report_template.md` — Paper Catalogue 中の相対リンクを `references/main.md#Key` に変更
+
+### 残作業
+- `rules/references.md` が `docs/REFERENCES/MAIN.md` を直接参照しているため、パスの更新が必要
