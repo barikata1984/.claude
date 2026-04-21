@@ -115,3 +115,46 @@
 - **Seed 1（F/Tベース構成則パラメータ回帰）**: 剛体のτ=Y(q,q̇,q̈)πに相当する柔軟物版の標準的回帰定式化は前例がなく、学術的新規性が高い
 - **Seed 2（推定→操作パイプライン）**: DPSIが唯一の先行事例だが5分の推定時間はリアルタイム操作に不十分。高速化が実用上の鍵
 - **Seed 3（不均一物性＋操作）**: Yao2023のVSFと前回サーベイのNadeau配置計画の統合が有望
+
+---
+
+## 2026-04-21: Empirical Prompt Tuning — literature-survey SKILL.md
+
+### 目的
+`skills/literature-survey/SKILL.md` の曖昧点を empirical-prompt-tuning スキルで系統的に解消。サブエージェントはすべて Sonnet (`claude-sonnet-4-6`) を使用。
+
+### 実施内容
+- **イテレーション数**: 8
+- **シナリオ**: A（英語トピック・focused・seed なし）、B（英語トピック・broad・seed あり）、C（日本語トピック・broad・seed あり、hold-out）
+- **収束判定**: Iter 7–8 で新規不明瞭点ゼロ、精度 100%、steps=1、retries=0 が連続達成
+
+### 適用した修正（6件）
+
+1. **Depth / Breadth 定義統合** (Iter 2): `focused`（20–40本）と `broad`（40–60本）の定義が README.md にしか存在せず SKILL.md に未転記だった。サーベイ範囲の主要パラメータを SKILL.md に直接明記。
+
+2. **モデルポリシー明確化** (Iter 3): "middle-class model" の表現が曖昧でサブエージェントが具体名を推定していた。`claude-sonnet-4-6` を名指しで明記。
+
+3. **Phase 1 スキップ条件の明示** (Iter 4a): research-framing スキルのスコープブロックが会話コンテキストに存在する場合の Phase 1 スキップが SKILL.md に未記載。スコープブロック形式・スキップ条件・`目的` フィールドの利用法を追記。
+
+4. **パス規約の注記** (Iter 4b): `references/` や `scripts/` の相対パス起点が不明確だった。Workflow セクション冒頭に「このファイルを含むディレクトリからの相対パス」と明記。
+
+5. **Tier 3 年次境界の明確化** (Iter 4c): "10+ years ago" の解釈が年によって変わる表現。`~2015年以前` と具体年を付記して固定。
+
+6. **venues_robotics.md 参照の追加** (Iter 7): `skills/literature-survey/venues_robotics.md`（ルート直下）が untracked のまま放置されていた。`references/venues_robotics.md`（正規位置）が存在するため誤配置ファイルを削除し、Phase 2 の会場別検索ステップに `references/venues_robotics.md` を読む条件付き指示を追記。
+
+### 収束結果
+| Iter | Scenario A 精度 | Scenario B 精度 | 新規不明瞭点 |
+|------|----------------|----------------|--------------|
+| 1 | 75% | 75% | depth 定義、モデル名 |
+| 2 | 100% | 75% | モデル名 |
+| 3 | 100% | 100% | Phase 1 スキップ、パス規約、Tier 3 境界 |
+| 4 | 100% | 100% | venues_robotics.md 参照 |
+| 5 (hold-out C) | — | — | 0（Scenario C 100%） |
+| 6 | 100% | 100% | 0 |
+| 7 | 100% | 100% | 0 |
+| 8 | 100% | 100% | 0（収束確定） |
+
+### 変更ファイル
+- `skills/literature-survey/SKILL.md` — 上記6件の修正
+- `skills/literature-survey/venues_robotics.md` — 削除（誤配置）
+- `docs/TODO.md` — 対応 TODO を `[x]` に

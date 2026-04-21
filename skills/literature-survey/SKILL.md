@@ -30,12 +30,14 @@ placeholder descriptions in English; translate them to match the output language
 
 ## Workflow
 
+> **Path convention**: All `references/` and `scripts/` paths in this file are
+> relative to the directory containing this SKILL.md.
+
 ### Subagent Model Policy
 
-All subagents launched during the survey must use the **middle-class model**
-(the tier between the highest-capability and lowest-cost models in the
-current lineup). This balances annotation quality against cost and context
-efficiency.
+All subagents launched during the survey must use the **Sonnet tier**
+(currently `claude-sonnet-4-6`). This balances annotation quality against
+cost and context efficiency.
 
 ### Phase 1: Research Design
 
@@ -48,9 +50,11 @@ Before searching, establish the survey's scope and boundaries with the user:
   - RQ1: What algorithmic approaches have been proposed for [problem]?
   - RQ2: Under what conditions are these approaches evaluated?
   - RQ3: What are the unresolved technical challenges?
-- **Breadth**: Should adjacent fields be included?
+- **Depth / Breadth**: Determines scope and default paper count.
+  - `focused` — core topic only; no adjacent fields; target **20–40 papers**
+  - `broad` — adjacent fields included; target **40–60 papers**
+  If the user did not specify depth, ask. The target count can be adjusted regardless of depth.
 - **Time emphasis**: Default is recent-first with historical coverage (see Phase 2)
-- **Target count**: Default 30-60 papers, adjustable
 - **Inclusion / Exclusion criteria**: Define the scope boundary upfront:
   - Inclusion: e.g., peer-reviewed papers + major preprints, specific
     robot types, specific task domains
@@ -59,6 +63,21 @@ Before searching, establish the survey's scope and boundaries with the user:
 
 If the user's request is already specific enough, propose the RQs and
 criteria for confirmation rather than asking open-ended questions.
+
+**Scope block (research-framing integration)**: If the conversation context
+contains a scope block in the format below, skip Phase 1 entirely and proceed
+directly to Phase 2. Derive RQs and I/E criteria from the provided topic and
+depth; do not ask for confirmation. Use the `目的` field to orient RQs toward
+the stated goal (e.g., "Niche 特定" → emphasize RQs about open challenges and
+frontier gaps).
+
+```
+文献調査のスコープ:
+- トピック: [topic]
+- 深度: focused / broad
+- seed: 不要 / 必要  ← 必要 = 最終レポートに研究提案（Seed セクション）を含める
+- 目的: [purpose]
+```
 
 ### Phase 2: Search Strategy
 
@@ -76,7 +95,7 @@ Search systematically in three temporal tiers:
 - Identify papers that introduced major techniques, datasets, or benchmarks
 - Follow citation chains from Tier 1 papers backward
 
-**Tier 3 — Foundational (10+ years): Seminal works only**
+**Tier 3 — Foundational (~2015 and earlier, 10+ years ago): Seminal works only**
 - Classic papers that defined the field or subfield
 - Only include if they are still widely cited or conceptually essential
 
@@ -101,7 +120,10 @@ Use multiple complementary search approaches to maximize coverage:
 2. **Survey discovery**: Search for existing survey papers on the topic — these are goldmines for finding references you might miss
 3. **Citation chain following**: When you find a key paper, look at what it cites and what cites it
 4. **Author tracking**: If a few researchers dominate the field, search their recent publications
-5. **Venue-specific search**: Check top venues (conferences/journals) known for this area
+5. **Venue-specific search**: Check top venues (conferences/journals) known for this area.
+   If the topic is robotics, robot learning, manipulation, or sim-to-real, read
+   `references/venues_robotics.md` at the start of Phase 2 for the prioritized venue
+   list and venue-specific search strategies.
 
 WebSearch is the primary discovery tool — it is fast, has no rate limits, and
 reliably finds papers across all venues. Use it alongside the structured

@@ -83,4 +83,5 @@
 - [x] Step 3: 乖離改善追加 (RQ, キーワード, 比較表, 用語, Threats to Validity 等)
 - [x] Step 4: `scripts/resolve_dois.py` 新設
 - [x] `scripts/extract_sections.py` 新設 + Phase 3 改訂
-- [ ] テストケースでの実行評価
+- [x] テストケースでの実行評価 → empirical prompt tuning で代替 (2026-04-21)
+- [x] empirical prompt tuning による SKILL.md 堅牢化 (2026-04-21, 8 iterations, 精度 100% 収束)
