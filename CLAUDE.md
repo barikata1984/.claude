@@ -102,6 +102,14 @@ Max サブスク前提。タスク種別ごとに適切なモデル/effort/conte
 - **Commit format**: Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`)
 - **Main branch**: `main`
 
+## 略語使用規約
+
+文書・レポートで略語を使用する際は以下に従う。
+
+- **初出時**: `完全名 (略語)` の形式で記述する（例: `Discrete Elastic Rods (DER)`、`Bayesian Optimization (BO)`）
+- **2回目以降**: 略語のみで記述する
+- **ユーザーが既知と明示した略語**: 初出から略語のみで構わない
+
 ## 標準ドキュメント構成
 
 スクラッチプロジェクトでは以下の構成を `docs/` 配下に作成する。

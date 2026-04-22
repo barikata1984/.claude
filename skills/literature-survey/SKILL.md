@@ -424,9 +424,6 @@ paper metadata (no new searches needed):
    - Distribution across method categories
    - Experimental setting breakdown (simulation / real hardware / both)
    - Top venues by paper count
-7. **Concept matrix** — a table mapping key concepts (rows) to papers
-   (columns) showing which papers address which concepts. Derive concepts
-   from the category assignments and thesis/core annotations.
 
 ### Phase 6: Reference Verification
 
@@ -481,3 +478,17 @@ Additional steps:
 
 Before delivering results, read `references/quality_checklist.md` and verify
 all items.
+
+## Abbreviation Convention
+
+Apply the following rules to every survey report:
+
+- **First use**: write the full name followed by the abbreviation in parentheses —
+  e.g., `Discrete Elastic Rods (DER)`, `Bayesian Optimization (BO)`.
+- **Subsequent uses**: abbreviation only.
+- **User-declared known abbreviations** (e.g., 3DGS, FEM, MPM): use the abbreviation
+  from the first occurrence without expansion. Collect these from the user during
+  Phase 1 if not already stated.
+- **Abbreviation glossary**: append an `## Abbreviation Glossary` section at the end
+  of the report containing a three-column table — Abbreviation | Full name | First
+  occurrence (section name) — covering every abbreviation introduced in the report.
