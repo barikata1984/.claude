@@ -1,0 +1,11 @@
+{
+  "eval_id": 1, "configuration": "without_skill",
+  "summary": {"pass_rate": 0.5, "passed": 2, "failed": 2, "total": 4},
+  "timing": {"duration_seconds": 60.9, "total_tokens": 16410},
+  "expectations": [
+    {"text": "専門用語を使わずに問題を説明するよう促す質問が最初のセクションに含まれている", "passed": false, "evidence": "ジャーゴンなし説明を求めず技術的枠組みから開始"},
+    {"text": "Sim-to-Real・ハードウェア・安全性など、ロボット学習固有の質問または言及が含まれている", "passed": true, "evidence": "sim-to-realに言及しているが質問ではなく説明として提示"},
+    {"text": "ユーザーへの質問が2つ以上含まれている（一問一答ではなくガイド形式）", "passed": true, "evidence": "スライド形式か・面談日程の2問を提示"},
+    {"text": "セクション構造（動機・現状・手法など）に沿って進行していることが分かる", "passed": false, "evidence": "セクション構造なし。発表準備アドバイスとして4項目を並列提示"}
+  ]
+}

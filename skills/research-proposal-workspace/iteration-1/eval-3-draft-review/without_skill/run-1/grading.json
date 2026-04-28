@@ -1,0 +1,12 @@
+{
+  "eval_id": 3, "configuration": "without_skill",
+  "summary": {"pass_rate": 0.8, "passed": 4, "failed": 1, "total": 5},
+  "timing": {"duration_seconds": 62.8, "total_tokens": 17240},
+  "expectations": [
+    {"text": "フィードバックがセクション別（背景・提案手法・スケジュールなど）に構造化されている", "passed": true, "evidence": "背景・提案手法・評価計画・スケジュールの各セクションに分けてフィードバック"},
+    {"text": "「既存手法」が具体的な論文名・手法名なしで書かれている点を指摘している", "passed": true, "evidence": "「Diffusion Policy、BESOなどの先行研究との比較がなく」と言及"},
+    {"text": "「いくつかのベンチマーク」ではなく具体名が必要であると指摘している", "passed": true, "evidence": "「具体的なベンチマーク（RLBench、MetaWorldなど）が必要」と明示"},
+    {"text": "アブレーション計画が欠如していることを指摘している", "passed": true, "evidence": "「アブレーション計画が必要」と言及"},
+    {"text": "最後に優先度付きの要約（強み + 優先課題 2〜3 項目）が含まれている", "passed": false, "evidence": "「改訂の推奨順序」として手順リストで終わり。明示的な強みセクションと優先順位付き課題リストがない"}
+  ]
+}

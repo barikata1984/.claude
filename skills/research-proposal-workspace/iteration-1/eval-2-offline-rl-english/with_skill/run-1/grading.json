@@ -1,0 +1,11 @@
+{
+  "eval_id": 2, "configuration": "with_skill",
+  "summary": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4},
+  "timing": {"duration_seconds": 79.7, "total_tokens": 23996},
+  "expectations": [
+    {"text": "Asks what type of contribution this is (new method, efficiency, new problem formulation, etc.)", "passed": true, "evidence": "Explicitly presents options A/B/C/E with explanation of why distinction matters for evaluation design"},
+    {"text": "Asks which specific baseline methods will be compared against", "passed": true, "evidence": "Identifies three required baseline types including IQL, TD3+BC, DT examples"},
+    {"text": "Asks about specific benchmarks, datasets, or numerical evaluation targets", "passed": true, "evidence": "Asks which D4RL tasks/splits, how to measure sample efficiency, what a win looks like concretely"},
+    {"text": "Does not produce a complete proposal draft without first asking clarifying questions", "passed": true, "evidence": "No draft produced in either round — all responses are targeted questions"}
+  ]
+}

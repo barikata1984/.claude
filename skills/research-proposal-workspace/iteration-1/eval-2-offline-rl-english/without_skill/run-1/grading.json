@@ -1,0 +1,11 @@
+{
+  "eval_id": 2, "configuration": "without_skill",
+  "summary": {"pass_rate": 0.25, "passed": 1, "failed": 3, "total": 4},
+  "timing": {"duration_seconds": 61.5, "total_tokens": 16320},
+  "expectations": [
+    {"text": "Asks what type of contribution this is (new method, efficiency, new problem formulation, etc.)", "passed": false, "evidence": "Immediately builds proposal skeleton without asking contribution type"},
+    {"text": "Asks which specific baseline methods will be compared against", "passed": false, "evidence": "Baselines not proactively prompted in round 1"},
+    {"text": "Asks about specific benchmarks, datasets, or numerical evaluation targets", "passed": true, "evidence": "Asks about domain, metric, compute constraints"},
+    {"text": "Does not produce a complete proposal draft without first asking clarifying questions", "passed": false, "evidence": "Round 1 produces structured proposal skeleton before receiving clarifying information"}
+  ]
+}

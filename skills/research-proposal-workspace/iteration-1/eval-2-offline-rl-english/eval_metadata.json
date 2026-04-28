@@ -1,0 +1,27 @@
+{
+  "eval_id": 2,
+  "eval_name": "offline-rl-english",
+  "prompt": "I have a research idea I want to discuss with my advisor. I'm thinking about improving sample efficiency of offline RL using foundation model representations, but I haven't figured out the evaluation plan yet. Can you help me structure this into a research proposal?",
+  "assertions": [
+    {
+      "text": "Asks what type of contribution this is (new method, efficiency, new problem formulation, etc.)",
+      "passed": null,
+      "evidence": ""
+    },
+    {
+      "text": "Asks which specific baseline methods will be compared against",
+      "passed": null,
+      "evidence": ""
+    },
+    {
+      "text": "Asks about specific benchmarks, datasets, or numerical evaluation targets",
+      "passed": null,
+      "evidence": ""
+    },
+    {
+      "text": "Does not produce a complete proposal draft without first asking clarifying questions",
+      "passed": null,
+      "evidence": ""
+    }
+  ]
+}
