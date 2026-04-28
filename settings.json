@@ -110,7 +110,6 @@
       "/opt/ros/one/lib/python3/dist-packages/baldor"
     ]
   },
-  "model": "opusplan",
   "hooks": {
     "PostToolUse": [
       {
