@@ -110,6 +110,7 @@
       "/opt/ros/one/lib/python3/dist-packages/baldor"
     ]
   },
+  "model": "claude-opus-4-7",
   "hooks": {
     "PostToolUse": [
       {
