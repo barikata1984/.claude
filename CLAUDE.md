@@ -8,6 +8,12 @@
 - バグ報告を受けたらまずログ・エラー・テストから自力調査せよ。質問は調査後に
 - セッション終了時は /log-progress で進捗を記録せよ
 
+## 機密情報の取扱い
+
+- secret 表示系コマンド (`doppler secrets get`, `pass show`, `gpg -d`, `cat .env`, `printenv` 等) と credential ファイルの直接 read は `~/.claude/settings.json` の deny rules で自動ブロック済み
+- 値の確認はユーザーに dashboard 等で依頼。動作確認は末端機能の成否で間接判断（存在確認は `doppler secrets --only-names` / `pass ls` / `test -f`）
+- 万一ターミナルに漏出した場合: 即座にユーザーへ報告 → secret rotation と shell history (`~/.zsh_history`) クリーンアップを案内
+
 ## モデル・effort・context の使い分け
 
 Max サブスク前提。タスク種別ごとに適切なモデル/effort/context を選択し、Opus 枠と週次制限を浪費しない。
