@@ -1,47 +1,74 @@
 # Quality Checklist
 
-Before delivering results, verify all items:
+Before delivering results, verify all items.
 
-## Research Design
+## Frame (Phase 1)
 
 - [ ] Research Questions (RQs) defined and confirmed with user
-- [ ] Inclusion/exclusion criteria defined before search
-- [ ] Keyword set with synonyms/variants constructed from RQs
+- [ ] Inclusion / exclusion criteria defined before search
+- [ ] Depth (focused / broad) determined; target paper count agreed
+- [ ] User-known abbreviations collected, if any
+- [ ] `survey_slug` confirmed with user
 
-## Search & Collection
+## Map (Phase 2)
 
-- [ ] All three temporal tiers are represented
+- [ ] All three temporal tiers represented in the mapped set
+- [ ] Snowballing executed: 5–10 seeds + 1–2 hop expansion
 - [ ] Preprints included to counter publication bias
-- [ ] Search Review Checkpoint (Phase 2.5) completed — user approved the paper list before analysis
-- [ ] Inclusion/exclusion criteria applied at checkpoint with reasons noted
-- [ ] Duplicates removed and count recorded in search log
-- [ ] Search Log records every search action: source, exact query/URL, result count, and notes
-- [ ] Source summary lists all information sources used and query counts
+- [ ] Every paper has at least one of: publisher DOI, arXiv ID, or URL
+- [ ] DOIs resolved inline where possible (arXiv → publisher DOI)
+- [ ] Duplicates removed
+- [ ] I/E criteria applied at Map Checkpoint with reasons noted
+- [ ] Map Checkpoint completed — user approved the paper list before
+      proceeding to hub selection
+- [ ] Per-paper extraction limited to: 1-line contribution + 3-5 concept tags
+      (no premature thesis/core/diff/limit annotation for non-hubs)
 
-## Paper-Level Analysis
+## Hubs (Phase 3)
 
-- [ ] Each paper has: title, authors, year, venue/source, publisher DOI (or arXiv ID if unpublished), and thesis/core/diff/limit
-- [ ] limit fields contain only author-stated limitations (no LLM speculation)
-- [ ] Phase 3a/3b split: OA papers processed first, paywall papers batched by publisher
+- [ ] Hub selection criteria applied: B (cluster bridging + top-tertile
+      citations) AND/OR C (synthesis centrality)
+- [ ] Hub count within 5–10 range
+- [ ] Hub list confirmed with user before deep read
+- [ ] PDFs acquired for all approved hubs (or user-confirmed exceptions)
+- [ ] PDFs placed at `./literature/papers/{citekey}/main.pdf` with
+      correct citekey per `/paper-summary` regulation
+- [ ] `/paper-summary` invoked on each hub; resulting note paths recorded
 
-## DOI & Verification
+## Synthesize (Phase 4)
 
-- [ ] DOI Resolution phase completed — arXiv-only papers checked against DBLP/Semantic Scholar/Crossref for publisher DOIs
-- [ ] Hallucination check completed — all papers verified via DOI/URL
+- [ ] thesis derived from hub deep reads + concept matrix patterns
+- [ ] foundation aggregated from hub deep reads' approach-and-core-elements
+      sections + training/optimization sections (shared losses, datasets)
+- [ ] progress traces a chronological trajectory using hub novelty sections
+- [ ] gap grounded in (a) converging hub discussions, (b) matrix sparsity,
+      (c) frontier diffs
+- [ ] If user requested research proposals: seed section included per
+      `references/seed_format.md`
+- [ ] Survey-level claims cite hub papers via wikilink
+- [ ] Concept matrix populated for all mapped papers (rows × concepts)
+- [ ] Quantitative trends tabulated (year count, concept distribution,
+      experiment settings, top venues)
+
+## Verify & Output (Phase 5)
+
+- [ ] reference-verify completed — all papers checked for hallucinations
+- [ ] Excluded unverifiable papers reported
+- [ ] Output file at `./literature/surveys/{survey_slug}.md`
+- [ ] Hub papers linked via Obsidian wikilink to deep-read notes
+- [ ] Non-hub papers represented in concept matrix and 1-line catalogue entry
+- [ ] `literature/surveys/README.md` table updated
+- [ ] `docs/LOGS/literature-survey.md` appended with this run
 
 ## Report Structure
 
-- [ ] Abstract follows 4-sentence structure (state/contribute/findings/method)
+- [ ] Abstract follows 4-sentence structure (state / contribute / findings / method)
 - [ ] Terminology section maps term variants
-- [ ] Comparison table covers key papers cross-cuttingly
-- [ ] Quantitative trends tabulated (year count, method distribution, experiment settings)
-- [ ] Concept matrix maps concepts to papers
-- [ ] Papers are organized by category, not just listed chronologically
-- [ ] The overview section gives a reader unfamiliar with the topic a clear starting point
-- [ ] Survey Findings section contains thesis, foundation, progress, and gap
-- [ ] If user requested research proposals: seed section included (see `references/seed_format.md`)
-- [ ] Survey-level claims are traceable to specific paper-level annotations
-- [ ] Foundational works table includes #, paper, year, venue, and significance
-- [ ] Threats to Validity section discusses search scope, publication bias, selection bias, and analysis limitations
+- [ ] Concept matrix is the primary at-a-glance artifact
+- [ ] Hub Papers section lists all hubs with links to deep notes
+- [ ] Paper Catalogue groups non-hub papers by category
+- [ ] Survey Methodology covers Frame / Map / Hub Selection / Verify in
+      a single block (not 4 separate logs)
 - [ ] Conclusion answers each Research Question
-- [ ] Output language is consistent throughout — no mixing of languages
+- [ ] Output language consistent throughout — no language mixing
+- [ ] Abbreviation Glossary included (Abbreviation | Full name | First occurrence)

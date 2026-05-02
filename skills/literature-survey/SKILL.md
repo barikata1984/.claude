@@ -1,494 +1,510 @@
 ---
 name: literature-survey
-description: "Conduct a comprehensive academic literature survey on a given research topic. Searches the web systematically for papers from recent to historical, producing a structured Markdown report with summaries. Use this skill whenever the user asks for a literature review, survey, related work search, prior art investigation, or wants to know what research exists on X. Also trigger when the user says things like papers about, survey the field of, what is the state of the art in, find relevant publications, prior work, related work, or any request to systematically gather academic references."
+description: "Conduct an academic literature survey that maps a research field — produces a concept matrix, gap analysis, and curated hub-paper deep reads. Use this skill whenever the user asks for a literature review, survey, related work search, prior art investigation, field mapping, or wants to know what research exists on X. Also trigger when the user says things like papers about, survey the field of, what is the state of the art in, find relevant publications, prior work, related work, or any request to systematically gather and map academic references. The skill defers per-paper deep analysis to /paper-summary, invoking it only on selected hub papers."
 ---
 
 # Literature Survey Skill
 
-You are conducting a comprehensive academic literature survey. Your goal is to produce
-a well-organized, citable reference collection that gives the user a clear picture of
-the research landscape on their topic.
+Purpose: produce a **landscape map** of a research area — a concept matrix
+spanning all surveyed papers, a synthesis of the field's thesis / progress /
+gap, and curated **hub-paper deep reads** generated via `/paper-summary`.
+This is a scoping/mapping review (Webster & Watson 2002; Arksey & O'Malley),
+not a systematic review of evidence.
+
+## Output Layout
+
+```
+./literature/
+├── surveys/
+│   └── {survey_slug}.md                  ← この skill が生成するメインレポート
+└── papers/
+    └── {citekey}/
+        ├── main.pdf                       ← ハブ論文の PDF（取得・配置）
+        └── {paper-title-slug}.md          ← /paper-summary が生成する深読みノート
+```
+
+- **`{survey_slug}`**: Phase 1 で「core topic + RQ」から自動生成し、ユーザー確認の上で確定する slug（lowercase + ハイフン）
+- **`{citekey}`** / **`{paper-title-slug}`**: `/paper-summary` の規約に準拠（`{LastName}-{VenueYear}-{ShortTitle}` / 完全 slugify）
 
 ## Language Rule
 
-**The entire report must be written in a single language, determined by the language
-of the user's topic description:**
+レポート全体は単一言語で記述する。言語はユーザーのトピック記述の言語で決定：
 
-- User provides topic in **Japanese** → all prose in **Japanese**
-- User provides topic in **English** → all prose in **English**
+- 日本語入力 → レポート本文は日本語
+- 英語入力 → レポート本文は英語
 
-"Prose" means: section narratives, thesis/core/diff/limit annotations, category
-descriptions, gap analyses, seed proposals, significance descriptions, and methodology notes.
+### 英語のまま残すもの（限定列挙）
 
-Always keep the following in English regardless of output language:
-chapter/section/subsection headings, paper titles, author names, venue names,
-proposed method/architecture names (e.g., "Rapid Motor Adaptation", "Domain Contraction"),
-DOI, URLs, BibTeX keys, and structural labels (thesis/core/diff/limit).
+以下に該当するものだけを英語のまま残す。これ以外の英単語は日本語化すること：
 
-Do NOT mix languages within a single report. The template below contains
-placeholder descriptions in English; translate them to match the output language.
+- 章節見出し、論文タイトル、著者名、Venue 名
+- 手法名・アーキテクチャ名・モデル名（固有名詞: JEPA, Dreamer, TD-MPC, GelSight, MPPI 等）
+- DOI、URL、BibTeX キー、ファイルパス、コード片
+- 構造ラベル（軸名そのもの: thesis / foundation / progress / gap / seed）
+- 数式、原文の直接引用（引用符付き）
+
+### 日本語化すべき一般語彙
+
+以下のような **一般名詞・形容詞・副詞・動詞** は、固有名詞でない限り英語のまま残さず、
+カタカナ化または日本語訳に置換する。**「英語のまま埋め込む方が学術的に見える」という
+誤った直感に従わないこと**。日本語論文として読めるテキストを目指す。
+
+- 一般名詞の例: `gap` → 課題 / ギャップ、`axis` → 軸、`field` → 分野、`structure` → 構造、
+  `dependency` → 依存（性）、`collapse` → 崩壊、`bottleneck` → ボトルネック、
+  `tradeoff` → トレードオフ、`limitation` → 限界 / 制約、`overhead` → オーバーヘッド、
+  `velocity` → 速度（citation velocity → 引用速度）
+- 形容詞・副詞の例: `principled` → 原理的（に）、`scalable` → スケーラブル、
+  `robust` → 頑健（な）、`end-to-end` → エンドツーエンド、`stable` → 安定（した）、
+  `lightweight` → 軽量、`reward-free` → 報酬不要、`zero-shot` → ゼロショット
+- 動詞の例: `outperform` → 上回る、`introduce` → 導入する、`leverage` → 活用する、
+  `bridge` → 橋渡しする、`address` → 取り組む / 対処する
+
+判断に迷ったら **「日本語論文・解説記事で実際にカタカナまたは漢字で書かれているか」**
+を基準にする（例: `transformer` はカタカナ「トランスフォーマー」または英語のまま、
+どちらも実例あり → どちらでも良い。`gap` は日本語論文では「ギャップ」または「課題」
+が一般的、`gap` のまま使うのは不自然）。
+
+### 構文の英語直訳禁止
+
+英語の構文をそのまま和訳すると不自然になる。以下を避ける：
+
+- **番号付き体言止め羅列**:
+  - ✗ `主要な発見は (i) X、(ii) Y、(iii) Z、の 3 点。`
+  - ✓ `主要な発見は次の 3 点である。第一に X。第二に Y。第三に Z。`
+  または `主要な発見は次の 3 点：(1) X、(2) Y、(3) Z。`（番号は和文括弧）
+- **連続した体言止め**:
+  - ✗ `~を解決した、~を確立した、~を実現した。`
+  - ✓ `~を解決し、~を確立し、~を実現した。` または接続詞で繋ぐ
+- **副詞の丸投げカタカナ化**:
+  - ✗ `principled に解決した`
+  - ✓ `原理的に解決した` / `首尾一貫した方法で解決した`
+
+## Subagent Policy
+
+並列検索や hub 深読みでサブエージェントを使う場合は **Sonnet tier**
+（現在 `claude-sonnet-4-6`）。コスト・コンテキスト効率と注釈品質のバランス。
+
+## Auto-execution Mode
+
+通常 workflow は以下の点でユーザー確認を取る：
+
+- **Phase 1 (Frame)**: depth 未指定時の確認、RQ と I/E criteria の確認、ユーザー
+  既知略語の収集、survey_slug の確認
+- **Phase 2 (Map)**: Map Checkpoint 承認
+- **Phase 3 (Hubs)**: Hub Selection 承認
+
+**live user が応答できない環境**（自動 batch 実行、empirical evaluation、
+無人 dispatch 等）では以下のフォールバック規約に従う：
+
+- **Phase 1 (Frame) 全般**:
+  - **depth**: 入力にヒントがなければ `focused` をデフォルト
+  - **RQ**: core topic から 2-4 個を auto-derive し、Methodology → Frame に記録
+  - **I/E criteria**: トピックから合理的なデフォルト（peer-reviewed + 主要 preprint、
+    対象領域内、英語）を auto-derive し記録
+  - **既知略語**: 収集せず、初出展開ルールで対応（誤展開は許容）
+  - **survey_slug**: auto-suggest をそのまま採用し、Methodology に記録
+- **Phase 2 (Map Checkpoint)**: 提示用テキストを完成形 markdown で生成し、
+  Methodology → Map セクションに「(automated run: presented but not confirmed)」
+  注記付きで **inline 埋め込み**。ユーザー追加・除外指示は無いものとして扱う
+- **Phase 3 (Hub Selection)**: 提示用 Hub 候補表を生成し、Methodology →
+  Hub Selection に同様の注記を残して進む。承認待ちはせず deep read に進む
+
+自動実行モードの判定: 呼び出し側が「自動実行」「empirical eval」「batch」「headless」の
+いずれかを明示した場合、または会話文脈にスコープブロック（research-framing 連携節参照）
+があり対話相手が登場しない場合に有効化する。判定が曖昧な場合は対話的モードを優先せよ
+（誤って自動実行モードに入ってユーザー確認を skip するより、確認を求める方が安全）。
 
 ## Workflow
 
-> **Path convention**: All `references/` and `scripts/` paths in this file are
-> relative to the directory containing this SKILL.md.
+5 フェーズ構成: **Frame → Map → Hubs → Synthesize → Verify & Output**
 
-### Subagent Model Policy
+### Phase 1: Frame
 
-All subagents launched during the survey must use the **Sonnet tier**
-(currently `claude-sonnet-4-6`). This balances annotation quality against
-cost and context efficiency.
+調査の境界を確定する。
 
-### Phase 1: Research Design
-
-Before searching, establish the survey's scope and boundaries with the user:
-
-- **Core topic**: The specific research question or area
-- **Research Questions (RQs)**: Formulate 2-4 concrete questions the survey
-  will answer. RQs give the survey a clear purpose beyond "collect papers"
-  and guide search, analysis, and synthesis. Example:
+- **Core topic**: 具体的な研究課題・領域
+- **Research Questions (RQs)**: 2–4 個。survey の目的を明確化する。例：
   - RQ1: What algorithmic approaches have been proposed for [problem]?
   - RQ2: Under what conditions are these approaches evaluated?
   - RQ3: What are the unresolved technical challenges?
-- **Depth / Breadth**: Determines scope and default paper count.
-  - `focused` — core topic only; no adjacent fields; target **20–40 papers**
-  - `broad` — adjacent fields included; target **40–60 papers**
-  If the user did not specify depth, ask. The target count can be adjusted regardless of depth.
-- **Time emphasis**: Default is recent-first with historical coverage (see Phase 2)
-- **Inclusion / Exclusion criteria**: Define the scope boundary upfront:
-  - Inclusion: e.g., peer-reviewed papers + major preprints, specific
-    robot types, specific task domains
-  - Exclusion: e.g., poster-only publications, non-English papers,
-    papers outside the target domain
+- **Depth / Breadth**: 採録規模を決定
+  - `focused` — 中核トピックのみ。**20–40 papers**
+  - `broad` — 隣接領域も含める。**40–60 papers**
+  指定なしなら確認する。
 
-If the user's request is already specific enough, propose the RQs and
-criteria for confirmation rather than asking open-ended questions.
+  **target 内のどこに着地すべきか**: snowballing が自然飽和した点
+  （直近 1 hop で発見される新規 paper が大部分既に採録済み）で止めるのが原則。
+  - 下限を割って飽和: OK（小さい field の正直な signal）。Methodology に明記
+  - 上限を超えても飽和しない: I/E criteria を狭めて再 map（領域が広すぎ）
+  - 中央値前後 (focused なら 25-30) が典型的な着地点
+- **Inclusion / Exclusion criteria**: スコープ境界を明示
+  - Inclusion 例: peer-reviewed + 主要 preprint、特定タスク領域
+  - Exclusion 例: poster-only、英語以外、対象領域外
 
-**Scope block (research-framing integration)**: If the conversation context
-contains a scope block in the format below, skip Phase 1 entirely and proceed
-directly to Phase 2. Derive RQs and I/E criteria from the provided topic and
-depth; do not ask for confirmation. Use the `目的` field to orient RQs toward
-the stated goal (e.g., "Niche 特定" → emphasize RQs about open challenges and
-frontier gaps).
+ユーザー要求が既に具体的なら、RQ と criteria を提示して確認だけ取る。
+
+#### survey_slug の生成
+
+Frame 完了時、core topic と RQ から `{survey_slug}` を自動生成し、ユーザーに確認する
+（auto-execution mode 時は確認 skip — Auto-execution Mode 節参照）。
+
+**slug 化規則（auto-suggest 生成時）:**
+
+1. core topic から英語キーワードを抽出（日本語入力なら英訳）
+2. lowercase 化、空白とコロン等の区切り文字をハイフン `-` に置換
+3. stop word（`a`, `an`, `the`, `of`, `for`, `via`, `with`, `from`, `in`, `on`, `and`, `or`,
+   `is`, `are`, `to`）を除外
+4. 残った先頭 **3-5 語**を `-` 連結（5 語超なら核心 3-5 語に絞る）
+5. 年号は core topic に元々含まれている場合のみ末尾に付与（例: "2026 update of X" → `...-2026`）。
+   時事 survey 用に勝手に付けない
+
+Alternatives は (i) 1 語短縮版、(ii) 別のキー語を主軸にした版、(iii) "-survey" suffix 付き
+の 3 案を提示する。
+
+```
+core topic: "Multi-Robot Task Allocation under Uncertainty"
+RQ1: algorithmic approaches?
+RQ2: evaluation conditions?
+
+Auto-suggest: multi-robot-task-allocation-uncertainty
+Alternatives:
+  - multi-robot-task-allocation         (1 語短縮)
+  - uncertainty-aware-task-allocation   (別主軸)
+  - multi-robot-task-allocation-survey  (suffix 付き)
+  - <free input>
+```
+
+承認された slug でメインレポートを `./literature/surveys/{survey_slug}.md` に書く。
+
+#### research-framing 連携
+
+会話コンテキストに以下のスコープブロックがある場合、Phase 1 をスキップして Phase 2 へ。
+RQ と I/E criteria はトピックと depth から導出し、確認は取らない。`目的` が
+"Niche 特定" なら open challenges と frontier gaps を強調する RQ を組む。
 
 ```
 文献調査のスコープ:
 - トピック: [topic]
 - 深度: focused / broad
-- seed: 不要 / 必要  ← 必要 = 最終レポートに研究提案（Seed セクション）を含める
+- seed: 不要 / 必要
 - 目的: [purpose]
 ```
 
-### Phase 2: Search Strategy
+ただし `survey_slug` の確認は省略しない（Frame スキップ時もユーザーに 1 回確認）。
 
-Search systematically in three temporal tiers:
+### Phase 2: Map
 
-**Tier 1 — Recent (last 2-3 years): Exhaustive**
-- Search for the latest preprints, conference papers, and journal articles
-- Include workshop papers, technical reports, and theses if relevant
-- Actively include preprints to counter publication bias (positive results
-  are overrepresented in peer-reviewed venues)
-- This tier gets the most effort — aim for near-complete coverage of the topic
+論文を集めて軽量に分類する。**ここでは深読みしない** — 1 行 contribution と
+3-5 個の concept tag だけ。深読みは Phase 3 でハブ論文のみ実施。
 
-**Tier 2 — Established (3-10 years): High-impact focus**
-- Concentrate on highly-cited papers and key contributions
-- Identify papers that introduced major techniques, datasets, or benchmarks
-- Follow citation chains from Tier 1 papers backward
+#### Search Strategy
 
-**Tier 3 — Foundational (~2015 and earlier, 10+ years ago): Seminal works only**
-- Classic papers that defined the field or subfield
-- Only include if they are still widely cited or conceptually essential
+3 つの時間層で検索：
 
-### Keyword Construction
+- **Tier 1 — Recent (last 2-3 years)**: preprint・主要会議・ジャーナルを網羅的に
+- **Tier 2 — Established (3-10 years)**: 高被引用・ベンチマーク・データセット原典
+- **Tier 3 — Foundational (~2015 以前)**: 当該領域を定義した seminal works のみ
 
-Before executing searches, derive a structured keyword set from the RQs:
+主要手法は **snowballing**（Wohlin 2014）：
 
-1. Extract key concepts from each RQ (population, intervention, outcome)
-2. For each concept, list synonyms, abbreviations, and spelling variants
-3. Combine with Boolean operators to form search strings
+1. WebSearch + Semantic Scholar / OpenAlex で **seed 5–10 本**を確定
+2. 各 seed の前方・後方引用を **1–2 hop** 追跡
+3. 並行して直接トピック検索（補完）と既存 survey 論文の発見
+4. 必要なら著者追跡・venue 限定検索
 
-Example: `("multi-robot" OR "multi-agent" OR "swarm") AND ("task allocation"
-OR "task assignment") AND ("cooperation" OR "coordination")`
+`references/search_sources.md` を Phase 2 開始時に読み、ツール仕様
+（Semantic Scholar MCP、OpenAlex script、`resolve_oa_url`）を把握。
+ロボティクス系トピックなら `references/venues_robotics.md` も読む。
 
-Record the final search strings in the Search Log.
+サブエージェントで並列化可（角度ごとに分担）。
 
-### Search Execution
+#### Keyword Construction
 
-Use multiple complementary search approaches to maximize coverage:
+RQ から構造化キーワードセットを導出：
 
-1. **Direct topic search**: Search the core topic and its synonyms/variants
-2. **Survey discovery**: Search for existing survey papers on the topic — these are goldmines for finding references you might miss
-3. **Citation chain following**: When you find a key paper, look at what it cites and what cites it
-4. **Author tracking**: If a few researchers dominate the field, search their recent publications
-5. **Venue-specific search**: Check top venues (conferences/journals) known for this area.
-   If the topic is robotics, robot learning, manipulation, or sim-to-real, read
-   `references/venues_robotics.md` at the start of Phase 2 for the prioritized venue
-   list and venue-specific search strategies.
+1. 各 RQ から key concept を抽出（population, intervention, outcome）
+2. 各 concept について synonyms, abbreviations, spelling variants をリスト
+3. Boolean で結合
 
-WebSearch is the primary discovery tool — it is fast, has no rate limits, and
-reliably finds papers across all venues. Use it alongside the structured
-metadata tools (Semantic Scholar MCP, OpenAlex script) described in
-`references/search_sources.md`. Read that file at the start of Phase 2 for
-tool-specific details (API formats, MCP parameters, OA resolution priority).
+例: `("multi-robot" OR "multi-agent" OR "swarm") AND ("task allocation" OR "task assignment") AND ("cooperation" OR "coordination")`
 
-Use subagents to parallelize searches across different queries and sources.
-Each subagent should handle a distinct search angle (e.g., one for the main
-topic, one for a related subtopic, one for survey papers).
+#### Per-paper Extraction（軽量）
 
-**Search logging requirement**: Every subagent must return a structured search log
-alongside its paper results. The log must record, for each search action performed:
-(1) the information source (e.g., WebSearch, Semantic Scholar API, arXiv API, ar5iv,
-IEEE Xplore), (2) the exact query string or URL used, (3) the number of results
-obtained, and (4) a brief note on relevance. This log is aggregated into the
-Survey Methodology → Search Log section of the final report.
+採録した各論文に対して、検索結果メタデータと abstract から以下を抽出：
 
-**DOI/URL requirement**: Every paper collected must have at least one of:
-publisher DOI (preferred), arXiv ID (fallback), or URL (last resort). See
-`references/search_sources.md` § DOI Types for details. Papers for which
-none of these can be found should be excluded.
+- **title, authors, year, venue, citation count**
+- **DOI / arXiv ID / URL**（少なくとも 1 つ。なければ除外）
+- **1-line contribution**: abstract から 1 文で要約
+- **concept tags**: 3-5 個。後の concept matrix の列見出し候補となる
 
-### Deduplication
+**深い 4 フィールド注釈（thesis/core/diff/limit）はここでは付けない**。これは
+ハブ論文に対してのみ Phase 3 で `/paper-summary` 経由で生成される。
 
-Multiple search angles will inevitably find the same paper. Deduplicate before
-proceeding to Phase 2.5:
+#### DOI Resolution（インライン）
 
-- **Primary match**: DOI or arXiv ID (normalize before comparing — strip URL
-  prefixes like `https://doi.org/` or `https://arxiv.org/abs/`)
-- **Fallback match**: Title comparison after normalization (lowercase, strip
-  punctuation and whitespace)
-- **Merge strategy**: When duplicates are found, keep the entry with the richest
-  metadata (publisher DOI > arXiv ID > URL-only)
-- **Logging**: Record the total number of duplicates removed in the search log
-
-### Phase 2.5: Search Review Checkpoint
-
-Before investing effort in paper-level analysis (Phase 3), present the search
-results to the user for review. This checkpoint exists because Phase 3 is the
-most token- and time-intensive part of the workflow — the paper list should be
-confirmed before analysis begins.
-
-**Present the following to the user:**
-
-A paper list grouped by temporal tier, sorted within each tier by citation count
-(descending):
-
-```
-## Search Results (N papers found, target: M)
-
-### Tier 1 — Recent (2023-2026): N papers
-| # | Title | Year | Venue | Citations |
-|---|-------|------|-------|-----------|
-| 1 | ...   | 2025 | NeurIPS | 42      |
-
-### Tier 2 — Established (2016-2022): N papers
-| # | Title | Year | Venue | Citations |
-|---|-------|------|-------|-----------|
-
-### Tier 3 — Foundational (~2015): N papers
-| # | Title | Year | Venue | Citations |
-|---|-------|------|-------|-----------|
-
-### Coverage Summary
-- Search angles used: N (list them)
-- Top venues represented: ...
-- Duplicates removed: N
-```
-
-**Scoring criteria** (used for sort order and for pruning when count exceeds target):
-
-1. **Citation count** (primary) — from Semantic Scholar or OpenAlex
-2. **Venue tier** (secondary) — top-tier conference/journal > workshop > preprint
-3. **Recency** (tertiary) — newer papers first within the same tier
-
-Before presenting, apply the inclusion/exclusion criteria defined in
-Phase 1 and note any papers excluded with reasons.
-
-**Ask the user:**
-- Are there known papers that should be added?
-- Should any subtopics or directions be excluded?
-- Should the inclusion/exclusion criteria be adjusted?
-- Should the target count be adjusted?
-
-Do not proceed to Phase 3 until the user approves the paper list.
-
-### Phase 3a: Open-Access Paper Analysis
-
-Classify the approved papers by full-text accessibility, then process OA papers first.
-
-**Step 1 — Classify papers:**
-
-For each approved paper, determine full-text access status:
-
-1. If `openAccessPdf` was returned by `search_semantic_scholar`, classify as **OA**.
-2. Otherwise, call `resolve_oa_url` with the paper's DOI / arXiv ID / S2 ID.
-   - If `best_url` is non-null → **OA**
-   - If `best_url` is null → **Paywall**
-
-Record the classification and the resolved URL for each paper.
-
-**Step 2 — Extract key sections (deterministic):**
-
-For arXiv papers, run the section extraction script to obtain structured
-content without reading full text:
-
-```bash
-python3 scripts/extract_sections.py --input oa_papers.json --output sections.json
-```
-
-The script fetches ar5iv HTML and extracts: abstract, introduction,
-conclusion, limitations, future work, tables (as Markdown), and figure
-captions. This replaces full-text reading for most papers — the extracted
-sections contain the information needed for all four annotation fields.
-
-For non-arXiv OA papers (e.g., publisher HTML), fall back to WebFetch on
-the OA URL, but instruct the subagent to focus on the same sections.
-
-**Step 3 — Annotate via subagents:**
-
-Distribute the extracted sections across subagents in batches of 15-20
-papers each. Because each paper is now represented by its key sections
-(~2,000-5,000 tokens) rather than full text (~10,000-15,000 tokens),
-larger batches are feasible.
-
-Each subagent receives the pre-extracted sections and returns **only** a
-JSON array — no intermediate reasoning or raw content:
-
-```json
-[
-  {
-    "key": "Author2024_keyword",
-    "title": "...", "authors": "...", "year": 2024,
-    "venue": "...", "doi": "...", "arxiv_id": "...", "oa_url": "...",
-    "thesis": "1-2 sentences",
-    "core": "1-2 sentences",
-    "diff": "1-2 sentences",
-    "limit": "1-2 sentences"
-  }
-]
-```
-
-**Annotation field definitions:**
-
-- **thesis**: The author's central claim — not what the method does, but what
-  the author argues is true. Frame as an argumentative stance (e.g., "dense
-  physical features from interaction are necessary for manipulation, visual
-  appearance alone is insufficient" rather than "proposes a method to assign
-  dense physical features").
-- **core**: The essential, irreplaceable element(s) of the method. Without
-  this, the approach would not work. Be specific (e.g., "differentiable
-  rendering loss that back-propagates through the physics simulator" not
-  just "differentiable rendering").
-- **diff**: Explicit contrast with prior work. Name the predecessor(s) and
-  state what limitation is overcome or what new capability is introduced.
-  Avoid vague statements like "improves over previous methods".
-- **limit**: Constraints or unsolved problems the authors explicitly
-  acknowledge — from the extracted Limitations/Future Work sections.
-  Record only what the authors themselves state. If the extraction script
-  could not find a Limitations section, supplement with abstract hints or
-  write "limit not available" rather than guessing.
-
-  **No speculation**: Fabricated limitations are indistinguishable from
-  real ones and undermine the survey's reliability.
-
-After all subagents return, merge their JSON arrays into a unified paper
-list. Then identify themes, trace the evolution, and highlight connections
-across the full set.
-
-**Step 3 — OA coverage analysis and paywall processing recommendation:**
-
-After processing all OA papers, analyze coverage and present a recommendation
-before proceeding to Phase 3b:
-
-1. **Coverage analysis**: For each thematic category and RQ, count OA vs
-   Paywall papers. Identify categories where Paywall papers are the sole
-   or majority source.
-2. **Annotation coverage**: Calculate the percentage of papers with complete
-   annotations (all four fields filled) from OA alone.
-3. **Recommendation**: Based on the above, propose one of:
-   - **Skip all**: OA coverage is sufficient across all categories/RQs
-   - **Selective fetch**: List specific Paywall papers that fill coverage
-     gaps (e.g., sole paper in a category, high-citation foundational work)
-   - **Full fetch**: OA coverage has significant gaps requiring most
-     Paywall papers
-
-Present the analysis and recommendation to the user:
-
-```
-## Paywall Processing Recommendation
-
-### OA Coverage Analysis
-- Total: N papers (OA: X, Paywall: Y)
-- Categories with OA-only coverage: [list]
-- Categories requiring Paywall papers: [list, with reason]
-- Annotation completeness (OA only): Z%
-
-### Recommendation: [Skip all / Selective fetch / Full fetch]
-[1-2 sentence justification]
-
-### Paywall Papers (Y papers, M publishers)
-
-| Publisher | Count | Papers | Priority |
-|-----------|-------|--------|----------|
-| IEEE Xplore | 3 | [Title1], ... | [High/Low] |
-| Elsevier | 2 | [Title4], ... | [High/Low] |
-
-For publishers you want to fetch:
-1. Log in via your browser
-2. Export cookies via Cookie-Editor (Export → JSON → copies to clipboard)
-3. Run: bash ~/.claude/mcp/academic-fetch/save-cookies.sh
-4. Say "ready" to process that publisher's papers
-
-You can also say "skip" for any publisher to mark those papers as
-"limit not available (paywall)" and move on.
-```
-
-If there are no paywall papers, skip Phase 3b entirely and proceed to Phase 4.
-
-### Phase 3b: Paywall Paper Analysis
-
-Process paywall papers one publisher group at a time:
-
-```
-for each publisher group (IEEE, Elsevier, Springer, ACM, ...):
-  1. Ask the user to export cookies for this publisher + run save-cookies.sh
-  2. User says "ready" → process all papers from this publisher via fetch_with_auth
-  3. Annotate with the same four fields (thesis/core/diff/limit)
-  4. If fetch_with_auth returns session-expiry → ask user to re-export cookies
-  5. User says "skip" → mark all papers from this publisher as
-     "limit not available (paywall)"
-```
-
-After all publisher groups are processed (or skipped), merge Phase 3a and 3b
-results into a unified set of annotated papers. Update the themes and connections
-identified in Phase 3a to incorporate newly analyzed paywall papers.
-
-### Phase 3 → 5 Transition: Context Consolidation
-
-Before proceeding to Phase 4, consolidate the analysis state. At this point,
-only the following information is needed for the remaining phases:
-
-1. **Paper metadata table**: key, title, authors, year, venue, DOI/arXiv ID
-2. **Annotations**: thesis/core/diff/limit per paper (1-2 sentences each)
-3. **Category assignments**: which papers belong to which thematic category
-4. **Unresolved DOIs**: list of papers needing Phase 4 resolution
-
-All raw search results, full-text content, and intermediate reasoning from
-Phase 2-3 subagents have already been consumed and should not be carried
-forward. If the conversation context has grown large, summarize the above
-into a compact working state before continuing.
-
-### Phase 4: DOI Resolution
-
-Many ML/AI papers first appear on arXiv but are later published at venues
-with a separate publisher DOI. The arXiv DOI (`10.48550/arXiv.XXXX.XXXXX`)
-is not the publisher DOI — the publisher DOI should appear in formal citations.
-
-Run the DOI resolution script on all papers that currently only have an
-arXiv ID or URL:
+arXiv ID のみで採録した論文は、可能なら publisher DOI に解決する。
+`scripts/resolve_dois.py` を使ってバッチ処理：
 
 ```bash
 python3 scripts/resolve_dois.py --input papers.json --output resolved.json
 ```
 
-The script queries DBLP, `resolve_oa_url` MCP tool, and Crossref in cascade,
-respecting rate limits. Resolution priority: publisher DOI > arXiv ID > URL.
+DBLP → `resolve_oa_url` MCP → Crossref のカスケード。Phase 4 として独立工程化せず、
+Map の終わりに 1 回流す。
 
-Record the resolution results in the DOI Resolution Log section of the
-final report (see Phase 7 template).
+#### Deduplication
 
-### Phase 5: Survey-Level Synthesis
+- Primary: DOI / arXiv ID（URL prefix 除去後に比較）
+- Fallback: タイトル正規化（lowercase, punctuation/whitespace 除去）後の比較
+- Merge 時は最も richest なメタデータを残す
 
-Derive survey-level findings by cross-cutting the paper-level annotations.
-This is the primary intellectual contribution of the survey — it transforms
-a collection of papers into actionable research insight.
+#### Map Checkpoint
 
-Read `references/synthesis_guide.md` for detailed writing guidelines for
-each section. The four paper-level axes aggregate into survey-level sections:
+Phase 3 に進む前に、Map 結果をユーザーに提示して承認を取る
+（auto-execution mode 時は確認 skip — Auto-execution Mode 節参照）。
 
-1. **thesis** — synthesize paper-level theses into the field's fundamental
-   unsolved problem
-2. **foundation** — aggregate paper-level cores into shared technical
-   building blocks
-3. **progress** — aggregate paper-level diffs chronologically into a
-   trajectory of solved problems
-4. **gap** — identify structural unsolved problems from the frontier of
-   diffs and converging limits
-5. **seed** (conditional) — include only when the user explicitly requests
-   research proposals. Read `references/seed_format.md` for structure.
+以下の完成形テンプレートをそのまま埋めて提示する：
 
-Additionally, produce these cross-cutting analyses from the consolidated
-paper metadata (no new searches needed):
+```markdown
+## Map Checkpoint — レビューお願いします
 
-6. **Quantitative trends** — tabulate from paper metadata:
-   - Publication count by year
-   - Distribution across method categories
-   - Experimental setting breakdown (simulation / real hardware / both)
-   - Top venues by paper count
+### Map Result (N papers, target: M)
 
-### Phase 6: Reference Verification
+#### By temporal tier
+- Tier 1 (recent, last 2-3 yrs): N papers
+- Tier 2 (established, 3-10 yrs): N papers
+- Tier 3 (foundational, ~10+ yrs): N papers
 
-Use the **reference-verify** skill to verify all collected papers and retrieve
-missing `limit` fields. Invoke it with:
+#### By initial concept clusters
+| # | Cluster | Count | Top venue | Sample papers (3 most cited) |
+|---|---------|-------|-----------|------------------------------|
+| 1 | [name]  | N     | [venue]   | [Author+ Year]; [...]; [...] |
+| 2 | ...     | ...   | ...       | ...                          |
 
-- **Papers**: the full list of papers collected in Phases 2-3
-- **Metadata triage**: enabled, targeting the `limit` field
-- **Output format**: structured data for embedding into the Survey Methodology section
+#### Coverage
+- Search angles used: N — [list angles in 1 line]
+- Snowballing: seed N + forward/backward 1-hop, total N papers
+- Duplicates removed: N
+- Papers excluded by I/E criteria: N — [list reasons]
 
-The reference-verify skill will:
-1. Run hallucination checks (DOI/URL existence verification) on all papers
-2. Exclude unverifiable papers and report the count
-3. Classify papers with missing `limit` fields by barrier type (paywall /
-   rendering failure / no Limitations section expected) and ask the user
-   per-category whether to attempt additional retrieval
+### 確認事項（回答お願いします）
 
-Only proceed to Phase 7 after reference-verify completes and the user has
-responded to any triage prompts.
+| # | 質問 | 回答候補 |
+|---|------|---------|
+| 1 | 既知の論文で **漏れているもの** はありますか？ | あれば: [タイトル / arXiv ID / DOI] / なし |
+| 2 | **除外すべき方向 / クラスタ** はありますか？ | あれば: [cluster # or トピック] / なし |
+| 3 | **I/E criteria 調整** が必要ですか？ | あれば: [追加 inclusion / 追加 exclusion] / なし |
+| 4 | **採録規模** を調整しますか？ | 現状 N で進む / 増やす（target M' へ） / 減らす（target M' へ） |
 
-### Phase 7: Output Generation
+承認 = 上記回答済みで「進めて」と一言。差し戻し = 質問への回答 + 「再 map」と一言。
+```
 
-Produce the survey report in `literature/<topic_slug>.md`,
-creating the `literature/` directory if it does not exist.
+回答待ちの間 Phase 3 には進まない。差し戻された場合は Map を更新して再提示。
 
-Read `references/report_template.md` for the complete report structure.
-If the user requested research proposals/seeds, also read
-`references/seed_format.md` for the Seed section structure.
+### Phase 3: Hub Selection & Deep Read
 
-Generate the report in sections to avoid hitting output limits and to
-maintain quality across the full document:
+Map された論文の中から **ハブ論文** を選び、それぞれに `/paper-summary` を
+適用して深読みノートを生成する。これがレポートの synthesis 段階での主要素材になる。
 
-1. **Metadata + Research Landscape Overview + Survey Findings**
-   (Thesis/Foundation/Progress/Gap, and conditionally Seed)
-2. **Paper Catalogue** — generate one category at a time, appending each
-3. **Survey Methodology** (Search Log, DOI Resolution Log, Hallucination
-   Check, Limit Field Coverage)
+#### Hub Selection 基準
+
+以下の **B + C のユニオン**で選定し、**上限 5–10 本**に絞る：
+
+- **B. カテゴリ橋渡し性 + 影響力**: 以下の両方を満たす：
+  - **論文単体が 2 つ以上の concept cluster** に属する技術要素を組み合わせている
+    （単に著者が複数 cluster で活動しているだけでは bridging に当たらない）
+  - **外部引用数が survey 全体（cluster 横断）の上位 1/3** に入る。発表 2 年以内の
+    recent paper は citation velocity（年あたり引用数）で全体の上位 1/3 を代替判定
+  - **citation 数が取得できない環境**（Semantic Scholar MCP / OpenAlex script
+    不通）では、以下の 3 proxy 軸を **High / Mid / Low** で評価して代替判定：
+    - **(i) venue tier**: High = top-tier（NeurIPS / ICML / ICLR / CVPR / ICCV /
+      ECCV / SIGGRAPH / RSS / CoRL / IJRR / RA-L / T-RO 等）、Mid = solid venue
+      （ICRA / IROS / AAAI / Humanoids / WAFR / L4DC 等）、Low = workshop /
+      preprint only
+    - **(ii) WebSearch hit 数**: 論文タイトル + 第一著者名で検索し、論文本体以外の
+      関連言及（解説 blog / re-implementation / 引用フォーラム / video summary 等）
+      が High ≥ 5 件、Mid 1-4 件、Low 0 件
+    - **(iii) 本 survey 内被引用頻度**: 採録した他論文の references で
+      High ≥ 3 本に言及、Mid 1-2 本、Low なし
+
+    **判定**: 3 軸中 **2 軸以上が High** なら「上位 1/3 相当」と認定。
+    Methodology に各 hub の 3 軸スコア（例: `(High, High, Mid)`）を明記し、
+    「citation proxy used」と注記
+- **C. Synthesis 主役性**: thesis / gap セクションで論じる中心となる論文
+  （Phase 4 の synthesis 想定をプレビューして判定）
+
+引用数だけ（criterion A）は survey 規模が小さい場合に信号が弱いため、
+B + C を主軸とする。
+
+#### Hub から除外する論文タイプ
+
+以下は Map に含めても Hub からは外す（深読みノートの粒度が合わないため）：
+
+- **教科書 / monograph**: contribution が章ごとに分かれており 1 deep note に収まらない。
+  特定の章が survey の中心テーマに直結する場合のみ、その章を別途 `/paper-summary` に
+  かける（citekey は `{Author}-Book{Year}-{Chapter}` 等で区別）
+- **Survey / review 論文**: それ自体が複数論文の集約であり、本 survey の参照対象
+  として Map に置くのは有用だが、Hub にすると機能重複する。Foundational Works 扱い
+  として Methodology または Map で言及するに留める
+- **Platform / framework / dataset 論文**: 単一研究 contribution というより
+  infrastructure。関連する応用論文（その platform を使った具体研究）を Hub にする
+  方が deep read の情報密度が高い
+
+これらを例外的に Hub に入れる場合は、"Why hub" 列でその理由を明示する。
+
+選定したハブ論文を以下のように提示してユーザー承認を取る：
+
+```
+## Hub Papers (N selected for deep read)
+
+| # | Title | Year | Venue | Why hub | Citekey |
+|---|---|---|---|---|---|
+| 1 | ... | 2024 | NeurIPS | B: bridges cluster A (X) + cluster B (Y), top-tertile cite (123/yr velocity) | Author-NeurIPS2024-... |
+| 2 | ... | 2023 | RSS    | C: thesis 軸の主役（Z 制約と W 制約の両立を最初に示した） | Author-RSS2023-... |
+| ... | ... | ... | ... | ... | ... |
+
+各ハブに対して /paper-summary を実行します。続行しますか？
+追加・削除があれば教えてください。
+```
+
+**Why hub の記述ルール**: 1-2 文で、B / C / B+C のいずれに該当するかを冒頭で明示し、
+具体的な根拠を続ける：
+
+- **B 該当**: 「B: bridges cluster X + cluster Y, top-tertile cite (具体数値 or velocity)」
+- **C 該当**: 「C: <thesis/foundation/progress/gap> 軸の主役（具体的な役割を 1 文で）」
+- **B + C 両方**: 「B+C: <両方の根拠を 1 文ずつ>」
+
+vague な表現（"important", "influential", "key paper"）は使わず、必ず cluster 名 / 軸名 /
+具体的な数値・役割を書く。
+
+#### Hub PDF 取得
+
+承認されたハブ論文ごとに：
+
+1. PDF を取得：
+   - `openAccessPdf`（Semantic Scholar 結果）→ ダウンロード
+   - 不在なら `resolve_oa_url` で OA URL を取得 → ダウンロード
+   - 不在なら `fetch_with_auth`（paywall）でユーザー cookie 経由取得
+2. `./literature/papers/{citekey}/main.pdf` として配置
+   - citekey は `/paper-summary` 規約 (`{LastName}-{VenueYear}-{ShortTitle}`) で生成
+   - ShortTitle のエッジケースは `/paper-summary` 内のプロンプトに委ねる
+
+PDF が取得できないハブ論文がある場合：
+- 別のハブ候補に差し替えるか、深読み無しのまま留め置く（Paper Catalogue 内では
+  `[deep read unavailable: PDF inaccessible]` と注記）かをユーザーに確認
+
+#### Hub Deep Read
+
+各ハブ論文について `/paper-summary` を呼び出す。**呼び出しモードはコンテキストで使い分け**：
+
+- **対話的 / 通常実行モード**: subagent dispatch で `/paper-summary` を起動
+  ```
+  /paper-summary literature/papers/{citekey}/
+  ```
+  サブエージェントで並列化可（同時 3-5 本まで、コンテキスト消費に注意）
+
+- **自動実行 / batch / context budget 制約モード**: `/paper-summary` の SKILL.md と
+  references/template.md を inline で読み込み、template 厳守でノートを直接 Write する。
+  recursive subagent dispatch によるトークン乗算を回避。Methodology に「inline mode」
+  と注記
+
+両モードとも出力先は同じ `./literature/papers/{citekey}/{paper-title-slug}.md`。
+完了後、生成されたパスを記録する。これが Phase 4 の synthesis 入力となる。
+
+**並列実行時の wikilink coordination**: 並列で `/paper-summary` を起動した場合、
+各実行は Step 4「既存ノート読み込み」の時点で他のハブノートがまだ存在しないため、
+ハブ間の相互 wikilink が欠落する。これを避けるには 2 戦略のいずれか：
+
+- **(i) 逐次実行**: 1 hub ずつ完了させる（遅いが coordination 不要）
+- **(ii) 並列 + 補完 pass**: 並列実行後、Phase 3 末尾で全 hub notes を 1 巡再 scan し、
+  相互 wikilink を Edit で補完する。各 note の Summary 本文中で他 hub 論文への
+  言及があれば `[[papers/{citekey}/{slug}|Author+ Year]]` 形式に置換
+
+通常は (ii) が時間効率良い。非ハブ → ハブ方向の wikilink は対象 note が存在するため
+逐次・並列いずれでも問題なし。問題はハブ ↔ ハブの相互参照のみ。
+
+### Phase 4: Synthesize
+
+Map で得た concept matrix（全論文）と、Phase 3 で得たハブ深読みノート（5–10 本）を
+入力として、survey-level の知見を導出する。これが survey の主要な知的貢献。
+
+`references/synthesis_guide.md` を読んで、各セクションの記述ガイドラインに従う。
+4 つの軸を導出：
+
+1. **thesis** — ハブ深読みノート + 全論文の 1-line contribution から、
+   field の根本的な未解決問題を articulate
+2. **foundation** — ハブ深読みノートから、field が依拠する技術的 building blocks を抽出
+3. **progress** — ハブ深読みノートを時系列に並べ、解決された問題の trajectory を描く
+4. **gap** — ハブ深読みノートの limitations + concept matrix の空欄 / 疎な行 / 欠落セルから、
+   構造的に未解決な問題を identify
+
+加えて、Map メタデータから cross-cutting analysis を生成（追加検索不要）：
+
+5. **Quantitative trends**: publication count by year / 主要 venue / sim/real 内訳
+6. **Concept matrix**: 全論文 × 4-6 concepts のテーブル。本 survey の主要 artifact
+
+#### Seed (conditional)
+
+ユーザーが研究提案を要求した場合のみ、`references/seed_format.md` を読んで
+Seed セクションを追加。「reading list が欲しい」だけなら省略。
+
+### Phase 5: Verify & Output
+
+#### Verify
+
+`reference-verify` skill を起動して採録論文を一括検証：
+
+- DOI / URL の存在確認（hallucination check）
+- 検証不可な論文は除外、その数を Methodology に記録
+
+**skip の許可**: Auto-execution mode かつ呼び出し側が「reference-verify は形式的に通過」
+と明示した場合のみ skip 可。Methodology → Verify に「reference-verify skipped per
+caller instruction (lightweight run)」と明記する。通常実行では skip しない。
+
+#### Output
+
+メインレポートを `./literature/surveys/{survey_slug}.md` に生成。
+出力構造は `references/report_template.md` を参照。
+
+セクション順序（出力上限を避けるため分割生成）：
+
+1. Metadata + Research Landscape Overview + Survey Findings
+   (Thesis / Foundation / Progress / Gap, 条件付きで Seed)
+2. Concept Matrix + Quantitative Trends + Hub Papers + Paper Catalogue
+3. Survey Methodology（Search summary / Hub selection rationale /
+   Verification result の 1 ブロック）
+
+ハブ論文は Paper Catalogue で 1 行 + Obsidian wikilink で深読みノートに飛ばす：
+
+```
+[[papers/{citekey}/{paper-title-slug}|{Author+ Year}]] — 1-line contribution
+```
+
+非ハブ論文は concept matrix と Paper Catalogue の 1 行 entry のみ。
 
 ## Reference Processing
 
-Follow the citation conventions in `.claude/rules/references.md`.
+引用規約は `.claude/rules/references.md` に従う（ファイルが存在しない環境では参照を skip）。
 
-Additional steps:
-1. **Update references/main.md**: Add all papers from the Paper Catalogue to `literature/references/main.md`,
-   creating `literature/references/` if it does not exist
-2. **Update README.md**: Add a new entry to the table in `literature/README.md`
-   after the survey is complete
-3. **Execution log**: Append to `docs/LOGS/literature-survey.md` with the search process,
-   output file paths, and implications for the project
+追加ステップ：
+
+1. **`literature/surveys/README.md` の更新**: 新規 survey を一覧テーブルに追記
+   - ファイルが存在しない場合は新規作成（一覧テーブルのヘッダ + 1 行 entry）
+   - cwd が scratch directory（`/tmp/...` 等）で永続化が無意味な場合は skip し、
+     Methodology に「README/LOGS update skipped (scratch environment)」と記録
+2. **執行ログ**: `docs/LOGS/literature-survey.md` に追記（検索プロセス、出力パス、
+   プロジェクトへの含意）
+   - `docs/` 構造が存在しない環境では skip。Methodology に同様に記録
 
 ## Quality Checklist
 
-Before delivering results, read `references/quality_checklist.md` and verify
-all items.
+完了前に `references/quality_checklist.md` の各項目を確認。
 
 ## Abbreviation Convention
 
-Apply the following rules to every survey report:
+レポート全体に以下を適用：
 
-- **First use**: write the full name followed by the abbreviation in parentheses —
-  e.g., `Discrete Elastic Rods (DER)`, `Bayesian Optimization (BO)`.
-- **Subsequent uses**: abbreviation only.
-- **User-declared known abbreviations** (e.g., 3DGS, FEM, MPM): use the abbreviation
-  from the first occurrence without expansion. Collect these from the user during
-  Phase 1 if not already stated.
-- **Abbreviation glossary**: append an `## Abbreviation Glossary` section at the end
-  of the report containing a three-column table — Abbreviation | Full name | First
-  occurrence (section name) — covering every abbreviation introduced in the report.
+- **初出**: `Discrete Elastic Rods (DER)`, `Bayesian Optimization (BO)` のように完全名 + 略語
+- **2 回目以降**: 略語のみ
+- **ユーザー既知略語** (3DGS, FEM, MPM 等): 初出から略語のみ。Phase 1 で確認
+- **末尾に Abbreviation Glossary**: 略語 / 完全名 / 初出セクション の 3 列テーブル
