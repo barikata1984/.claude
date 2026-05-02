@@ -18,6 +18,7 @@ downloads/
 file-history/
 ide/
 image-cache/
+paste-cache/
 plans/
 plugins/
 projects/
@@ -26,6 +27,7 @@ sessions/
 shell-snapshots/
 stats-cache.json
 statsig/
+tasks/
 telemetry/
 todos/
 backups/
