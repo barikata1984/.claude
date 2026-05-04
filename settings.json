@@ -129,7 +129,6 @@
       "/opt/ros/one/lib/python3/dist-packages/baldor"
     ]
   },
-  "model": "claude-opus-4-7",
   "hooks": {
     "PostToolUse": [
       {
@@ -142,6 +141,20 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/validate-references.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-taxonomy-check.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/stop-scope-check.sh"
           }
         ]
       }
@@ -171,5 +184,6 @@
   },
   "effortLevel": "xhigh",
   "autoMemoryEnabled": false,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "agentPushNotifEnabled": true
 }

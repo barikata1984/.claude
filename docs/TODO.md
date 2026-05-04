@@ -15,6 +15,16 @@
   - 退避先: ~/_CLAUDE.md
 - [x] ユーザーレベル CLAUDE.md にスクラッチプロジェクトの標準ドキュメント構成を明記
 
+## 挙動制御フレームワーク
+
+- [x] CLAUDE.md 剪定 (153 → 124 行、2026-05-04)
+- [x] `## 応答スコープ規約` セクション追加 (2026-05-04)
+- [x] 日本語スタイル自己点検 directive を `## 日本語スタイル規約` に追加 (2026-05-04)
+- [x] `~/.claude/hooks/stop-scope-check.sh` 実装、block mode で稼働 (2026-05-04)
+- [x] `~/.claude/hooks/stop-taxonomy-check.sh` を warn-only から block へ昇格 (2026-05-04)
+- [ ] 1-2 週間運用後、`scope-violation.log` と `taxonomy-warn.log` の偽陽性率レビュー
+- [ ] レビュー結果に応じて scope-check のキーワード調整、または検出ロジック改良
+
 ## project-team スキル
 
 ### 設計（完了）
