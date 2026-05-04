@@ -1,6 +1,6 @@
 ---
 name: sweep-analyze
-description: Retrieve and analyze wandb sweep results via the wandb API, identify the best run by the sweep's optimization metric, compute per-parameter impact, review learning curves, flag crashed or early-stopped runs, and optionally analyze GPU resource usage from recorded monitoring CSVs. Produces a findings section appended to docs/LOGS/log_sweep.md. Use this skill whenever a sweep has finished (or has enough completed runs) and the user wants to analyze results, pick the best hyperparameter configuration, understand which parameters mattered most, or says things like "analyze the sweep", "what were the best runs", "summarize the sweep results", "which hyperparameters worked", "スイープ結果を分析", "どの設定が良かった". Also trigger when the user provides a wandb sweep ID or references sweep results in conversation.
+description: Retrieve and analyze wandb sweep results via the wandb API, identify the best run by the sweep's optimization metric, compute per-parameter impact, review learning curves, flag crashed or early-stopped runs, and optionally analyze GPU resource usage from recorded monitoring CSVs. Produces a findings section appended to notes/LOGS/log_sweep.md. Use this skill whenever a sweep has finished (or has enough completed runs) and the user wants to analyze results, pick the best hyperparameter configuration, understand which parameters mattered most, or says things like "analyze the sweep", "what were the best runs", "summarize the sweep results", "which hyperparameters worked", "スイープ結果を分析", "どの設定が良かった". Also trigger when the user provides a wandb sweep ID or references sweep results in conversation.
 ---
 
 # sweep-analyze
@@ -12,7 +12,7 @@ Retrieve and analyze wandb sweep results, extract insights, and optionally analy
 Identify the sweep using one of the following:
 
 - **sweep ID**: wandb sweep ID (e.g., `abc123de` or `entity/project/abc123de`)
-- **sweep name**: entry name in `docs/LOGS/log_sweep.md`
+- **sweep name**: entry name in `notes/LOGS/log_sweep.md`
 - **project specification**: `--project <name>` (default: infer from existing sweep configs or ask)
 
 Ask the user for any missing information.
@@ -68,7 +68,7 @@ Only include this section if the training framework uses early stopping. Analyze
 
 ### 3. GPU resource analysis (if monitoring data exists)
 
-Check for `docs/LOGS/gpu_monitor_*<sweep_id>*.csv`. If found:
+Check for `notes/LOGS/gpu_monitor_*<sweep_id>*.csv`. If found:
 
 1. Stop the monitoring session if still running:
    ```bash
@@ -101,7 +101,7 @@ Derive from the analysis:
 ### 5. Record
 
 Present results in conversation first, then after user confirmation append to
-the corresponding entry in `docs/LOGS/log_sweep.md`:
+the corresponding entry in `notes/LOGS/log_sweep.md`:
 
 ```markdown
 ### Results

@@ -392,9 +392,9 @@ caller instruction (lightweight run)」と明記する。通常実行では skip
    - ファイルが存在しない場合は新規作成（一覧テーブルのヘッダ + 1 行 entry）
    - cwd が scratch directory（`/tmp/...` 等）で永続化が無意味な場合は skip し、
      Methodology に「README/LOGS update skipped (scratch environment)」と記録
-2. **執行ログ**: `docs/LOGS/literature-survey.md` に追記（検索プロセス、出力パス、
+2. **執行ログ**: `notes/LOGS/literature-survey.md` に追記（検索プロセス、出力パス、
    プロジェクトへの含意）
-   - `docs/` 構造が存在しない環境では skip。Methodology に同様に記録
+   - `notes/` 構造が存在しない環境では skip。Methodology に同様に記録
 
 #### Final Quality Check
 

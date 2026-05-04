@@ -60,12 +60,12 @@ Dig deeper based on responses rather than asking everything at once.
 1. Decide search method (grid / random / bayes)
    - Calculate combination count; suggest random/bayes for > 100 runs
 2. Confirm base config file and dataset
-3. Check existing sweep records (`docs/LOGS/log_sweep.md`) to avoid duplicating past experiments
+3. Check existing sweep records (`notes/LOGS/log_sweep.md`) to avoid duplicating past experiments
 4. Present the plan and obtain user approval
 
 ### Phase 4: Record
 
-After approval, append to `docs/LOGS/log_sweep.md`:
+After approval, append to `notes/LOGS/log_sweep.md`:
 
 ```markdown
 ## YYYY-MM-DD: <sweep_name>
@@ -105,8 +105,8 @@ To locate project-specific references, read the project's existing files:
 
 - **Config classes**: Find via `grep -r "class.*Config" src/` or similar
 - **Existing sweep configs**: `configs/sweep_*.yaml` (match their style)
-- **Experiment logs**: `docs/LOGS/log_sweep.md`
-- **GPU monitoring data**: `docs/LOGS/gpu_monitor_*.csv`
+- **Experiment logs**: `notes/LOGS/log_sweep.md`
+- **GPU monitoring data**: `notes/LOGS/gpu_monitor_*.csv`
 
 ## Rules
 

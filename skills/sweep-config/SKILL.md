@@ -11,7 +11,7 @@ Generate and validate wandb sweep config YAML.
 
 Obtain sweep configuration from one of the following:
 
-- Planning results from `/sweep plan` (in conversation or latest entry in `docs/LOGS/log_sweep.md`)
+- Planning results from `/sweep plan` (in conversation or latest entry in `notes/LOGS/log_sweep.md`)
 - Direct specification from the user (parameter names and values)
 
 ## Procedure

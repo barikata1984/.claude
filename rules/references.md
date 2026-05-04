@@ -1,6 +1,8 @@
 ---
 paths:
   - "literature/**"
+  - "notes/LOGS/**"
+  - "notes/REPORTS/**"
   - "docs/LOGS/**"
   - "docs/REPORTS/**"
 ---

@@ -24,7 +24,7 @@
 | Phase 4: DOI解決 | arXiv IDをpublisher DOIに昇格 | なし（自動） |
 | Phase 5: 統合分析 | thesis/foundation/progress/gap（seedは任意） | なし（自動） |
 | Phase 6: 参照検証 | `reference-verify`スキルで幻覚チェック | triage対応が必要な場合あり |
-| Phase 7: レポート生成 | `docs/SURVEYS/<topic_slug>.md`に出力 | なし（自動） |
+| Phase 7: レポート生成 | `notes/SURVEYS/<topic_slug>.md`に出力 | なし（自動） |
 
 **Phase 2.5の承認なしにPhase 3は開始しない。** Phase 3はトークンと時間を最も消費するため、
 論文リストを確認してから着手する設計になっている。
@@ -40,7 +40,7 @@
 ## 出力レポートの構成
 
 ```
-docs/SURVEYS/<topic_slug>.md
+notes/SURVEYS/<topic_slug>.md
 ├── メタデータ表（トピック、日付、論文数、使用ソース）
 ├── Research Landscape Overview（分野の全体像）
 ├── Survey Findings

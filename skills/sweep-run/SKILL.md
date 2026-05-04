@@ -1,6 +1,6 @@
 ---
 name: sweep-run
-description: Launch wandb sweep agents in tmux sessions with GPU assignment and background nvidia-smi monitoring. Handles optional sweep registration from a YAML, displays current GPU availability, lets the user decide parallelism and GPU pinning via CUDA_VISIBLE_DEVICES, and starts a separate tmux monitor writing docs/LOGS/gpu_monitor_*.csv for later resource analysis. Use this skill whenever the user wants to start running a sweep, launch wandb agents, kick off experiments on multiple GPUs, or says things like "run the sweep", "launch agents", "start the experiment", "execute this sweep", "deploy to GPUs", "スイープを起動", "エージェント立ち上げ". Also trigger after /sweep-config completes when the YAML is ready, or when the user has a wandb sweep ID and asks what to do next.
+description: Launch wandb sweep agents in tmux sessions with GPU assignment and background nvidia-smi monitoring. Handles optional sweep registration from a YAML, displays current GPU availability, lets the user decide parallelism and GPU pinning via CUDA_VISIBLE_DEVICES, and starts a separate tmux monitor writing notes/LOGS/gpu_monitor_*.csv for later resource analysis. Use this skill whenever the user wants to start running a sweep, launch wandb agents, kick off experiments on multiple GPUs, or says things like "run the sweep", "launch agents", "start the experiment", "execute this sweep", "deploy to GPUs", "スイープを起動", "エージェント立ち上げ". Also trigger after /sweep-config completes when the YAML is ready, or when the user has a wandb sweep ID and asks what to do next.
 ---
 
 # sweep-run
@@ -69,7 +69,7 @@ Start background GPU resource recording alongside the sweep agents:
 tmux new-session -d -s "sweep-monitor-<short_id>" \
   "nvidia-smi --query-gpu=timestamp,index,name,utilization.gpu,utilization.memory,memory.used,memory.total,power.draw \
    --format=csv,nounits -l 30 \
-   >> docs/LOGS/gpu_monitor_<sweep_id>_<date>.csv"
+   >> notes/LOGS/gpu_monitor_<sweep_id>_<date>.csv"
 ```
 
 If a monitoring session already exists, warn and skip.
@@ -86,7 +86,7 @@ Launch complete:
   agents:
     - <session_name_0> → GPU 0
     - <session_name_1> → GPU 2
-  monitoring: sweep-monitor-<short_id> → docs/LOGS/gpu_monitor_<id>_<date>.csv
+  monitoring: sweep-monitor-<short_id> → notes/LOGS/gpu_monitor_<id>_<date>.csv
 
 Management commands:
   tmux ls                          # List sessions

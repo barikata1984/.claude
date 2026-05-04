@@ -58,7 +58,7 @@ Before delivering results, verify all items.
 - [ ] Hub papers linked via Obsidian wikilink to deep-read notes
 - [ ] Non-hub papers represented in concept matrix and 1-line catalogue entry
 - [ ] `literature/surveys/README.md` table updated
-- [ ] `docs/LOGS/literature-survey.md` appended with this run
+- [ ] `notes/LOGS/literature-survey.md` appended with this run
 
 ## Report Structure
 

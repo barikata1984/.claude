@@ -1,11 +1,13 @@
 ---
 name: daily-report
-description: "Generate a structured daily work report. Extracts the day's work from docs/LOGS/ logs, docs/TODO.md, and git log, then saves it as a structured report for management in docs/REPORTS/. Invoke with /daily-report or /daily-report YYYY-MM-DD. Also trigger for requests like daily report, work summary, progress report, today's work summary."
+description: "Generate a structured daily work report. Extracts the day's work from notes/LOGS/ logs, notes/TODO.md, and git log (or docs/* for legacy projects), then saves it as a structured report for management in notes/REPORTS/ (or docs/REPORTS/ for legacy). Invoke with /daily-report or /daily-report YYYY-MM-DD. Also trigger for requests like daily report, work summary, progress report, today's work summary."
 ---
 
 # daily-report
 
-Extract the day's work from docs/ and git log, and generate a report for management.
+Extract the day's work from `<base>/` and git log, and generate a report for management.
+
+**`<base>` resolution**: `notes/` (default) if it exists in the project, else `docs/` (legacy) if it exists, else `notes/` (newly created). See CLAUDE.md「標準ドキュメント構成」for the full rule.
 
 ## Arguments
 
@@ -39,22 +41,22 @@ server's system timezone.
 ### 2. Collect sources
 
 Git log is the only required source — it always exists and provides an objective
-record of work. The docs/ files enrich the report but are not prerequisites.
+record of work. The <base>/ files enrich the report but are not prerequisites.
 
 **Required**:
 - `git log` + `git diff` for each commit (from Step 1)
 
 **Optional** (use if present, skip silently if not):
-- `docs/TODO.md` — completed `[x]` and pending `[ ]` items
-- `docs/ISSUES.md` — newly registered and resolved issues
-- `docs/LOGS/log_*.md` — sections appended on the target date (identify via git diff or date headers)
-- `docs/PLAN.md` — if there were design changes
+- `<base>/TODO.md` — completed `[x]` and pending `[ ]` items
+- `<base>/ISSUES.md` — newly registered and resolved issues
+- `<base>/LOGS/log_*.md` — sections appended on the target date (identify via git diff or date headers)
+- `<base>/PLAN.md` — if there were design changes
 
 If no git commits exist for the target date, do not generate a report — inform
 the user that no work was recorded and ask them to verify the date.
 
-Cross-reference git log commit messages with available docs/ content to determine
-the scope of work for the target date. When docs/ files are unavailable, infer
+Cross-reference git log commit messages with available <base>/ content to determine
+the scope of work for the target date. When <base>/ files are unavailable, infer
 topic structure from commit messages and diffs.
 
 ### 3. Topic integration (most important)
@@ -108,7 +110,7 @@ Granularity per topic:
 
 ### 5. Save
 
-Output to: `docs/REPORTS/YYYY-MM-DD.md`
+Output to: `<base>/REPORTS/YYYY-MM-DD.md`
 
 Create the directory if it does not exist. If a file with the same name already exists, confirm with the user.
 
@@ -122,5 +124,5 @@ Follow the citation conventions in `.claude/rules/references.md`.
 - Conclusion first. The manager should grasp the key point from the first sentence
 - Avoid verbose background explanations; focus on decisions and results
 - Include specific numbers ("improved by 3-5%" not "improved")
-- Include test results if recorded in docs/LOGS/ or commit messages. Do not run tests just for the report
+- Include test results if recorded in <base>/LOGS/ or commit messages. Do not run tests just for the report
 - Do not include work not recorded in logs (do not speculate)
