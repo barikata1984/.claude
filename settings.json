@@ -145,20 +145,7 @@
         ]
       }
     ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/stop-taxonomy-check.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/stop-scope-check.sh"
-          }
-        ]
-      }
-    ]
+    "Stop": []
   },
   "statusLine": {
     "type": "command",
@@ -184,6 +171,7 @@
   },
   "effortLevel": "xhigh",
   "autoMemoryEnabled": false,
-  "skipAutoPermissionPrompt": true,
-  "agentPushNotifEnabled": true
+  "theme": "auto",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
