@@ -9,7 +9,11 @@
       "Read(//tmp/**)",
       "Edit(~/.claude/skills/**)",
       "Write(~/.claude/skills/**)",
-      "Read(//opt/ros/one/lib/python3/dist-packages/baldor/**)"
+      "Read(//opt/ros/one/lib/python3/dist-packages/baldor/**)",
+      "Bash(set -e)",
+      "Bash(git revert *)",
+      "Bash(pixi install *)",
+      "Bash(bash /workspace/scripts/setup.sh)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
