@@ -32,3 +32,4 @@ telemetry/
 todos/
 backups/
 __pycache__/
+.last-cleanup
