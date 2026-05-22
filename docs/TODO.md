@@ -24,6 +24,14 @@
 - [x] `~/.claude/hooks/stop-taxonomy-check.sh` を warn-only から block へ昇格 (2026-05-04)
 - [ ] 1-2 週間運用後、`scope-violation.log` と `taxonomy-warn.log` の偽陽性率レビュー
 - [ ] レビュー結果に応じて scope-check のキーワード調整、または検出ロジック改良
+- [x] 和文タイポグラフィ正規化フック実装（マスク方式、24 テスト全通過、2026-05-22）
+  - `hooks/format_ja_typography.py` + `.sh` + テスト、`settings.json` PostToolUse 登録
+  - 全角約物→半角・ASCII 不可侵・コード/数式/URL 保護、global 適用
+- [x] 応答制御を concise 出力スタイルへ移行（2026-05-22）
+  - 「1-3 文/preamble 禁止の組み込み既定」は非存在と確認（公式ドキュメント）
+  - `output-styles/concise.md` 作成、応答スコープ規約から独自二条項を削除
+- [ ] concise 出力スタイル単体運用の効果観察（反復・冗長が抑制されるか）
+  - 不足なら独自二条項（スコープ制約・反復禁止）の復活、または長さ上限 Stop フック追加
 
 ## project-team スキル
 
