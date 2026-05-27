@@ -177,6 +177,7 @@
       }
     }
   },
+  "outputStyle": "Concise",
   "effortLevel": "xhigh",
   "autoMemoryEnabled": false,
   "theme": "auto",
