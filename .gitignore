@@ -33,3 +33,4 @@ todos/
 backups/
 __pycache__/
 .last-cleanup
+hooks/*.log
