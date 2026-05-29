@@ -271,3 +271,34 @@ karpathy 固有の新規トピックはゼロ。正味の新規貢献は Surgica
 初動の自力調査）を書き戻す必要が生じ、プロンプト側の質問閾値も反転する、(3) 正味の新規価値は
 Surgical Changes の数行のみ。費用対効果から、必要なら Surgical Changes 相当の数行を応答スコープ
 規約に接ぎ木する方が安価（接ぎ木は本セッションでは未実施）。
+
+## 2026-05-29: 方針転換 — karpathy を主軸に据えて試用開始
+
+**背景**：前項（2026-05-27）の評価で karpathy 主軸を一旦不採用としたが、可逆性（git 追跡
+下なので `git checkout CLAUDE.md` で即復元可能）と、secret のハードガード（settings.json
+の deny list: `doppler secrets get` / `pass show` / `cat .env` / `Read **/.env` 等）が
+CLAUDE.md の有無に依らず効き続けることを再評価し、試用窓を設ける判断に切り替えた。
+
+**採用構成**：`~/.claude/CLAUDE.md` を以下の 3 ブロックのみに縮約。
+
+1. karpathy CLAUDE.md の `@~/.claude/plugins/marketplaces/karpathy-skills/CLAUDE.md` インポート
+   （Think Before Coding / Simplicity First / Surgical Changes / Goal-Driven Execution の 4 原則）
+2. Git Workflow（Conventional Commits / main）
+3. 標準ドキュメント構成（`<notes>` 解決順序と TODO / LOGS / ISSUES / PLAN の運用ルール表）
+
+**一旦解除した既存セクション**（必要時は git 履歴から戻す）：ワークフロー、応答スコープ
+規約、評価者規約、機密情報の取扱い、情報の確実性ポリシー、略語使用規約、日本語スタイル規約。
+
+**残存リスクの認識**：
+- 応答スコープ規約の解除により、karpathy 項目 1（迷えば聞け・選択肢を提示）が支配的になり、
+  プロンプト側の明確化質問・列挙が増える可能性。
+- 評価者規約の解除により、ユーザー反論への迎合バイアスが戻る可能性。
+- 機密情報の取扱いの解除はソフト方針（漏出時報告・rotation 案内）のみが消え、ハードな
+  読み取り禁止は settings.json 側で生きている。
+- 情報の確実性ポリシーの解除により、外部一次情報での検証強制が外れる可能性（推論
+  マーカーの自己制動が弱まる）。
+
+**反映タイミング**：`@import` は起動時展開なので、本セッション内ではまだ旧設定が効いている。
+次セッション以降で挙動を観察する。微妙なら `git checkout CLAUDE.md` で即時復元。
+
+
