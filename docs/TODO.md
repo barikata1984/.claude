@@ -45,6 +45,12 @@
   - ブラインド A/B（独立判定者 + hold-out S2）: T-S1 漏れ（無問題の自発報告）を発見→土台 bullet を「気づいたときだけ・無ければ言わない」に修正し解消
   - S4 の指摘どまり/指摘+修正のブレは prompt 層の天井として 80 点で確定
 - [ ] 予防層の実運用評価（未要求の批判・分析・蛇足が減るか、S1/S4 型の残留が許容範囲か）
+- [x] under-retrieval 対策「外部事実の検証」節を CLAUDE.md に新設（段階 1、2026-05-30）
+  - hallucination でなく under-retrieval と切り分け、批判的スタンス（対ユーザー態度）とは別軸（対・事実）で独立節化
+  - 既存実装調査（Aedelon の classifier-gated injection、blueprint research-protocol、Anthropic 公式）
+  - 設計: 強制は原理不可、事後ゲート却下、デーモン不採用、段階導入（指示 → 測定 → 必要なら軽量 hook）
+  - empirical-prompt-tuning 5 シナリオ（検索すべき/不要/境界 ×2/under-trigger hold-out）全て意図通り・収束・文面修正不要
+- [ ] 外部事実の検証節の実運用評価（検索すべき場面で実際に発火するか = 遵守率、empirical では測れない）
 
 ## project-team スキル
 
