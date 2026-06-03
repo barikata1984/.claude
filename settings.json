@@ -179,7 +179,8 @@
   },
   "outputStyle": "Concise",
   "language": "Japanese",
-  "effortLevel": "xhigh",
+  "model": "claude-opus-4-6",
+  "effortLevel": "high",
   "voice": {
     "enabled": true,
     "mode": "hold"
