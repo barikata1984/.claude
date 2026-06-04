@@ -34,6 +34,8 @@ Before delivering results, verify all items.
 - [ ] PDFs placed at `./literature/papers/{citekey}/main.pdf` with
       correct citekey per `/paper-summary` regulation
 - [ ] `/paper-summary` invoked on each hub; resulting note paths recorded
+- [ ] Hub cross-verification completed: separate agents verified each
+      deep-read note against PDF (or explicit caller skip noted)
 
 ## Synthesize (Phase 4)
 
@@ -54,6 +56,8 @@ Before delivering results, verify all items.
 
 - [ ] reference-verify completed — all papers checked for hallucinations
 - [ ] Excluded unverifiable papers reported
+- [ ] Synthesis trace-back completed: thesis/foundation/progress/gap claims
+      verified against hub deep-read notes
 - [ ] Output file at `./literature/surveys/{survey_slug}.md`
 - [ ] Hub papers linked via Obsidian wikilink to deep-read notes
 - [ ] Non-hub papers represented in concept matrix and 1-line catalogue entry
