@@ -28,8 +28,15 @@ State the failure precisely — **what** is observed, **when** it occurs, and
 
 ## Phase 2: Build the Fault Tree
 
-**Do this BEFORE reading any source code related to the bug.** Reading code first
-anchors you to whatever you see first.
+**Build hypotheses from structure, not from code logic.** Reading implementation
+details first anchors you to whatever you see first. You MAY open files to check
+names, classes, and method signatures — if the tool shows more than that,
+ignore function bodies and logic for now. Base your hypotheses on the system's
+architecture and the symptom, not on any code details you happen to see.
+Detailed code reading belongs to Phase 4.
+
+If the user suggests a likely cause, include it as a hypothesis — but treat it
+the same as any other: it must be confirmed or eliminated by evidence in Phase 4.
 
 Walk through each cause category and ask "could this produce the top event?"
 Write a one-line hypothesis for each plausible category. For excluded categories,
