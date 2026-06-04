@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(*)",
@@ -133,6 +136,7 @@
       "/opt/ros/one/lib/python3/dist-packages/baldor"
     ]
   },
+  "model": "claude-opus-4-6[1m]",
   "hooks": {
     "PostToolUse": [
       {
@@ -179,7 +183,6 @@
   },
   "outputStyle": "Concise",
   "language": "Japanese",
-  "model": "claude-opus-4-6",
   "effortLevel": "high",
   "voice": {
     "enabled": true,
@@ -189,8 +192,5 @@
   "theme": "auto",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  }
+  "voiceEnabled": true
 }
