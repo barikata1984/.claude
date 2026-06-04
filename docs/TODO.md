@@ -73,6 +73,13 @@
 - [x] Step 4: `skills/project-team/SKILL.md`
 - [x] Step 5: `settings.json` パーミッション更新（Step 4 で実施済み — `Edit/Write(~/.claude/skills/**)` 追加）
 
+## Agent Teams
+
+- [x] Agent Teams 機能の調査・検証（環境変数、TeamCreate スキーマ、公式ドキュメント）
+- [x] `~/.claude/rules/agent-teams.md` 作成（トリガー条件・ワークフロー・ベストプラクティス）
+- [x] empirical-prompt-tuning による検証（4 iter + hold-out、精度 100% 収束、修正 2 件適用）
+- [ ] 実運用での効果観察（TeamCreate が適切な場面で自動発火するか）
+
 ## Literature Survey
 
 - [x] Robotic Pick-and-Place: Grasping and Stable Object Placement (2026-04-06)
