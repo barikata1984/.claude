@@ -3,7 +3,7 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
-    "allow": [
+    "_allow": [
       "Bash(*)",
       "WebSearch",
       "WebFetch",
@@ -18,7 +18,7 @@
       "Bash(pixi install *)",
       "Bash(bash /workspace/scripts/setup.sh)"
     ],
-    "deny": [
+    "_deny": [
       "Bash(rm -rf /:*)",
       "Bash(rm -rf ~:*)",
       "Bash(doppler secrets get:*)",
@@ -66,7 +66,7 @@
       "Read(**/secrets.json)",
       "Read(**/*.secret)"
     ],
-    "ask": [
+    "_ask": [
       "Bash(rm:*)",
       "Bash(rmdir:*)",
       "Bash(unlink:*)",
