@@ -1,43 +1,58 @@
 ---
 name: request-source
 description: >
-  Generates a [知識ソース] knowledge source block for a specified Claude response,
-  classifying information as internal knowledge (training data), external knowledge
-  (retrieved via WebSearch/WebFetch), or observations (session logs, code, errors).
-  Always use this skill when: the user asks about sources, basis, or credibility of
-  a Claude response in any phrasing — including Japanese (「ソースは？」「内部知識？」
-  「根拠は？」「検索した？」「WebSearch した？」「ソースブロックがない」「知識ソースが欠けている」);
-  the user calls /request-source explicitly; a previous response is missing its
-  [知識ソース] block and needs retroactive annotation; or the user questions whether
-  information came from training data vs. actual web retrieval.
+  応答末尾に Sources ブロックを付与する. 外部事実を含む応答では自動付与; ユーザーが
+  明示的に呼んだ場合は直前の応答を遡及的に注釈する.
+  自動付与トリガー: 応答が外部事実(API 仕様, ライブラリバージョン, 論文情報, 統計,
+  ニュース, 第三者ドキュメント等)を含むとき.
+  付与しない場合: コード編集, ファイル操作, git 操作, 会話的やりとり, セッション内の
+  観測事実(ログ, エラー出力, テスト結果)のみで構成される応答.
+  手動トリガー: /request-source, 「ソースは?」「根拠は?」「検索した?」「内部知識?」
+  「WebSearch した?」「ソースブロックがない」「知識ソースが欠けている」.
 ---
 
-Analyze the response specified in `$ARGUMENTS` and generate a knowledge source block.
+## 動作モード
 
-`$ARGUMENTS` can be a contextual reference such as "直前の回答" or "この回答" (resolve from conversation history), or literal response text.
+1. **自動付与**: 応答本文の末尾に Sources ブロックを追記する. 応答本文と Sources ブロックの間に `---` を置く.
+2. **手動呼び出し** (`$ARGUMENTS` あり): 指定された応答(「直前の回答」等)を分析し, Sources ブロックのみを出力する. 冒頭の `---` は不要(本文がないため分離の必要がない). `Sources:` から始める.
 
-## Output format
-
-The complete source block below is your entire response — no text before it, no text after it, and do not reproduce the original response text. All three sections (内部知識, 外部知識, 観測事実) must always be present; write "なし" for any section with no entries.
+## 出力フォーマット
 
 ```
 ---
-
-[知識ソース]
-内部知識：
-- <item from training data>
-
-外部知識：
-- <URL> — <summary of retrieved information>
-- なし
-
-観測事実：
-- <logs, code, error output, or execution results directly confirmed in this session>
-- なし
+Sources:
+- [検証済] 項目の要約 — 参照先 (URL/DOI/ドキュメントパス)
+- [未検証] 項目の要約(内部知識)
 ```
 
-## Category definitions
+## 分類ルール
 
-- **内部知識**: Items derived from training data that have not been verified via WebSearch/WebFetch in this session. Write each item as a concise factual statement; do not add meta-annotations like "〜由来の知識" or "training data より".
-- **外部知識**: Information retrieved via WebSearch/WebFetch in this session. Include URL and a brief summary. If nothing was retrieved, write "なし".
-- **観測事実**: Logs, code, error output, or execution results directly confirmed in this session. A third category distinct from both internal and external knowledge. If nothing was observed, write "なし".
+- **[検証済]**: 当該セッション中に WebSearch / WebFetch / MCP で実際に確認した情報. 参照先(URL, DOI, ドキュメントパス等)を必ず付記する.
+- **[未検証]**: 訓練データ(内部知識)に依拠しており, 当該セッション中に外部検証していない情報. 参照先は書かない. 「(内部知識)」と付記する.
+- **優先順位**: 粒度ルール(自明な常識 → 除外)は分類ルールに優先する. 学部教育レベルで自明な事実は, 内部知識であっても Sources に含めない.
+
+## 記載の粒度
+
+- 応答中の主要な事実主張ごとに 1 行. 同一ソースから得た密接に関連する事実(例: 1 つの API の複数パラメータ)は 1 行にまとめてよい. 当該分野の学部教育を受けた者にとって自明な常識や, 応答の構造的要素(「以下に示す」等)は含めない.
+- 同一の参照先が複数項目に対応する場合, 各項目に同じ参照先を繰り返してよい.
+- 同一の項目が検証済と未検証の両方に該当する場合(部分的に検証した場合), 検証済の行に記載し, 未検証部分があればその旨を補記する.
+
+## CLAUDE.md の inline 注記との関係
+
+CLAUDE.md「外部事実の検証」は本文中に「内部知識・未確認」と明示するルールを定めている. Sources ブロックを付与する応答では, 未検証情報の明示は Sources ブロックの `[未検証]` に集約し, 本文中の個別注記(`(内部知識・未確認)` 等)は省略する(二重記載を避ける).
+
+## 付与判断の基準
+
+応答に以下のいずれかが含まれるとき付与する:
+- ライブラリ・フレームワーク・API の仕様やバージョン情報
+- 論文の著者, 年, 数値, 手法の詳細
+- 統計データ, ベンチマーク結果
+- ニュース, イベント, リリース情報
+- 第三者ドキュメントの内容への言及
+
+以下のみで構成される応答には付与しない:
+- コード編集・生成の結果報告
+- ファイル・git 操作の実行報告
+- セッション内の観測事実(エラーログ, テスト出力等)の報告
+- 会話的やりとり(確認, 質問, 提案)
+- ユーザーのコードベース内の事実のみに基づく説明
