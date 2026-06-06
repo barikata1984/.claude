@@ -177,7 +177,13 @@
     "karpathy-skills": {
       "source": {
         "source": "github",
-        "repo": "forrestchang/andrej-karpathy-skills"
+        "repo": "multica-ai/andrej-karpathy-skills"
+      }
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
       }
     }
   },
@@ -189,9 +195,9 @@
     "mode": "hold"
   },
   "autoMemoryEnabled": false,
+  "skipWorkflowUsageWarning": true,
   "theme": "auto",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "skipWorkflowUsageWarning": true
+  "voiceEnabled": true
 }
