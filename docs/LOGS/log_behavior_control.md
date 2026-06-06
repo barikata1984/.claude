@@ -577,3 +577,41 @@ SKILL.md への変更は計 5 箇所:
 
 ### その他の変更
 - `settings.json`: permissions の `allow`/`deny`/`ask` キーを `_allow`/`_deny`/`_ask` にリネームして無効化（auto mode で運用するため）
+
+## 2026-06-06: ドキュメント事前参照 (Doc-First) ハーネス導入
+
+### 問題
+Claude Code が実装・デバッグ時にマニュアルやドキュメントを事前確認せず、内部知識のみでコードを書いて試行錯誤するため、ドキュメントを見れば一発で済む問題に余計な時間がかかるケースが複数発生。特にハードウェア（センサ・アクチュエータ）やライブラリ API で顕著。
+
+### 設計
+- **CLAUDE.md 行動規則** として実装（skill ではなく常時発火の一般行動）
+- **doc-registry.md** でトピック別の参照先を管理（ユーザーレベル、全プロジェクト共通）
+- ドキュメント参照の優先順: Local → Web（doc-registry にエントリがなくても WebSearch でフォールスルー）
+- 適用除外: 純粋アルゴリズム、同セッション確認済み、1–2 回の検索で見つからない場合
+
+### 成果物
+- `~/.claude/CLAUDE.md` に「ドキュメント事前参照 (Doc-First)」節を追加
+- `~/.claude/doc-registry.md` を新規作成（書式定義 + 空のエントリ一覧）
+
+### EPT 検証
+シナリオ 3 種（A: Dynamixel 位置制御実装, B: RealSense エラー対処, C: ROS 2 tf2 broadcaster — hold-out）。評価の焦点は「CLAUDE.md の行動規則が明示的起動なしに自発的に読み出されるか」。
+
+| iter | シナリオ | 精度 | steps | duration |
+|---|---|---|---|---|
+| 1 | A (実装) | 100% | 3 | 49s |
+| 1 | B (デバッグ) | 100% | 9 | 99s |
+| 2 | A (実装) | 100% | 7 | 90s |
+| 2 | B (デバッグ) | 100% | 8 | 90s |
+| hold-out | C (ROS 2) | 100% | 5 | 60s |
+
+6/6 subagent が Doc-First 手順を自発的に実行（doc-registry.md を Read → Web ドキュメント参照 → コード/修正案生成）。
+
+### 適用した修正（2 件）
+1. **doc-registry.md**: コメントアウト例を削除、書式例をコードブロック内に限定（実エントリとの混同防止）
+2. **CLAUDE.md 手順 3**: 「1 回」を削除、上限は除外条件「1–2 回で見つからなければ進む」に一元化
+
+### テスト条件の制約
+subagent に CLAUDE.md を「システム指示」として渡しているため、実セッションよりも Doc-First 節の顕著性が高い可能性がある。実セッションではシステムプロンプト全体の中に埋もれうる。実運用での遵守率は別途観察が必要。
+
+### 付随作業: プラグインエラー修正
+`known_marketplaces.json` と `installed_plugins.json` のパスが `/home/developer/` を参照しており、`/home/atsushi/` に修正。修正後、プラグインシステムが自動的に `skill-creator` キャッシュを再構築。`/reload-plugins` でエラーなし（2 plugins, 6 agents）を確認。
