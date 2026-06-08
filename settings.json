@@ -3,6 +3,14 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
+    "defaultMode": "auto",
+    "additionalDirectories": [
+      "~/.claude",
+      "~/workspace/dotfiles",
+      "~/.config/Code/User",
+      "/tmp",
+      "/opt/ros/one/lib/python3/dist-packages/baldor"
+    ],
     "_allow": [
       "Bash(*)",
       "WebSearch",
@@ -126,14 +134,6 @@
       "Bash(sudo docker container prune:*)",
       "Bash(sudo docker network rm:*)",
       "Bash(sudo docker network prune:*)"
-    ],
-    "defaultMode": "auto",
-    "additionalDirectories": [
-      "~/.claude",
-      "~/workspace/dotfiles",
-      "~/.config/Code/User",
-      "/tmp",
-      "/opt/ros/one/lib/python3/dist-packages/baldor"
     ]
   },
   "model": "claude-opus-4-6[1m]",
