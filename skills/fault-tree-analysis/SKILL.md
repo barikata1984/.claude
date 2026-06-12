@@ -1,11 +1,11 @@
 ---
-name: fault-tree-debug
-description: "MANDATORY debugging methodology. You MUST use this skill for ANY bug investigation, test failure, error diagnosis, or troubleshooting task — even if you think you can handle it without a skill. This skill provides the Fault Tree Analysis (FTA) framework that prevents the #1 AI debugging failure: jumping to one hypothesis without considering alternatives. Trigger on: NaN, crash, test failure, wrong output, assertion error, flaky test, regression, performance issue, memory leak, divergence, oscillation, timeout, data corruption, silent error, shape mismatch, type error — any symptom the user wants investigated. Also trigger on phrases like: debug, find the root cause, why is this failing, investigate, what's wrong, look into this error, this doesn't work, something is broken, fix this bug, 調べて, 原因, バグ, エラー, 落ちる, 動かない, おかしい, 壊れた. If the user describes a symptom and asks you to find the cause, USE THIS SKILL."
+name: fault-tree-analysis
+description: "MANDATORY analyzing methodology. You MUST use this skill for ANY bug investigation, test failure, error diagnosis, or troubleshooting task — even if you think you can handle it without a skill. This skill provides the Fault Tree Analysis (FTA) framework that prevents the #1 AI analyzing failure: jumping to one hypothesis without considering alternatives. Trigger on: NaN, crash, test failure, wrong output, assertion error, flaky test, regression, performance issue, memory leak, divergence, oscillation, timeout, data corruption, silent error, shape mismatch, type error — any symptom the user wants investigated. Also trigger on phrases like: analyze, find the root cause, why is this failing, investigate, what's wrong, look into this error, this doesn't work, something is broken, fix this bug, 調べて, 原因, バグ, エラー, 落ちる, 動かない, おかしい, 壊れた. If the user describes a symptom and asks you to find the cause, USE THIS SKILL."
 ---
 
-# Fault Tree Debug
+# Fault Tree Analysis
 
-Systematic debugging via Fault Tree Analysis. The core discipline:
+Systematic Analyzing via Fault Tree Analysis. The core discipline:
 **enumerate all plausible causes before investigating any of them.**
 
 You (like all AI agents) tend to latch onto the first plausible hypothesis. This
