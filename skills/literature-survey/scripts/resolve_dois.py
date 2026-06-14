@@ -48,7 +48,7 @@ def _fetch_json(url: str, *, timeout: int = 30, retries: int = 2) -> dict | None
                 time.sleep(wait)
                 continue
             return None
-        except (urllib.error.URLError, TimeoutError):
+        except (urllib.error.URLError, TimeoutError, OSError):
             if attempt < retries:
                 time.sleep(1)
                 continue
