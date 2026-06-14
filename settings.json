@@ -136,7 +136,7 @@
       "Bash(sudo docker network prune:*)"
     ]
   },
-  "model": "claude-opus-4-6[1m]",
+  "model": "claude-opus-4-6[1M]",
   "hooks": {
     "PostToolUse": [
       {
@@ -157,7 +157,26 @@
         ]
       }
     ],
-    "Stop": []
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check_proposal.py"
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/check_proposal.py"
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
