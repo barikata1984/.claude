@@ -5,23 +5,15 @@ description: Commit session changes AND push them to the remote in one flow. Run
 
 # commit-and-push
 
-An integrated command that runs `/commit` followed by `/push` in sequence. Commits session changes or git diffs and pushes to the remote. Trigger on requests like "commit and push", "push changes", "sync changes".
-
-## Usage
-
-```
-/commit-and-push    → Run commit + push in sequence
-/commit             → Commit only (no push)
-/push               → Push only (targets already committed changes)
-```
+Commit session changes and push to remote. Both sub-steps delegate to haiku subagents.
 
 ## Procedure
 
-1. Follow `.claude/skills/commit/SKILL.md` to commit changes
-2. If the commit succeeds, follow `.claude/skills/push/SKILL.md` to push to the remote
+1. Follow `.claude/skills/commit/SKILL.md` to commit changes (spawns haiku subagent)
+2. If the commit succeeds, follow `.claude/skills/push/SKILL.md` to push (spawns haiku subagent)
 3. Display `git status` and `git log --oneline -5` as the final result
 
 ## Context
 
-- Commit logic: see `.claude/skills/commit/SKILL.md`
-- Push logic: see `.claude/skills/push/SKILL.md`
+- Commit logic (haiku subagent): see `.claude/skills/commit/SKILL.md`
+- Push logic (haiku subagent): see `.claude/skills/push/SKILL.md`

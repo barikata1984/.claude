@@ -5,43 +5,39 @@ description: Create git commits from session file changes grouped by topic using
 
 # commit
 
-Create commits from session file changes or git diffs. Categorize changes by topic and commit using Conventional Commits format. Also used as part of `/commit-and-push`. Trigger on requests like "commit", "stage changes", "group changes".
+Create commits from session file changes or git diffs via a haiku subagent. The main agent gathers context; a haiku subagent executes the git operations.
 
 ## Procedure
 
-### 1. Inspect session history
+### 1. Build change summary (main agent)
 
-Review the conversation history to identify files changed during this session via Edit / Write / Bash tools.
+Review conversation history. Extract:
+- Which files were changed via Edit / Write / Bash during this session
+- What was done to each file and why
 
-### 2-A. When there are session changes
+Determine whether session changes exist (changes you can trace to this conversation).
 
-The conversation context provides "what was changed and why", so commit messages are highly accurate.
+If there are uncommitted changes beyond session changes, note them separately.
 
-1. Check actual file state with `git status` and `git diff`
-2. If changes across different topics are clearly distinguishable, group them by topic
-3. Generate a Conventional Commits format message for each group
-4. Stage and commit (no user confirmation needed since intent is clear from session context)
+### 2. Spawn haiku subagent
 
-If there are uncommitted changes beyond session changes, notify the user and ask whether to include them.
+Use the Agent tool with `model: "haiku"` to delegate the commit work. The subagent prompt must include:
 
-### 2-B. When there are no session changes
+1. **The change summary** from step 1 (list of files, what changed, why), or state "no session changes — user approval required before committing"
+2. **All rules** from the Rules section below (copy them into the prompt)
+3. **The commit execution procedure** below
 
-Without conversation context about the changes, commit messages are based solely on git information.
+#### Subagent commit procedure (include in prompt)
 
-1. List changed files with `git status`
-2. Examine change details with `git diff` (staged + unstaged)
-3. Check recent commit history with `git log --oneline -10` to match message style
-4. Analyze changes and group by topic
-5. Generate a Conventional Commits format message for each group
-6. **Present commit messages to the user and obtain approval before** staging and committing
+1. Run `git status` and `git diff` (staged + unstaged) to see current state
+2. Run `git log --oneline -10` to match existing commit message style
+3. Group changes by topic
+4. Generate a Conventional Commits message for each group
 
-### 3. Execute commits
-
-For each topic group:
-
-1. Stage relevant files individually with `git add <file1> <file2> ...`
-2. Commit with the message passed via HEREDOC format:
-   ```bash
+**If session changes exist** (intent is clear):
+5. Stage files individually: `git add <file1> <file2> ...`
+6. Commit using HEREDOC format:
+   ```
    git commit -m "$(cat <<'EOF'
    <type>: <description>
 
@@ -49,16 +45,25 @@ For each topic group:
    EOF
    )"
    ```
-3. Verify the result with `git status` after committing
-4. If there are multiple groups, proceed to the next group
+7. Run `git status` to verify
+8. Return a summary of all commits made
+
+**If no session changes** (intent unclear):
+5. Return a structured list of proposed commits (files and messages for each group) — do NOT stage or commit
+
+### 3. Handle result (main agent)
+
+- **Session changes existed**: Report the subagent's commit summary to the user.
+- **No session changes**: Present the proposed commits to the user. If approved, spawn another haiku subagent (or execute directly) to stage and commit.
+- **Extra uncommitted changes** noted in step 1: Ask the user whether to include them.
 
 ## Rules
 
-- Commit messages use Conventional Commits format: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`
+- Conventional Commits format: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`, `style:`, `perf:`, `build:`, `ci:`
 - Commit messages in English, imperative mood
 - Match the style of recent `git log`
-- Exclude files containing secrets (`.env`, credentials, API keys, etc.) from commits and warn
-- Do not use `git add -A` or `git add .`; specify files individually
+- Exclude files containing secrets (`.env`, credentials, API keys) — warn the user
+- Never use `git add -A` or `git add .`; stage files individually
 - If a pre-commit hook fails, do not use `--amend`; fix the issue and create a new commit
 - Do not create empty commits
-- For submodule changes (shown as `Subproject commit` in `git diff`), explicitly confirm with the user
+- For submodule changes (`Subproject commit` in `git diff`), flag them for user confirmation — do not commit automatically

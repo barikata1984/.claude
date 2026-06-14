@@ -5,20 +5,28 @@ description: Push already-committed local commits to the remote repository. Chec
 
 # push
 
-Push committed changes to the remote repository. Also used as part of `/commit-and-push`. Trigger on requests like "push", "push to remote", "sync with remote".
+Push committed changes to the remote repository via a haiku subagent.
 
 ## Procedure
 
-1. Check commits to push with `git log --oneline @{u}..HEAD`
-   - If no tracking branch exists, show recent commits with `git log --oneline -5`
-2. If there are no commits to push, notify the user and finish
-3. Confirm the current branch name
-4. Execute `git push`:
+Spawn a subagent using the Agent tool with `model: "haiku"`. The subagent prompt must include the procedure and rules below.
+
+### Subagent push procedure (include in prompt)
+
+1. Run `git log --oneline @{u}..HEAD` to check commits to push
+   - If no tracking branch exists, run `git log --oneline -5` to show recent commits
+2. If there are no commits to push, return "nothing to push"
+3. Confirm the current branch name with `git branch --show-current`
+4. Execute push:
    - If a remote tracking branch exists: `git push`
-   - If no remote tracking branch exists: `git push -u origin <branch>`
-6. Display the push result
+   - If no remote tracking branch: `git push -u origin <branch>`
+5. Return the push result (success/failure and details)
 
-## Rules
+### Rules (include in prompt)
 
-- Push destination defaults to the current branch's remote unless otherwise specified by the user
-- If push fails (e.g., remote is ahead), report the cause and consult the user on how to proceed
+- Push destination defaults to the current branch's remote unless otherwise specified
+- If push fails (e.g., remote is ahead), return the error details — do not attempt force push
+
+## Handle result (main agent)
+
+Report the subagent's result to the user. If push failed, consult the user on how to proceed.
