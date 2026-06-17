@@ -76,6 +76,14 @@
 - [x] 批判的スタンス節の見出しを case A（タイミング主軸）に統一・目的語明確化・反証探索を削除（2026-06-03）
   - 主従不整合（土台＝役割主/増幅＝タイミング主）と導入文の二分法 vs 本文三分法を解消、目的語＝「批判」を明示
   - 「反証を最低 1 つ探す」を削除（重箱の隅の指摘で話が進まない）。empirical 2 iter で全 6 モード判定 ○・干渉課題解決・リグレッションなし、80 点で確定
+- [x] japanese-tech-writing スキル登録・常時読み込み化 + EPT (2026-06-17)
+  - k16shikano gist をスキルとして登録, CLAUDE.md に @include 追加
+  - EPT 2 iter + hold-out, 全シナリオ 100%, description 修正のみで収束
+- [x] argument-gap-edit スキル登録 (2026-06-17)
+- [x] CLAUDE.md 圧縮・統合 132 → 84 行 (2026-06-17)
+  - Git Workflow + 標準ドキュメント構成を rules/workflow.md に移動
+  - 「参照情報の検証」+「Doc-First」を「外部ソース事前参照」に統合
+  - 統合節 EPT 3 シナリオ 100% 収束
 
 ## project-team スキル
 
