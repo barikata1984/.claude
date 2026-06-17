@@ -34,9 +34,7 @@ not a systematic review of evidence.
 - 英語入力 → レポート本文は英語
 
 本 skill 固有の構造ラベル(`thesis / foundation / progress / gap / seed`)は
-言語に関わらず英語のまま使用する. それ以外の日本語ライティング規約(英語のまま
-残す範囲, 一般語彙の日本語化, 構文の英語直訳禁止など)は CLAUDE.md 経由で
-読み込まれる `~/.claude/rules/japanese_style.md` に従う.
+言語に関わらず英語のまま使用する.
 
 ## Subagent Policy
 
