@@ -71,6 +71,13 @@
   - iter 3: ブレスト局面でも解除しない旨を明示
   - hold-out (命名要求シナリオ): 仮称提案の escape hatch が正しく機能
 - [ ] 造語禁止ルールの実運用評価 (ブレスト・研究議論で造語が抑制されるか, 正当な仮称提案は可能か)
+- [x] 参照情報の検索規則を「全技術・科学的問い」に拡張 + 信頼度バイアス警告追加（2026-06-19）
+  - カテゴリ列挙方式から「技術的・科学的な問いはすべて対象」に書き換え
+  - EPT iter 1: 全 3 シナリオ 100% — ルール文面は明瞭、実問題は顕著性（salience）と判明
+- [x] 顕著性対策: UserPromptSubmit + SubagentStart フック追加（2026-06-19）
+  - `~/.claude/hooks/search-first-reminder.sh` — 毎ターン検索優先リマインダーを注入
+  - `~/.claude/hooks/search-first-reminder-subagent.sh` — サブエージェント起動時にも注入
+  - `settings.json` に UserPromptSubmit / SubagentStart フックとして登録
 - [ ] 参照情報の検証節の実運用評価（検索すべき場面で実際に発火するか = 遵守率、empirical では測れない）
 - [ ] request-source Sources ブロック自動付与の実運用評価（付与/非付与の判断精度、Sources の粒度が適切か）
 - [x] 批判的スタンス節の見出しを case A（タイミング主軸）に統一・目的語明確化・反証探索を削除（2026-06-03）
