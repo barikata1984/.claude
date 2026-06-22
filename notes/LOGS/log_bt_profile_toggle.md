@@ -80,3 +80,73 @@ xbindkeys は生の X11 キーコード（`c:197` 構文）に直接バインド
 ### その他の知見
 
 - WirePlumber の再起動は PipeWire オーディオグラフをリセットする. Flatpak アプリ（tidal-hifi 等）のアクティブストリームが切断されるため, アプリの再読み込みが必要になる.
+
+---
+
+## 2026-06-22: HSP/HFP → A2DP 切り替え不動作の修正
+
+### 問題
+
+HSP/HFP から A2DP への切り替え後, BT ヘッドセットから音が出ない.
+PipeWire は A2DP シンクを RUNNING と報告し pw-top でデータフローも確認できるが, デバイスは無音.
+
+### 根本原因
+
+BlueZ が HSP/HFP から A2DP へ直接切り替えたとき, A2DP トランスポート（L2CAP チャンネル）の再確立に失敗する.
+PipeWire 側のシンクは RUNNING 状態になるが, BT トランスポート層では音声データが実際にはデバイスに届いていない.
+
+### 修正: toggle-bt-profile.sh の大幅改修
+
+`~/workspace/dotfiles/toggle-bt-profile.sh` を書き直し, HSP/HFP → A2DP 切り替えパスに以下の処理を追加した.
+
+**1. off プロファイルを経由した二段階切り替え（HSP/HFP → off → A2DP）**
+
+直接切り替えではなく, 一度 `off` プロファイルに設定してからA2DPに切り替えることで BlueZ にクリーンなトランスポートの切断・再確立を強制する.
+
+**2. シンク準備完了のポーリング**
+
+A2DP プロファイル設定後, 2ch 48kHz シンクが PipeWire に現れるまで最大 4 秒間ポーリングして待機する. シンクが出現前に次の処理に進むと, sink-input の移行先が存在しないためエラーになる.
+
+**3. sink-input の移行**
+
+既存のすべてのストリーム（sink-input）を新しい BT シンクに `pactl move-sink-input` で移動する. プロファイル切り替え後, ストリームはデフォルトシンク（スピーカー等）に残留していることがあるため必要.
+
+**4. メディアキーによる再トリガー（XF86AudioPause → XF86AudioPlay）**
+
+Flatpak Chromium（tidal-hifi）は MPRIS をセッションバスに公開しないため, `pactl move-sink-input` でストリームを移動しても音声コンテキストが新シンクを認識しないことがある.
+`xdotool key XF86AudioPause` → `xdotool key XF86AudioPlay` でメディアキーを模擬することで, Chromium/Flatpak の音声コンテキストを再トリガーする.
+
+**5. `set -e` の削除**
+
+スクリプト先頭の `set -e` を削除した. シンクが存在しない場合の `pactl move-sink-input` など, 非致命的な失敗でスクリプト全体が中断されることを防ぐ.
+
+### WirePlumber 自動切り替えの無効化
+
+2026-06-22 セッションで新たに判明: WirePlumber 0.4.17 の `policy-bluetooth.lua` は, `media.role=Communication` を持つ入力ストリームが存在するか, Chromium 等のハードコードされたアプリが実行中の場合に BT プロファイルを自動的に HSP/HFP に戻す.
+`~/.config/wireplumber/policy.lua.d/11-disable-autoswitch.lua` で `media-role.use-headset-profile = false` を設定することで抑制済み（2026-06-22 の調査でも引き続き有効と確認）.
+
+### voice-input スクリプトの修正
+
+`~/workspace/dotfiles/voice-input/voice-input.py` に 2 件の修正を加えた.
+
+**言語検出の追加**
+
+faster-whisper の `transcribe()` に `language` パラメータを追加. fcitx5-remote の現在入力メソッド（`fcitx5-remote -n`）を参照し, 日本語 IME がアクティブなら `"ja"`, それ以外なら `"en"` を動的に設定する.
+言語パラメータなしでは Whisper が短い発話を誤って他言語と判定することがある.
+
+**孤立 parecord プロセスの修正**
+
+SIGTERM/SIGINT シグナルハンドラ `cleanup_recording()` を追加した. 終了シグナル受信時に `parecord` サブプロセスを確実に終了させる. これまでは voice-input.py が強制終了されると `parecord` が孤立プロセスとして残留し, マイク入力を占有し続けていた.
+
+### chocofi BT TX パワーの増加
+
+`~/workspace/chocofi-bt/config/corne.conf` に `CONFIG_BT_CTLR_TX_PWR_PLUS_8=y` を追加し, nRF52840 の BLE TX パワーを 0 dBm（デフォルト）から +8 dBm（最大値）に引き上げた. ファームウェアビルドをトリガーするためにリポジトリへプッシュ済み.
+nRF52840 では +8 dBm と 0 dBm の消費電力差は無視できる.
+
+### 知見
+
+- BlueZ は HSP/HFP から A2DP への直接切り替えで A2DP トランスポート確立に失敗する. `off` 経由の二段階切り替えでトランスポートの完全な切断・再確立が保証される.
+- PipeWire はシンクを RUNNING 状態で報告し pw-top でもデータフローが確認できるが, BT トランスポートが実際には音声をデバイスに届けていないことがある.
+- xbindkeys の `c:NNN` 構文は生の X11 キーコードにバインドするため, キーシム層をバイパスし xmodmap のリセットの影響を受けない（前回セッションで確認済みの修正が引き続き有効）.
+- Flatpak Chromium（tidal-hifi）は MPRIS をセッションバスに公開しないため, パイプライン経由のストリーム制御ができない.
+- nRF52840 の BLE TX パワーデフォルトは 0 dBm. +8 dBm が上限で消費電力増加は無視できる.
