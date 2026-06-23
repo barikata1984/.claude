@@ -150,3 +150,41 @@ nRF52840 では +8 dBm と 0 dBm の消費電力差は無視できる.
 - xbindkeys の `c:NNN` 構文は生の X11 キーコードにバインドするため, キーシム層をバイパスし xmodmap のリセットの影響を受けない（前回セッションで確認済みの修正が引き続き有効）.
 - Flatpak Chromium（tidal-hifi）は MPRIS をセッションバスに公開しないため, パイプライン経由のストリーム制御ができない.
 - nRF52840 の BLE TX パワーデフォルトは 0 dBm. +8 dBm が上限で消費電力増加は無視できる.
+
+---
+
+## 2026-06-23: voice-input 言語切り替え確認と BT キーボード切断時の再接続修正
+
+### 言語切り替えの動作確認
+
+`fcitx5-remote -n` が mozc アクティブ時に `mozc` を、英語入力時に `keyboard-us` を返すことを確認した。
+faster-whisper の `language` パラメータに正しく `"ja"` / `"en"` が渡されていることも確認済み。
+
+**補足: 「英語入力なのに日本語認識」問題の原因**
+
+以前報告した「英語入力しているのに日本語として認識される」問題は、mozc がアルファベット入力モード（トレイアイコンが [A] を表示）になっていた状態が原因と考えられる。
+この状態では fcitx5 の入力メソッドとして mozc がアクティブなままであるため、`fcitx5-remote -n` は `mozc` を返し、voice-input.py は `language="ja"` を設定する。
+fcitx5 レベルの入力メソッド（mozc が選択されているか）と mozc 内部のモード（アルファベット入力か日本語入力か）は別であり、voice-input.py は前者のみを参照する。
+
+### BT キーボード切断時のデーモン終了問題の修正
+
+**問題**
+
+voice-input デーモンが、BT キーボード（chocofi）の切断時に終了していた。
+
+**根本原因**
+
+python-evdev はデバイスが消えたとき OSError を発生させるが、切断に対する組み込みの再接続機能を持たない（[github issue #64](https://github.com/gvalkov/python-evdev/issues/64)）。
+イベントループがその OSError をキャッチせずに終了していた。
+
+**修正内容**
+
+`~/workspace/dotfiles/voice-input/voice-input.py` に以下の変更を加えた。
+
+- `wait_for_keyboard()` 関数を追加: デバイスファイルが `/dev/input/` に現れるまでポーリングし、接続を待機する。
+- イベントループを `try/except OSError` で囲み、切断時に `wait_for_keyboard()` を呼び出して再接続するループに変更した。
+
+### 知見
+
+- python-evdev はデバイス切断時に OSError を発生させる。`OSError` をキャッチして再試行するのが標準的なアプローチ（pyudev によるカーネルイベント監視は過剰設計）。
+- `fcitx5-remote -n` が返す値は fcitx5 レベルの入力メソッド名であり、mozc 内部のアルファベット/日本語モードは反映されない。
