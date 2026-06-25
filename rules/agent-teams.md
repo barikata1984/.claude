@@ -36,3 +36,20 @@
 - メンバーが idle になるのは正常. エラーではない
 - タスク完了後は TaskList で次の未割り当てタスクを確認する
 - メンバーからのメッセージは自動配信される. inbox の手動チェックは不要
+
+## Progress Management with Workflow
+
+複数エージェントの進捗管理には Workflow ツールを使う:
+
+- `phase(title)` で作業フェーズを宣言し, 進捗表示をグループ化する
+- `log(message)` で要所ごとに進捗メッセージを出す
+- `meta.phases` にフェーズ一覧を事前定義し, `/workflows` で進捗を可視化する
+- `pipeline()` / `parallel()` 内の `agent()` には `phase` オプションを明示して, 正しいグループに帰属させる
+
+### TeamCreate との使い分け
+
+| 状況 | 選択 |
+|---|---|
+| 制御フローが決定的 (ループ, 条件分岐, fan-out → 集約) | Workflow |
+| タスク間の依存が動的に変わる, 人間のフィードバックを挟む | TeamCreate + TaskCreate |
+| 単発の並列実行 (2–3 件) | Agent の並列 spawn |
