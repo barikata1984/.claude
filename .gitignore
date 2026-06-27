@@ -43,3 +43,7 @@ jobs/
 teams/
 *.bak
 test.wav
+
+
+# APM dependencies
+apm_modules/
