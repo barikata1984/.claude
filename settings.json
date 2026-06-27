@@ -230,7 +230,7 @@
   "language": "Japanese",
   "effortLevel": "high",
   "voice": {
-    "enabled": true,
+    "enabled": false,
     "mode": "tap"
   },
   "autoMemoryEnabled": false,
@@ -238,5 +238,6 @@
   "theme": "auto",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "voiceEnabled": false,
+  "tui": "fullscreen"
 }
