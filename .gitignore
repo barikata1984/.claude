@@ -7,7 +7,6 @@ settings.local.json
 
 # Environment-specific
 mcp-needs-auth-cache.json
-statusline-command.sh
 
 # Runtime / ephemeral data
 .claude.json
