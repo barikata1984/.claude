@@ -128,14 +128,18 @@ SEP="${GRAY} │ ${RESET}"
 # ========== Line 1: Model | Context% | Changes | Branch ==========
 ctx_color=$(color_for_pct "$ctx_pct_int")
 
-line1="🤖 ${model_name}${SEP}${ctx_color}📊 ${ctx_pct_int}%${RESET}"
+line1="🤖 ${model_name}"
 
 if [[ -n "$git_stats" ]]; then
-  line1+="${SEP}✏️  ${GREEN}${git_stats}${RESET}"
+  line1+=" ✏️ ${GREEN}${git_stats}${RESET}"
 fi
 
 if [[ -n "$git_branch" ]]; then
-  line1+="${SEP}🔀 ${git_branch}"
+  line1+=" @ 🔀 ${git_branch}"
+fi
+
+if [[ -n "$cwd" ]]; then
+  line1+=" @ 📁 $(basename "$cwd")"
 fi
 
 # ========== Line 2: Context window progress bar ==========
@@ -147,15 +151,12 @@ if (( ctx_size > 0 )); then
   line2+="  ${DIM}${used_tokens_display} / ${ctx_size_display} tokens${RESET}"
 fi
 
-# ========== Line 3: Session cost ==========
-line3=""
 if [[ -n "$cost_display" ]]; then
-  line3="${GREEN}💰 ${cost_display}${RESET}"
+  line2+="${SEP}💰 ${cost_display}"
 else
-  line3="${DIM}💰 --${RESET}"
+  line2+="${SEP}${DIM}💰 --${RESET}"
 fi
 
 # ---------- Output ----------
 printf '%s\n' "$line1"
-printf '%s\n' "$line2"
-printf '%s' "$line3"
+printf '%s' "$line2"
