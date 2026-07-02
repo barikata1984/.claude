@@ -1,5 +1,27 @@
 # Issues
 
+## plan-to-implement: 探索フェーズの扱いが未定
+
+Stage 1 の設計討議で、実装対象コードの探索を明示フェーズにするか、機能分解決定前の暗黙の下準備にするかが未決着。
+
+Explore サブエージェントを spawn して調査結果を受け取り機能分解を決定する、という流れ自体は合意済みだが、これを Stage 1 の手順書上に明示ステップとして書くか、単に「機能分解の前提」として省略するかが未定。Stage 1 起草時に決める。
+
+---
+
+## plan-to-implement: subagent frontmatter permissionMode: plan の可否が未確認
+
+auto モード以外（例: 通常モード、bypassPermissions モード）で、subagent frontmatter に `permissionMode: plan` を指定した場合の挙動が未確認。
+
+claude-code-guide エージェントでの調査により、auto モードではサブエージェント個別の `permissionMode` 指定が無視されることは確認済みだが、他のモードでの挙動は公式ドキュメントで確認できていない。plan-to-implement の Stage 1 設計（メインが Explore サブエージェントを spawn する流れ）に影響しうる。
+
+---
+
+## plan-to-implement: read-only 探索の公式ベストプラクティスと Explore 型の定義が未確認
+
+Explore という read-only な agent type を使うのが read-only 探索のイディオムだという方針は立てたが、その正確な定義（他の agent type との差異、公式に推奨される使い方）を公式ドキュメントで確認できていない。
+
+---
+
 ## literature-survey: Parallel Subagent Orchestration Issues
 
 literature-survey (2026-04-07, F/T estimation + placement) の Phase 2 で、5つの検索サブエージェントを同時起動したところ、1つがユーザーにより拒否され、最も重要な検索角度（RQ2: 新規性確認）の結果が欠落した。後から補完検索を実施したが手戻りが発生。
