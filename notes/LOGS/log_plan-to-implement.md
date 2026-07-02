@@ -41,3 +41,29 @@
 
 - 探索を Stage 1 の明示フェーズにするか、前段の暗黙の下準備にするかは保留（Stage 1 起草時に決める）。
 - 次: plan-to-implement の Stage 1 を起草 → ept で検証。
+
+## 2026-07-02: 技術確認事項の解消（公式ドキュメント WebFetch）
+
+前掲「技術的確認事項」で未確認としていた 2 点を、公式ドキュメントの直接取得により解消した。
+
+### subagent frontmatter `permissionMode: plan` の可否 → 使える（例外あり）
+
+[sub-agents ドキュメント](https://code.claude.com/docs/en/sub-agents)に frontmatter フィールドとして明記:
+
+> `permissionMode` … `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, or `plan`. Ignored for plugin subagents
+
+継承と優先の規則:
+
+> Subagents inherit the permission context from the main conversation and can override the mode … If the parent uses `bypassPermissions` or `acceptEdits`, this takes precedence and can't be overridden. If the parent uses auto mode, the subagent inherits auto mode and any `permissionMode` in its frontmatter is ignored.
+
+結論: 通常はサブエージェントに `permissionMode: plan` を設定でき尊重される。例外は (a) 親が auto モード（無視）、(b) 親が bypassPermissions / acceptEdits（上書き不可）、(c) plugin subagent（無視）。
+
+### Explore 型の定義 → 確認済み
+
+> Explore: A fast, read-only agent optimized for searching and analyzing codebases. Tools: read-only tools; Write and Edit are denied.
+
+Explore と Plan は CLAUDE.md と親の git status をスキップして探索を速く安くする。plan モード中に自動使用される Plan サブエージェント（read-only、Write/Edit 拒否）も別に存在する。
+
+### 設計への含意（前の判断を補強）
+
+read-only 探索は Explore 型（ツール制限で Write/Edit 拒否）と `permissionMode: plan`（frontmatter 指定）の 2 通りで実現できる。**Explore 型を採る**理由が明確になった: Explore の read-only 性はツール制限由来なので親が auto モードでも保たれるが、`permissionMode: plan` は auto モードで無視されるため `/implement` を auto モードで走らせると効かない。堅牢性で Explore が勝つ。Stage 1 の探索は「メインが Explore サブエージェントを spawn」で確定。
