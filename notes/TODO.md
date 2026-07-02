@@ -36,8 +36,11 @@
 - [x] 応答制御を concise 出力スタイルへ移行（2026-05-22）
   - 「1-3 文/preamble 禁止の組み込み既定」は非存在と確認（公式ドキュメント）
   - `output-styles/concise.md` 作成、応答スコープ規約から独自二条項を削除
-- [ ] concise 出力スタイル単体運用の効果観察（反復・冗長が抑制されるか）
-  - 不足なら独自二条項（スコープ制約・反復禁止）の復活、または長さ上限 Stop フック追加
+- [x] concise 出力スタイル単体運用の効果観察（2026-07-02）
+  - Opus 4.7/4.8 で Output style（システムプロンプト常駐）だけでは冗長ドリフトを抑止しきれないと判明
+  - 対策: `/concise` スキル新規作成（recency bias を利用した会話内リマインダー、EPT 3 iter で応答プロトコルを 4 分岐に精緻化・unclear points 0 に収束）
+  - 二段構え化: CLAUDE.md に `@~/.claude/skills/concise/SKILL.md` を常時ルールとして追加、settings.json から `outputStyle: "Concise"` を削除。`/concise` はドリフト時の明示リマインド用に維持
+- [ ] 二段構え（CLAUDE.md 常時ルール + `/concise` 明示リマインド）の実運用評価（冗長ドリフトが実際に抑制されるか）
 - [x] 反迎合「批判的スタンス」節を CLAUDE.md に追加（2026-05-29）
   - Web ベストプラクティス調査（役割再定義・問題先出し・立場表明・過剰補正の安全弁）
   - empirical-prompt-tuning で A/B 検証（4 シナリオ × 2 群、過剰補正なし・解除条項機能を確認）
@@ -115,6 +118,7 @@
 - [x] Agent Teams 機能の調査・検証（環境変数、TeamCreate スキーマ、公式ドキュメント）
 - [x] `~/.claude/rules/agent-teams.md` 作成（トリガー条件・ワークフロー・ベストプラクティス）
 - [x] empirical-prompt-tuning による検証（4 iter + hold-out、精度 100% 収束、修正 2 件適用）
+- [x] サブエージェント完了報告ルール追加（2026-07-02） — spawn 時プロンプトに「完了時 SendMessage で報告せよ」を含める旨を明記、催促の往復を削減
 - [ ] 実運用での効果観察（TeamCreate が適切な場面で自動発火するか）
 
 ## Literature Survey
