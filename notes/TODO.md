@@ -177,9 +177,11 @@
 
 ### 実装
 
-- [ ] Stage 1（交渉フロー）の起草
-- [ ] 起草後、ept（empirical-prompt-tuning）で検証
-- [ ] 探索フェーズ扱い（明示フェーズか暗黙の下準備か）の決定
+- [x] Stage 1（交渉フロー）の起草（2026-07-02） — `plan-to-implement/SKILL.md`（本体オーケストレータ）+ `implement/SKILL.md`（薄いラッパ、wrap-up-session と同じ委譲パターン）を新規作成
+- [x] 起草後、ept（empirical-prompt-tuning）で検証（2026-07-02） — 5 iteration・8 シナリオ全て accuracy 100%、6 failure pattern を検出・修正、実質収束（詳細は `log_plan-to-implement.md`）
+- [x] 探索フェーズ扱い（明示フェーズか暗黙の下準備か）の決定（2026-07-02） — 明示フェーズ（Phase 0）に決定、read-only は Explore agent type で実現
+- [ ] Stage 2（トリアージ・非収束処理の硬化） — 使いながら判断（保留、実運用での必要性次第で着手）
+- [ ] Stage 3（大 N の再帰的メタ分割） — 使いながら判断（保留、同上）
 
 ## Literature Survey スキル改善 (2026-04-06)
 
