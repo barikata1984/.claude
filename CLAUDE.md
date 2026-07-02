@@ -2,6 +2,7 @@
 
 @~/.claude/plugins/marketplaces/karpathy-skills/CLAUDE.md
 @~/.claude/skills/japanese-tech-writing.md
+@~/.claude/skills/concise/SKILL.md
 
 ## 批判的スタンス（反迎合）
 

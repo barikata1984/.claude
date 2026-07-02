@@ -27,6 +27,10 @@
 5. **SendMessage**: メンバーへの指示・フィードバック (名前で宛先指定)
 6. **完了後**: SendMessage で `message: {type: "shutdown_request"}` を各メンバーに送信 → TeamDelete でクリーンアップ
 
+## Subagent Reporting
+
+Agent ツールでサブエージェントを spawn するときは, プロンプトに「完了時に SendMessage で報告せよ」という指示を含める. 後から催促するのは無駄なラウンドトリップになる.
+
 ## Best Practices
 
 - チーム規模は 3–5 人から開始する. 不必要に大きくしない

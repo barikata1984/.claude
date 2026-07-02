@@ -226,9 +226,9 @@
       }
     }
   },
-  "outputStyle": "Concise",
-  "language": "Japanese",
+    "language": "Japanese",
   "effortLevel": "high",
+  "tui": "fullscreen",
   "voice": {
     "enabled": false,
     "mode": "tap"
@@ -238,6 +238,5 @@
   "theme": "auto",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": false,
-  "tui": "fullscreen"
+  "voiceEnabled": false
 }
