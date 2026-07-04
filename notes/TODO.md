@@ -113,6 +113,16 @@
 - [x] Step 4: `skills/project-team/SKILL.md`
 - [x] Step 5: `settings.json` パーミッション更新（Step 4 で実施済み — `Edit/Write(~/.claude/skills/**)` 追加）
 
+### 廃止・後継（2026-07-04）
+
+- project-team スキル本体（フェーズ管理・ハンドオフ・状態ファイル）は `abff630` で未使用として削除済み。フェーズ/ハンドオフを伴う重量級設計自体が使われなかったのが敗因
+- `agents/pt-engineer.md` / `pt-analyst.md` / `pt-research.md` のロール定義（実装・分析・調査の内容）は再利用価値ありと判断し、project-team 依存部分（Critique Mode, Phase, Handoff Notes）を除去して独立サブエージェント化
+  - [x] `agents/engineer.md`（model: opus）, `agents/analyst.md`（model: opus）, `agents/researcher.md`（model: sonnet）を新規作成、pt-*.md は削除
+  - [x] `rules/delegation.md` を新規作成 — ロール別ルーティング表 + 報告前レビュー方針
+  - [x] `agents/writer.md`（model: sonnet）を追加、`researcher` から論文/提案書執筆タスクを分離（Opus 4.8 のライティング品質低下を確認したため文書作成用ロールを新設。他ロールと同じ frontmatter 機構であり「固定」という特別な機構ではない点は誤記を訂正済み）
+  - [x] EPT iteration 1 実施（2026-07-04） — 実装/執筆/些細な修正の3シナリオで検証。些細な修正(100%)は正しく委譲回避、実装(33%)・執筆(63%)は委譲されず実行エージェントが自力完結。決定的診断: `rules/delegation.md` が本セッション中に作成されたファイルであるため、セッション開始時静的スナップショットの `~/.claude/rules/*.md` ロードに反映されておらず、今回の精度はルール文言の有効性を測るデータになっていない（詳細: `log_delegation_roles.md`）
+  - [ ] 次回セッション開始直後に同じ3シナリオ（実装タスク→engineer期待、執筆タスク→writer期待、些細な1行修正→委譲すべきでない）で EPT を再実行し、`rules/delegation.md` がロード済みの状態での委譲精度を評価する（シナリオ設計は log_delegation_roles.md に記載済みのものを再利用可）
+
 ## Agent Teams
 
 - [x] Agent Teams 機能の調査・検証（環境変数、TeamCreate スキーマ、公式ドキュメント）
