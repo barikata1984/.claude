@@ -121,7 +121,12 @@
   - [x] `rules/delegation.md` を新規作成 — ロール別ルーティング表 + 報告前レビュー方針
   - [x] `agents/writer.md`（model: sonnet）を追加、`researcher` から論文/提案書執筆タスクを分離（Opus 4.8 のライティング品質低下を確認したため文書作成用ロールを新設。他ロールと同じ frontmatter 機構であり「固定」という特別な機構ではない点は誤記を訂正済み）
   - [x] EPT iteration 1 実施（2026-07-04） — 実装/執筆/些細な修正の3シナリオで検証。些細な修正(100%)は正しく委譲回避、実装(33%)・執筆(63%)は委譲されず実行エージェントが自力完結。決定的診断: `rules/delegation.md` が本セッション中に作成されたファイルであるため、セッション開始時静的スナップショットの `~/.claude/rules/*.md` ロードに反映されておらず、今回の精度はルール文言の有効性を測るデータになっていない（詳細: `log_delegation_roles.md`）
-  - [ ] 次回セッション開始直後に同じ3シナリオ（実装タスク→engineer期待、執筆タスク→writer期待、些細な1行修正→委譲すべきでない）で EPT を再実行し、`rules/delegation.md` がロード済みの状態での委譲精度を評価する（シナリオ設計は log_delegation_roles.md に記載済みのものを再利用可）
+  - [x] delegation.md ロード済み環境で EPT 再実行（2026-07-04） — 同じ3シナリオを iteration 1・2 で実行、6/6 シナリオとも正しいロールに委譲され精度100%、delegation.md 起因の新規 unclear points は2 iteration 連続で0件。収束と判定し文言修正なしで確定（詳細: `log_delegation_roles.md`）。副産物として Write ガードが `summary.md` のような正当な成果物パスもブロックする問題を再確認し ISSUES.md に追記
+  - [x] Write ガード問題の深掘り調査・恒久対策（2026-07-04） — GitHub issues/Reddit/HN・公式ドキュメント・`settings.json` hooks を調査したが公開報告なし、PreToolUse ブロックの明示定義も未検出。モデル自身がファイル名パターンから「サブエージェントは所見をテキストで返すべき」という規範を内面化している可能性が高いと判断。調査過程で EPT シナリオB設計自体がユーザー想定の運用思想（出口はインターフェースエージェント＝メインループが検証してから保存）と食い違っていたと判明し、`agents/writer.md` の tools を Read/Grep のみに制限、`rules/delegation.md` の報告前レビュー条項に writer の制約を追記（詳細: `log_delegation_roles.md`）
+  - [x] 再検証1（scenB4）で多段階委譲時の新問題を発見（2026-07-04） — writer 自身は Write を試みなくなったが、委譲元（代理メインループ役のサブエージェント）自身が同じ Write ガードでブロックされることが判明。中間委譲元も真のメインループの権限を持たないという構造的限界（詳細: `log_delegation_roles.md`）
+  - [x] 再検証2（scenB5）でシナリオをテキスト完結型に再設計し再実行（2026-07-04） — ファイル保存を求めないシナリオに変更した結果、Write ガードに一切遭遇せず、委譲判断・報告前レビューとも精度100%で確認（詳細: `log_delegation_roles.md`）
+  - [ ] 次回 EPT では `run_in_background: false` の逐次実行、または usage meta 取得手段を確保してから定量指標（tool_uses/duration_ms）を測定する（今回は並列実行のため両 iteration とも未測定）
+  - [ ] 多段階委譲を検証する EPT は、成果物のファイル保存を求めずテキスト完結型のシナリオ設計にして Write ガードとの交絡を避ける
 
 ## Agent Teams
 
