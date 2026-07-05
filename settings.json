@@ -169,10 +169,6 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/validate-references.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/format-ja-typography.sh"
           }
         ]
       }
