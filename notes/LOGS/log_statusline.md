@@ -28,3 +28,10 @@
 
 `.gitignore` から `statusline-command.sh` を削除し、git 追跡対象に変更した。
 以後は他マシンとの同期が `git pull` で可能になった。
+
+## 2026-07-05: effort.level 表示の追加
+
+`statusline-command.sh` に、ステータスライン JSON 入力の `effort.level` を表示する処理を追加した。
+
+- モデル名の直後に `w/ {effort}` を表示（`effort.level` が存在しない場合は省略）
+- Line 1 の項目順序を並べ替え: `🤖 {model} w/ {effort} ✏️ +N/-N of 📁 {dirname} @ 🔀 {branch}`（従来はブランチがディレクトリ名より先で、両方に `@` 区切りを使用していた）

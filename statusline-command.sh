@@ -72,6 +72,7 @@ parse_json() {
 
 # ---------- Parse stdin fields ----------
 model_name=$(parse_json "$input" '.model.display_name // empty' 'Unknown')
+effort_level=$(parse_json "$input" '.effort.level // empty' '')
 used_pct=$(parse_json "$input" '.context_window.used_percentage // 0' '0')
 remaining_pct=$(parse_json "$input" '.context_window.remaining_percentage // 100' '100')
 ctx_size=$(parse_json "$input" '.context_window.context_window_size // 0' '0')
@@ -129,17 +130,20 @@ SEP="${GRAY} │ ${RESET}"
 ctx_color=$(color_for_pct "$ctx_pct_int")
 
 line1="🤖 ${model_name}"
+if [[ -n "$effort_level" ]]; then
+  line1+=" w/ ${effort_level}"
+fi
 
 if [[ -n "$git_stats" ]]; then
   line1+=" ✏️ ${GREEN}${git_stats}${RESET}"
 fi
 
-if [[ -n "$git_branch" ]]; then
-  line1+=" @ 🔀 ${git_branch}"
+if [[ -n "$cwd" ]]; then
+  line1+=" of 📁 $(basename "$cwd")"
 fi
 
-if [[ -n "$cwd" ]]; then
-  line1+=" @ 📁 $(basename "$cwd")"
+if [[ -n "$git_branch" ]]; then
+  line1+=" @ 🔀 ${git_branch}"
 fi
 
 # ========== Line 2: Context window progress bar ==========
