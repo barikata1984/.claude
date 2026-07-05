@@ -136,7 +136,7 @@
       "Bash(sudo docker network prune:*)"
     ]
   },
-  "model": "claude-opus-4-6[1M]",
+  "model": "sonnet",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -226,7 +226,7 @@
       }
     }
   },
-    "language": "Japanese",
+  "language": "Japanese",
   "effortLevel": "high",
   "tui": "fullscreen",
   "voice": {
