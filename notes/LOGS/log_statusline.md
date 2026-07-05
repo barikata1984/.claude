@@ -35,3 +35,8 @@
 
 - モデル名の直後に `w/ {effort}` を表示（`effort.level` が存在しない場合は省略）
 - Line 1 の項目順序を並べ替え: `🤖 {model} w/ {effort} ✏️ +N/-N of 📁 {dirname} @ 🔀 {branch}`（従来はブランチがディレクトリ名より先で、両方に `@` 区切りを使用していた）
+
+### 2026-07-05: 文言修正（of → in）
+
+`statusline-command.sh:142` の `line1+=" of 📁 $(basename "$cwd")"` を `line1+=" in 📁 $(basename "$cwd")"` に修正。
+表示が `w/ high of 📁 .claude` → `w/ high in 📁 .claude` になり、前置詞の用法として自然な形になった。

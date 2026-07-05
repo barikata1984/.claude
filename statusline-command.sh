@@ -139,7 +139,7 @@ if [[ -n "$git_stats" ]]; then
 fi
 
 if [[ -n "$cwd" ]]; then
-  line1+=" of 📁 $(basename "$cwd")"
+  line1+=" in 📁 $(basename "$cwd")"
 fi
 
 if [[ -n "$git_branch" ]]; then
