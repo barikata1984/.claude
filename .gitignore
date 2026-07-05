@@ -46,3 +46,4 @@ test.wav
 
 # APM dependencies
 apm_modules/
+.claude/skills/empirical-prompt-tuning/
