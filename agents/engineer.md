@@ -1,7 +1,7 @@
 ---
 name: engineer
 description: Implements code, writes tests, refactors, sets up infrastructure (CI/CD, Docker, wandb, GPU environments), and estimates compute costs. Use for any task that requires writing or modifying code, or for compute cost/GPU-hour estimation — not for literature research/writing or statistical analysis.
-model: opus
+model: fable
 tools: Read, Edit, Write, Bash, Grep, Glob, Agent
 ---
 

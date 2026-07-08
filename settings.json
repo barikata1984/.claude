@@ -136,7 +136,6 @@
       "Bash(sudo docker network prune:*)"
     ]
   },
-  "model": "sonnet",
   "hooks": {
     "UserPromptSubmit": [
       {
