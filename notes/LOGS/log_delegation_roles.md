@@ -207,3 +207,17 @@ EPT で 4 シナリオ（一般技術調査、コードベース限定探索 vs 
 - **`notes/LOGS`/`TODO.md`/`ISSUES.md` の定型更新を `writer` に委譲する案**: これは文章構成ではなく事実の記帳作業であり、かつ `writer` は Write/Edit ツールを持たないため委譲すると無意味な往復が増える。実行エージェント本人（またはメインループの `/log-progress`）による直接作業のまま据え置いた
 
 本セッションで新たに顕在化した未解決の技術課題はない。project-level の設計・ロードマップ（PLAN.md）変更もなし（エージェント定義のチューニングであり、プロジェクト全体の設計転換ではない）。
+
+## 2026-07-08: engineer/analyst のモデルを opus から fable に変更
+
+`agents/engineer.md` と `agents/analyst.md` の frontmatter `model:` を `opus` から `fable` に変更した。公式ドキュメント（code.claude.com の model-config / sub-agents / errors）で subagent の model 挙動を確認した上での変更。
+
+確認した事実：
+
+- `fable`（Claude Fable 5）はサブエージェント frontmatter の有効なエイリアス。他に `best` / `opusplan` / `sonnet[1m]` / `opus[1m]` / `inherit` 等がある。
+- frontmatter に無効なモデル値を書いた場合は `inherit`/デフォルトへ**サイレントフォールバック**する。opus への強制変更コールバックのような機構は存在しない。一方 CLI の `--model` フラグや `ANTHROPIC_MODEL` 環境変数に無効値を指定すると起動時エラー。事前の値検証は Anthropic API 直接利用時のみ。
+- fable が**使用制限（レート制限・使用量上限）**に達しても他モデルへ自動フォールバックしない。`You've hit your session/weekly limit · resets <時刻>` が表示されリセットまでブロックされる。レート制限・billing・認証系のエラーは fallback model chain の対象外。`best` は起動時の初期選択でありランタイムフォールバックではない。fable 明示指定時のフォールバックは安全分類器（サイバーセキュリティ・生物学系）発火時のみ。
+
+含意：fable を既定にすると使用制限到達時に自動切り替えされずセッションがブロックされる。頻発するようなら `model:` 指定の見直し（opus/sonnet へ戻す等）を要する。ユーザーは制限リスクを承知の上で fable のまま運用する判断。
+
+別件として `settings.json` の default `"model": "sonnet"` pin を削除した（本セッション開始前からの変更）。

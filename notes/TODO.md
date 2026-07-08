@@ -125,6 +125,8 @@
   - [x] Write ガード問題の深掘り調査・恒久対策（2026-07-04） — GitHub issues/Reddit/HN・公式ドキュメント・`settings.json` hooks を調査したが公開報告なし、PreToolUse ブロックの明示定義も未検出。モデル自身がファイル名パターンから「サブエージェントは所見をテキストで返すべき」という規範を内面化している可能性が高いと判断。調査過程で EPT シナリオB設計自体がユーザー想定の運用思想（出口はインターフェースエージェント＝メインループが検証してから保存）と食い違っていたと判明し、`agents/writer.md` の tools を Read/Grep のみに制限、`rules/delegation.md` の報告前レビュー条項に writer の制約を追記（詳細: `log_delegation_roles.md`）
   - [x] 再検証1（scenB4）で多段階委譲時の新問題を発見（2026-07-04） — writer 自身は Write を試みなくなったが、委譲元（代理メインループ役のサブエージェント）自身が同じ Write ガードでブロックされることが判明。中間委譲元も真のメインループの権限を持たないという構造的限界（詳細: `log_delegation_roles.md`）
   - [x] 再検証2（scenB5）でシナリオをテキスト完結型に再設計し再実行（2026-07-04） — ファイル保存を求めないシナリオに変更した結果、Write ガードに一切遭遇せず、委譲判断・報告前レビューとも精度100%で確認（詳細: `log_delegation_roles.md`）
+  - [x] `agents/engineer.md`・`agents/analyst.md` の `model` を `opus` から `fable` に変更（2026-07-08） — fable のエイリアス有効性、無効値のサイレントフォールバック仕様、使用制限時の非フォールバック挙動を公式ドキュメントで確認（詳細: `log_delegation_roles.md`）
+  - [ ] fable 運用後の使用制限到達頻度を観察（頻発する場合は `model:` 指定を opus/sonnet へ見直し）
   - [ ] 次回 EPT では `run_in_background: false` の逐次実行、または usage meta 取得手段を確保してから定量指標（tool_uses/duration_ms）を測定する（今回は並列実行のため両 iteration とも未測定）
   - [ ] 多段階委譲を検証する EPT は、成果物のファイル保存を求めずテキスト完結型のシナリオ設計にして Write ガードとの交絡を避ける
 
