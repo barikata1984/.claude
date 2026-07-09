@@ -136,6 +136,7 @@
       "Bash(sudo docker network prune:*)"
     ]
   },
+  "model": "sonnet",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -222,7 +223,7 @@
     }
   },
   "language": "Japanese",
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "tui": "fullscreen",
   "voice": {
     "enabled": false,
