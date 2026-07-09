@@ -129,6 +129,8 @@
   - [ ] fable 運用後の使用制限到達頻度を観察（頻発する場合は `model:` 指定を opus/sonnet へ見直し）
   - [ ] 次回 EPT では `run_in_background: false` の逐次実行、または usage meta 取得手段を確保してから定量指標（tool_uses/duration_ms）を測定する（今回は並列実行のため両 iteration とも未測定）
   - [ ] 多段階委譲を検証する EPT は、成果物のファイル保存を求めずテキスト完結型のシナリオ設計にして Write ガードとの交絡を避ける
+  - [x] `rules/delegation.md` を除外リスト方式から allow-list/default-deny 方式に改訂（2026-07-09） — メインループの自力実行によるトークン浪費対策、EPT 4 iteration で収束（詳細: `log_delegation_roles.md`）
+  - [ ] allow-list/default-deny 方式の実運用評価（メインループの自力実行が実際に減るか、(a)/(b) の境界判断で EPT 未検証のエッジケースが顕在化しないか）
 
 ## Agent Teams
 
