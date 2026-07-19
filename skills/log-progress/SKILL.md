@@ -1,61 +1,73 @@
 ---
 name: log-progress
-description: Update project documentation (notes/TODO.md, notes/LOGS/log_*.md, notes/ISSUES.md, notes/PLAN.md — or docs/* for legacy projects) based on the current conversation's progress, findings, and resolved issues. Checks off completed TODOs, appends new findings to the relevant append-only topic log, adds newly discovered issues, deletes resolved issues, and updates PLAN only if design decisions changed. Also used as a sub-step by /wrap-up-session. Use this skill whenever the user wants to record session progress, update project docs from conversation, capture findings before stopping, or says things like "log progress", "update docs", "update notes", "record what we did", "進捗記録", "ログ更新", "TODO を更新", "ノート更新". Do NOT trigger if the user also wants to commit and push — suggest /wrap-up-session instead.
+description: Write session minutes (セッション議事録) to notes/LOGS/YYYY-MM-DD_<topic>.md — a causal-order History of what happened and why, plus a one-line Decisions list — then sync the thin state indexes TODO.md, ISSUES.md, and the DECISIONS.md decision ledger. The main agent writes the minutes directly from full conversation context; a subagent lint-checks the result. Also used as a sub-step by /wrap-up-session. Use this skill whenever the user wants to record session progress, capture findings or decisions before stopping, update project docs from conversation, or says things like "log progress", "update docs", "update notes", "record what we did", "議事録", "進捗記録", "ログ更新", "記録して", "TODO を更新", "ノート更新". Do NOT trigger if the user also wants to commit and push — suggest /wrap-up-session instead.
 ---
 
 # log-progress
 
-Update documentation based on conversation content via a sonnet subagent.
+Write session minutes: a per-session record of what happened and why. The reader is you or the user weeks later. The failure mode this skill exists to prevent is a record of outcomes whose reasoning cannot be reconstructed — 「なんでそうなった？」に答えられないログ.
+
+**The main agent writes the minutes directly.** You are the only party holding the full conversation. Any summarize-then-delegate step loses context that can never be recovered. Delegation happens only after writing, as a lint pass (step 6).
+
+## Output layout
+
+| File | Role |
+|---|---|
+| `<base>/LOGS/YYYY-MM-DD_<topic>.md` | Session minutes — the primary record, one per session |
+| `<base>/TODO.md` | State index: open tasks, 1–2 lines each + minutes link |
+| `<base>/ISSUES.md` | State index: open issues, same format. Delete resolved entries |
+| `<base>/DECISIONS.md` | Decision ledger: every decision as one line + minutes link. Superseded decisions get their line updated, never deleted |
+
+`<base>` resolution: `notes/` if it exists → `docs/` (legacy) → project CLAUDE.md's designation → create `notes/`.
+
+Out of scope — do not touch:
+- Legacy topic logs (`<base>/LOGS/log_*.md`): frozen. Never append, never edit.
+- Skill-owned ledgers (`log_sweep.md`, `gpu_monitor_*.csv`, `literature-survey.md`, etc.): maintained by their own skills.
+- `PLAN.md`: deprecated. Leave as-is.
+
+## Minutes template
+
+Body in Japanese; code identifiers, commands, and paths verbatim. All five sections required; where nothing applies write `None` — an explicit `None` distinguishes "nothing happened" from "forgot to write".
+
+```markdown
+# YYYY-MM-DD <topic>
+
+## Topic
+主題と目的を 1–3 行。何のセッションで、何を達成しようとしたか
+
+## History
+因果順の散文。問題 → 原因の仮説 → 検証 (何をしたら何がわかったか) → 原因の確定 →
+対処案の比較 (却下理由はここで生まれる) → 判断、の順で書く。
+失敗した試みも成功と同じ流れの中に置く。数値・パス・出力などの証拠は流れの中に埋める。
+並列な項目 (競合する仮説群、対処の候補案など) は導入する箇所で箇条書きにして
+同列であることを示し、その後の散文で 1 つずつ解決する。
+段落は作業の単位 (仮説の検証 / 原因の特定 / 案の比較と判断 / 実装と検証 など) で切る —
+段落頭だけ拾い読みすれば作業の骨格が追える状態を保つ。短い作業同士の 1 段落への結合は可
+
+## Decisions
+- <採用案> / 却下: <案名> — <ユーザー確認済み | エージェント判断>
+
+## Changes
+- 変更ファイル・コミット・成果物
+
+## Open Items
+- 未解決・次の作業 (→ TODO/ISSUES へ反映)
+```
+
+**Why History is causal-order:** the reader must meet each conclusion only after the evidence that produced it. Writing the decision first (「案 B を採用した。根拠は…」) forces the reader to hold an unexplained conclusion while back-filling its justification — the exact reading failure this template replaces. A decision appears in History as the last link of its chain: what was tried, what that showed, which options were compared, why the losers lost, then the judgment.
+
+**Why Decisions is one line each:** the reasons live in History, inside their causal chain. The Decisions list exists for scanning and grep (「この案は検討済みか？」) — it names the adopted option, the rejected alternatives, and the approval mark (ユーザー確認済み / エージェント判断). Repeating rationale here would fork the record into two places that can drift.
 
 ## Procedure
 
-### 1. Build session summary (main agent)
+1. **Resolve `<base>` and target file.** Date via `date +%F`; topic slug short kebab-case English. If this session already wrote a minutes file, revise that same file — one session, one document; never fragment it with "continued" sections. If a different session claimed today's date+topic, suffix `-2`, `-3`.
+2. **Write the minutes** per the template, directly from conversation memory.
+3. **Sync TODO.md** — check off completed `[x]`, add new open tasks (1–2 lines + minutes link). Create the file if missing.
+4. **Sync ISSUES.md** — add new issues (same format), delete resolved ones entirely. Create if missing.
+5. **Sync DECISIONS.md** — one line per new decision: `- YYYY-MM-DD <same text as the minutes Decisions line> ([議事録](LOGS/…))`. Create if missing. When a decision supersedes an earlier one, update the old line in place and link the new minutes.
+6. **Lint pass.** Spawn a subagent (`model: "sonnet"`) with the minutes path, the DECISIONS.md path, and the template above. It reads and reports — it does not edit. Violations to hunt: missing sections; empty sections lacking `None`; History stating a decision before the evidence that produced it (conclusion-first); parallel alternatives (hypotheses, candidate options) buried inline in prose instead of enumerated as a bullet list at their introduction; a single paragraph spanning multiple units of work (e.g., a decision and its implementation packed together — long ones deserve their own paragraphs); failed attempts without failure reasons; claims without evidence (numbers, paths, outputs); Decisions lines carrying rationale (belongs in History) or missing the approval mark; minutes Decisions lines not matching their DECISIONS.md counterparts; broken relative links; malformed dates. Fix legitimate findings yourself.
+7. **Report** to the user: minutes path, sections with content vs `None`, index changes (TODO/ISSUES/DECISIONS), lint findings and fixes.
 
-Review the conversation to extract:
-- Completed tasks and their outcomes
-- New findings, experiment results, design decisions
-- Newly discovered issues
-- Resolved issues
-- Any changes to project plan or architecture
+## Lifecycle
 
-### 2. Resolve docs base directory (main agent)
-
-Detect which exists in the project — `notes/` (default) or `docs/` (legacy). If neither exists, consult project-level CLAUDE.md; otherwise default to `notes/`.
-
-### 3. Spawn sonnet subagent
-
-Use the Agent tool with `model: "sonnet"` to delegate the documentation updates. The subagent prompt must include:
-
-1. **The session summary** from step 1
-2. **The docs base directory** from step 2
-3. **The update procedure and rules** below
-
-#### Subagent update procedure (include in prompt)
-
-1. Read each documentation file to understand current state:
-   - `<base>/TODO.md`
-   - `<base>/LOGS/` (list files, read relevant topic logs)
-   - `<base>/ISSUES.md`
-   - `<base>/PLAN.md`
-2. If referenced files do not exist on disk, report and skip them
-3. Update each file according to its role:
-   - **TODO** (`<base>/TODO.md`) — Check off completed items with `[x]`. Add newly identified tasks
-   - **LOGS** (`<base>/LOGS/log_<topic>.md`) — Append results and findings to the relevant topic log (append to end). Create a new `log_<topic>.md` if no suitable log exists
-   - **ISSUES** (`<base>/ISSUES.md`) — Add newly discovered issues. Delete resolved issues entirely
-   - **PLAN** (`<base>/PLAN.md`) — Update only if design decisions have changed
-
-#### Reference processing (include in prompt)
-
-If `.claude/rules/references.md` exists in the project, follow its citation conventions.
-
-#### Rules (include in prompt)
-
-- LOGS are **append-only** — do not edit past records
-- ISSUES: **delete** resolved items (do not archive)
-- Maintain the existing format of each file
-- Use ISO date format (YYYY-MM-DD)
-- Do not touch files if there are no changes
-
-### 4. Report result (main agent)
-
-Report which files the subagent updated to the user.
+Minutes are revisable while their session is alive — repeat invocations rework the same file into one coherent document. Once the session ends, the file is frozen: later sessions write their own minutes and never edit past ones. The state indexes (TODO/ISSUES/DECISIONS) are living documents, always edited in place.
