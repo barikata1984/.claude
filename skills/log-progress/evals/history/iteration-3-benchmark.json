@@ -1,0 +1,237 @@
+{
+  "metadata": {
+    "skill_name": "log-progress",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-07-19T09:13:41Z",
+    "evals_run": [
+      0,
+      1,
+      2
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ 直下に日付形式 (YYYY-MM-DD_<topic>.md) のセッション議事録ファイルが新規作成されている",
+          "passed": true,
+          "evidence": "LOGS/2026-07-19_flaky-test-batch-export.md 新規作成"
+        },
+        {
+          "text": "議事録に Topic / History / Decisions / Changes / Open Items の全セクションが存在する",
+          "passed": true,
+          "evidence": "5 セクション完備"
+        },
+        {
+          "text": "History が因果順: 仮説 1 の棄却 → 仮説 2 の検証・確定 → 根本原因 → 案の比較 → 採用、の順で書かれ、採用の判断がその検証・比較より前に断定されていない",
+          "passed": true,
+          "evidence": "報告→仮説列挙→棄却/確定→原因→案比較→採用の順。結論先出しなし"
+        },
+        {
+          "text": "History に案 A (ファイルロック) の却下理由と案 B (tmp_path) の採用理由が流れの中に記述されている",
+          "passed": true,
+          "evidence": "案 A 却下理由・案 B 採用理由が比較段落に記述"
+        },
+        {
+          "text": "Decisions が 1 行形式 (採用案 / 却下: 案名 — 承認区分) で、根拠の重複記述を含まない",
+          "passed": true,
+          "evidence": "1 行形式・承認区分・根拠なし"
+        },
+        {
+          "text": "DECISIONS.md が新規作成され、議事録の Decisions 行と同一テキストの行 + 議事録リンクを持つ",
+          "passed": true,
+          "evidence": "新規作成・行一致"
+        },
+        {
+          "text": "TODO.md の flaky 調査タスクが [x] にチェックされている",
+          "passed": true,
+          "evidence": "[x] + リンク"
+        },
+        {
+          "text": "ISSUES.md から解決済みの flaky イシューが削除され、CI pip キャッシュの新イシューが追加されている",
+          "passed": true,
+          "evidence": "flaky 削除・CI キャッシュ追加"
+        },
+        {
+          "text": "旧トピックログ log_testing.md と PLAN.md が変更されていない",
+          "passed": true,
+          "evidence": "変更は ISSUES/TODO + 新規のみ"
+        },
+        {
+          "text": "並列な項目 (仮説 2 つ、対処案 2 つ) が導入箇所で箇条書きとして同列列挙され、その後の散文で 1 つずつ解決されている",
+          "passed": true,
+          "evidence": "仮説 2 件・対処案 2 件とも導入箇所で箇条書き列挙→散文で個別解決"
+        }
+      ],
+      "notes": [],
+      "eval_name": "debug-session-decisions"
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ 直下に日付形式のセッション議事録ファイルが新規作成されている",
+          "passed": true,
+          "evidence": "LOGS/2026-07-19_sweep-k9x2m4p1-analysis.md 新規作成"
+        },
+        {
+          "text": "議事録に Topic / History / Decisions / Changes / Open Items の全セクションが存在する",
+          "passed": true,
+          "evidence": "5 セクション完備"
+        },
+        {
+          "text": "History に val_loss 0.412 など数値証拠が因果の流れの中に埋め込まれている",
+          "passed": true,
+          "evidence": "0.412/0.415/22 完了/OOM/step 8k が流れの中に"
+        },
+        {
+          "text": "History で lr 微調整案の却下と augmentation 方針の採用が、sweep 結果の記述より後に現れる",
+          "passed": true,
+          "evidence": "結果と寄与分解の後に候補検討・採用"
+        },
+        {
+          "text": "Decisions が 1 行形式 + 承認区分で、根拠の重複記述を含まない",
+          "passed": true,
+          "evidence": "2 行・承認区分・根拠なし"
+        },
+        {
+          "text": "DECISIONS.md が新規作成され、議事録の Decisions 行と一致する",
+          "passed": true,
+          "evidence": "新規作成・行一致"
+        },
+        {
+          "text": "log_sweep.md が fixture から一切変更されていない (スキル固有台帳の境界)",
+          "passed": true,
+          "evidence": "変更は TODO のみ — 台帳不可侵"
+        },
+        {
+          "text": "TODO.md の sweep 分析タスクが [x] になり、次の augmentation sweep タスクが追加されている",
+          "passed": true,
+          "evidence": "[x] + 新タスク"
+        },
+        {
+          "text": "PLAN.md が変更されていない",
+          "passed": true,
+          "evidence": "PLAN 不変"
+        },
+        {
+          "text": "並列な選択肢 (次方針の候補) が導入箇所で箇条書きとして同列列挙されている",
+          "passed": true,
+          "evidence": "次実験候補 2 件を箇条書きで同列列挙後に散文で解決"
+        }
+      ],
+      "notes": [],
+      "eval_name": "experiment-session-ledger-boundary"
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ に新しい議事録ファイルが作成されておらず、既存の 2026-07-19_config-refactor.md が更新されている",
+          "passed": true,
+          "evidence": "新規ファイルなし、同一文書として改訂"
+        },
+        {
+          "text": "History に flatten 検討〜採用と後方互換シムの経過が因果順で追記されている",
+          "passed": true,
+          "evidence": "flatten 着手→2 案列挙→採用→互換問題→シム判断→テストの因果順"
+        },
+        {
+          "text": "Decisions に flatten (ユーザー確認済み) とシム (エージェント判断) の 2 行が追加され、承認区分が書き分けられている",
+          "passed": true,
+          "evidence": "flatten=ユーザー確認済み / シム=エージェント判断で書き分け"
+        },
+        {
+          "text": "DECISIONS.md に対応する 2 行が追加され、議事録の Decisions 行と一致する",
+          "passed": true,
+          "evidence": "2 行追加・一致 (lint が既存 JSON/YAML 比較の書式不整合も検出し統一)"
+        },
+        {
+          "text": "更新前から存在した記録 (YAML 一本化の決定・History の既存経過) が失われていない",
+          "passed": true,
+          "evidence": "既存記録温存 (JSON/YAML 比較は同一セッション文書として書式のみ統一)"
+        },
+        {
+          "text": "セクション見出しが重複せず、単一の一貫した議事録構造が保たれている (各セクションが 1 つ)",
+          "passed": true,
+          "evidence": "各セクション単一"
+        }
+      ],
+      "notes": [],
+      "eval_name": "mid-session-reinvocation"
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+1.00",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+  "notes": [
+    "iteration-3 は検証イテレーション: フィードバック反映 (並列項目の箇条書き列挙規則) が出力に現れるかのみを確認。ベースラインなし — delta 表示は無意味なので無視すること",
+    "全 3 eval で列挙→散文解決のハイブリッド形を確認。lint も新規則で実際に検出 (eval2 で既存段落の書式不整合を指摘し統一された)",
+    "lint の『証拠なき数値』指摘に対し、実行エージェントは元データが存在しない概算 (約 4 分) の捏造 back-fill を 2 件とも正しく拒否",
+    "time/tokens は未捕捉。無視すること"
+  ]
+}

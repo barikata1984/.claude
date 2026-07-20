@@ -1,0 +1,406 @@
+{
+  "metadata": {
+    "skill_name": "log-progress",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-07-19T07:42:52Z",
+    "evals_run": [
+      0,
+      1,
+      2
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ 直下に日付形式 (YYYY-MM-DD_<topic>.md) のセッション議事録ファイルが新規作成されている",
+          "passed": true,
+          "evidence": "LOGS/2026-07-19_flaky-test-batch-export.md が新規作成されている"
+        },
+        {
+          "text": "議事録に Context / Decisions / Failed Attempts / Findings / Changes / Open Items の全セクションが存在する",
+          "passed": true,
+          "evidence": "7 セクションすべて存在 (機械検査で欠落なし)"
+        },
+        {
+          "text": "Decisions に案 B (tmp_path) 採用の根拠と案 A (ファイルロック) の却下理由が両方記録されている",
+          "passed": true,
+          "evidence": "根拠 (共有パス解消・テスト都合をプロダクションに持ち込まない) と却下案 A の理由を明記"
+        },
+        {
+          "text": "Decisions にユーザー承認の記載がある",
+          "passed": true,
+          "evidence": "「承認: ユーザー確認済み」の行あり"
+        },
+        {
+          "text": "Failed Attempts に仮説 1 (乱数シード) が外れた理由付きで記録されている",
+          "passed": true,
+          "evidence": "「seed は既に固定されており、フレーク要因ではなかった（外れ）」"
+        },
+        {
+          "text": "TODO.md の flaky 調査タスクが [x] にチェックされている",
+          "passed": true,
+          "evidence": "[x] + 原因の 1 行要約 + 議事録リンク付き"
+        },
+        {
+          "text": "ISSUES.md から解決済みの flaky イシューが削除され、CI pip キャッシュの新イシューが追加されている",
+          "passed": true,
+          "evidence": "flaky エントリ削除済み。CI キャッシュの件が議事録リンク付きで追加"
+        },
+        {
+          "text": "旧トピックログ log_testing.md と PLAN.md が変更されていない",
+          "passed": true,
+          "evidence": "fixture と同一 (バイナリ比較)"
+        }
+      ],
+      "notes": [],
+      "eval_name": "debug-session-decisions"
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ 直下に日付形式のセッション議事録ファイルが新規作成されている",
+          "passed": true,
+          "evidence": "LOGS/2026-07-19_sweep-k9x2m4p1-next-experiment.md 新規作成"
+        },
+        {
+          "text": "議事録に Context / Decisions / Failed Attempts / Findings / Changes / Open Items の全セクションが存在する",
+          "passed": true,
+          "evidence": "7 セクション存在。Failed Attempts は説明付き None"
+        },
+        {
+          "text": "Findings に val_loss 0.412 など数値証拠が含まれている",
+          "passed": true,
+          "evidence": "0.412 / 0.415 / 22/24 run / OOM 設定 / step 8k 発散を記録"
+        },
+        {
+          "text": "Decisions に augmentation sweep 方針の根拠と lr 微調整案の却下理由が記録されている",
+          "passed": true,
+          "evidence": "2 決定とも根拠・却下案・承認付き (batch=128 固定も独立の決定として記録)"
+        },
+        {
+          "text": "log_sweep.md が fixture から一切変更されていない (スキル固有台帳の境界)",
+          "passed": true,
+          "evidence": "fixture と同一 (バイナリ比較)"
+        },
+        {
+          "text": "TODO.md の sweep 分析タスクが [x] になり、次の augmentation sweep タスクが追加されている",
+          "passed": true,
+          "evidence": "[x] + 新タスク、いずれも議事録リンク付き"
+        },
+        {
+          "text": "PLAN.md が変更されていない",
+          "passed": true,
+          "evidence": "fixture と同一"
+        }
+      ],
+      "notes": [],
+      "eval_name": "experiment-session-ledger-boundary"
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ に新しい議事録ファイルが作成されておらず、既存の 2026-07-19_config-refactor.md が更新されている",
+          "passed": true,
+          "evidence": "LOGS/ 配下は同ファイルのみ。in-place で改訂"
+        },
+        {
+          "text": "Decisions に flatten 採用が根拠・却下案 (ネスト維持)・ユーザー承認付きで追加されている",
+          "passed": true,
+          "evidence": "3 要素とも存在。既存 Decisions セクション内に統合追加"
+        },
+        {
+          "text": "Decisions に後方互換シム決定が「エージェント判断」の承認区分付きで追加されている",
+          "passed": true,
+          "evidence": "「承認: エージェント判断」。根拠 (段階的移行) も付記"
+        },
+        {
+          "text": "Changes にテスト 34 件パスが反映されている",
+          "passed": true,
+          "evidence": "Findings に「テスト 34 件がパスすることを確認」(旧スキル側と同じ寛容基準で判定)"
+        },
+        {
+          "text": "更新前から存在した記録 (YAML 一本化の決定・Findings 等) が失われていない",
+          "passed": true,
+          "evidence": "YAML 一本化決定・env findings とも温存"
+        },
+        {
+          "text": "log_<topic>.md 形式の旧トピックログが新規作成されていない",
+          "passed": true,
+          "evidence": "新規 log_*.md なし"
+        },
+        {
+          "text": "セクション見出しが重複せず、単一の一貫した議事録構造が保たれている (Decisions/Findings/Changes/Open Items が各 1 つ)",
+          "passed": true,
+          "evidence": "各セクション単一。旧 Open Item「flatten を検討する」は解消済みとして削除され矛盾なし"
+        }
+      ],
+      "notes": [],
+      "eval_name": "mid-session-reinvocation"
+    },
+    {
+      "eval_id": 0,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.62,
+        "passed": 5,
+        "failed": 3,
+        "total": 8,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ 直下に日付形式 (YYYY-MM-DD_<topic>.md) のセッション議事録ファイルが新規作成されている",
+          "passed": false,
+          "evidence": "議事録ファイルなし。log_testing.md への日付見出し追記のみ"
+        },
+        {
+          "text": "議事録に Context / Decisions / Failed Attempts / Findings / Changes / Open Items の全セクションが存在する",
+          "passed": false,
+          "evidence": "議事録が存在せず、箇条書きの時系列追記のみ"
+        },
+        {
+          "text": "Decisions に案 B (tmp_path) 採用の根拠と案 A (ファイルロック) の却下理由が両方記録されている",
+          "passed": true,
+          "evidence": "log_testing.md 追記内に案 A 却下理由と案 B 採用を記録 (内容としては存在)"
+        },
+        {
+          "text": "Decisions にユーザー承認の記載がある",
+          "passed": true,
+          "evidence": "「案B を採用、ユーザー承認済み」"
+        },
+        {
+          "text": "Failed Attempts に仮説 1 (乱数シード) が外れた理由付きで記録されている",
+          "passed": true,
+          "evidence": "「seed 固定済みで棄却」として理由付き記録 (専用セクションはないが内容として存在)"
+        },
+        {
+          "text": "TODO.md の flaky 調査タスクが [x] にチェックされている",
+          "passed": true,
+          "evidence": "[x] 済み (議事録リンクなし)"
+        },
+        {
+          "text": "ISSUES.md から解決済みの flaky イシューが削除され、CI pip キャッシュの新イシューが追加されている",
+          "passed": true,
+          "evidence": "削除・追加とも実施 (リンクなし)"
+        },
+        {
+          "text": "旧トピックログ log_testing.md と PLAN.md が変更されていない",
+          "passed": false,
+          "evidence": "log_testing.md に追記 (旧スキルでは正しい挙動だが新方式の凍結境界には違反)"
+        }
+      ],
+      "notes": [],
+      "eval_name": "debug-session-decisions"
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ 直下に日付形式のセッション議事録ファイルが新規作成されている",
+          "passed": false,
+          "evidence": "議事録なし。log_sweep.md への追記のみ"
+        },
+        {
+          "text": "議事録に Context / Decisions / Failed Attempts / Findings / Changes / Open Items の全セクションが存在する",
+          "passed": false,
+          "evidence": "議事録が存在しない"
+        },
+        {
+          "text": "Findings に val_loss 0.412 など数値証拠が含まれている",
+          "passed": true,
+          "evidence": "log_sweep.md 追記内に 0.412 vs 0.415 を記録 (内容としては存在)"
+        },
+        {
+          "text": "Decisions に augmentation sweep 方針の根拠と lr 微調整案の却下理由が記録されている",
+          "passed": true,
+          "evidence": "根拠と lr 案却下理由を記録 (内容としては存在)"
+        },
+        {
+          "text": "log_sweep.md が fixture から一切変更されていない (スキル固有台帳の境界)",
+          "passed": false,
+          "evidence": "sweep-analyze の台帳に「## 2026-07-19 次の方針決定」を追記 — 管轄境界違反"
+        },
+        {
+          "text": "TODO.md の sweep 分析タスクが [x] になり、次の augmentation sweep タスクが追加されている",
+          "passed": true,
+          "evidence": "両方実施 (議事録リンクなし)"
+        },
+        {
+          "text": "PLAN.md が変更されていない",
+          "passed": true,
+          "evidence": "fixture と同一"
+        }
+      ],
+      "notes": [],
+      "eval_name": "experiment-session-ledger-boundary"
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.86,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 0.0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "LOGS/ に新しい議事録ファイルが作成されておらず、既存の 2026-07-19_config-refactor.md が更新されている",
+          "passed": true,
+          "evidence": "新規ファイルなし、既存ファイル末尾に追記"
+        },
+        {
+          "text": "Decisions に flatten 採用が根拠・却下案 (ネスト維持)・ユーザー承認付きで追加されている",
+          "passed": true,
+          "evidence": "Decisions (continued) 内に 3 要素とも存在"
+        },
+        {
+          "text": "Decisions に後方互換シム決定が「エージェント判断」の承認区分付きで追加されている",
+          "passed": true,
+          "evidence": "「判断: エージェント判断」として記録"
+        },
+        {
+          "text": "Changes にテスト 34 件パスが反映されている",
+          "passed": true,
+          "evidence": "Findings (continued) に「テスト 34 件のパスを確認した」(セクションは異なるが記録あり)"
+        },
+        {
+          "text": "更新前から存在した記録 (YAML 一本化の決定・Findings 等) が失われていない",
+          "passed": true,
+          "evidence": "既存本文は無編集で温存"
+        },
+        {
+          "text": "log_<topic>.md 形式の旧トピックログが新規作成されていない",
+          "passed": true,
+          "evidence": "新規 log_*.md なし"
+        },
+        {
+          "text": "セクション見出しが重複せず、単一の一貫した議事録構造が保たれている (Decisions/Findings/Changes/Open Items が各 1 つ)",
+          "passed": false,
+          "evidence": "append-only の機械適用により Decisions/Findings/Changes/Open Items の (continued) 見出しが重複。旧 Open Item「flatten を検討する」と「実施済み」が別見出しに併存し矛盾した状態"
+        }
+      ],
+      "notes": [],
+      "eval_name": "mid-session-reinvocation"
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.6833,
+        "stddev": 0.155,
+        "min": 0.57,
+        "max": 0.86
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.32",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+  "notes": [
+    "ベースライン 'without_skill' の実体は旧 log-progress スキル (skill-snapshot) — 無スキルではなく改善前バージョンとの比較",
+    "内容系 assertion (根拠・却下案・数値証拠の記録) は両構成でパス — テストハーネスが完全な経過をプロンプトで渡すため、実運用で起きるメイン要約段階の文脈喪失は再現されない。delta +0.32 は構造・境界・lifecycle 系 assertion のみに由来し、実運用での差はこれより大きい可能性がある",
+    "旧スキルの失点は 3 パターンに集約: (1) 議事録ファイル不在 (eval0/1)、(2) スキル固有台帳 log_sweep.md への侵犯 (eval1)、(3) append-only 機械適用による (continued) セクション重複と Open Items の矛盾 (eval2)",
+    "旧スキルの失点はすべて旧仕様どおりの正しい実行によるもの — 実行エラーではなく仕様の差を測定している",
+    "time_seconds / tokens は全行 0 — 完了通知にメトリクスが含まれず捕捉不能だったため。この列は無視すること",
+    "eval2 の assertion 7 (セクション重複なし) は旧スキル出力の観察後に追加したもの — lifecycle ルールという設計目標の検査であり両構成に同一適用"
+  ]
+}

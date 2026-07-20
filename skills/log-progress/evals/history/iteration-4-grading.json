@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "LOGS/ 直下に日付形式 (YYYY-MM-DD_<topic>.md) のセッション議事録ファイルが新規作成されている",
+      "passed": true,
+      "evidence": "LOGS/2026-07-19_flaky-test-batch-export.md 新規作成"
+    },
+    {
+      "text": "議事録に Topic / History / Decisions / Changes / Open Items の全セクションが存在する",
+      "passed": true,
+      "evidence": "5 セクション完備"
+    },
+    {
+      "text": "History が因果順: 仮説 1 の棄却 → 仮説 2 の検証・確定 → 根本原因 → 案の比較 → 採用、の順で書かれ、採用の判断がその検証・比較より前に断定されていない",
+      "passed": true,
+      "evidence": "症状→仮説→検証→原因特定→案比較→採用→実装の順。結論先出しなし"
+    },
+    {
+      "text": "History に案 A (ファイルロック) の却下理由と案 B (tmp_path) の採用理由が流れの中に記述されている",
+      "passed": true,
+      "evidence": "案 A 却下理由・案 B 採用理由が比較段落に記述"
+    },
+    {
+      "text": "Decisions が 1 行形式 (採用案 / 却下: 案名 — 承認区分) で、根拠の重複記述を含まない",
+      "passed": true,
+      "evidence": "1 行形式・承認区分・根拠なし"
+    },
+    {
+      "text": "DECISIONS.md が新規作成され、議事録の Decisions 行と同一テキストの行 + 議事録リンクを持つ",
+      "passed": true,
+      "evidence": "新規作成・行一致"
+    },
+    {
+      "text": "TODO.md の flaky 調査タスクが [x] にチェックされている",
+      "passed": true,
+      "evidence": "[x] + リンク"
+    },
+    {
+      "text": "ISSUES.md から解決済みの flaky イシューが削除され、CI pip キャッシュの新イシューが追加されている",
+      "passed": true,
+      "evidence": "flaky 削除・CI キャッシュ追加"
+    },
+    {
+      "text": "旧トピックログ log_testing.md と PLAN.md が変更されていない",
+      "passed": true,
+      "evidence": "凍結ファイル不可侵 (バイナリ比較)"
+    },
+    {
+      "text": "並列な項目 (仮説 2 つ、対処案 2 つ) が導入箇所で箇条書きとして同列列挙され、その後の散文で 1 つずつ解決されている",
+      "passed": true,
+      "evidence": "仮説 2 件・対処案 2 件とも箇条書き導入→散文解決"
+    },
+    {
+      "text": "History の段落が作業の単位 (仮説の検証 / 原因の特定 / 案の比較と判断 / 実装と検証) で切られており、判断と実装が同一段落に詰め込まれていない",
+      "passed": true,
+      "evidence": "判断 (却下+採用+承認) と実装・検証が別段落。原因特定も独立段落。仮説 1/2 の検証は短い作業として 1 段落に結合 (規則の許容範囲)"
+    }
+  ],
+  "summary": {
+    "passed": 11,
+    "failed": 0,
+    "total": 11,
+    "pass_rate": 1.0
+  }
+}
