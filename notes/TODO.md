@@ -217,3 +217,7 @@
 - [x] `scripts/extract_sections.py` 新設 + Phase 3 改訂
 - [x] テストケースでの実行評価 → empirical prompt tuning で代替 (2026-04-21)
 - [x] empirical prompt tuning による SKILL.md 堅牢化 (2026-04-21, 8 iterations, 精度 100% 収束)
+
+## log-progress 再設計 (2026-07-20)
+
+- [ ] 新 log-progress の実運用観察: 議事録の質・発動の安定性。特に短い依頼 (「議事録書いて」「DECISIONS に反映」) ([議事録](LOGS/2026-07-20_log-progress-redesign.md))

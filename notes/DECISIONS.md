@@ -1,0 +1,15 @@
+# DECISIONS
+
+- 2026-07-20 記録の一次単位をセッション議事録に一本化 / 却下: トピック別ログ継続、議事録との併存 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 TODO/ISSUES は薄い状態インデックスとして維持し PLAN.md は廃止 / 却下: 状態ファイル完全廃止、Open Items 代替 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 書き手はメイン直書き + サブ lint / 却下: サブ執筆 (旧方式) — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 発動は手動 + wrap-up-session 連動 / 却下: PreCompact フック導入 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 daily-report スキル削除 / 却下: 議事録ベース再構築、放置 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 既存 log_*.md は凍結残置 / 却下: ARCHIVE 移動、議事録形式への変換 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 テンプレートを物語中心 5 セクション (Topic/History/Decisions/Changes/Open Items) に再設計 / 却下: 7 セクションカテゴリ構成、順序入替のみ — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 物語セクション名は History / 却下: Timeline, Sequence of Events, Narrative, Background, Circumstances, Process, What happened, 経緯 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 DECISIONS.md 決定台帳を新設し議事録の Decisions と同一テキストで同期 / 却下: 台帳なし (散文への grep 依存) — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 並列項目は箇条書き導入 → 散文で解決の規則を追加 / 却下: 散文への埋め込み継続 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 段落は作業の単位で切る (短い作業の結合可) 規則を追加 / 却下: 列挙アイテム単位の段落 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 description は現状維持、最適化ループ不実施 / 却下: パッチ済みハーネスでのループ実行 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 評価資産は evals/ へ移設、イテレーションは要約のみ保存し作業場削除 / 却下: 全量保存、全削除 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
