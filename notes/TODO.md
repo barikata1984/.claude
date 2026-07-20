@@ -221,3 +221,7 @@
 ## log-progress 再設計 (2026-07-20)
 
 - [ ] 新 log-progress の実運用観察: 議事録の質・発動の安定性。特に短い依頼 (「議事録書いて」「DECISIONS に反映」) ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+
+## サブエージェント実行モード (2026-07-20)
+
+- [ ] 実行モード則 + log-progress wrap-up 例外の実運用観察: standalone/wrap-up で background/同期が正しく分岐するか ([議事録](LOGS/2026-07-20_subagent-execution-mode.md))

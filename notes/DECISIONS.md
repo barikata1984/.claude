@@ -13,3 +13,6 @@
 - 2026-07-20 段落は作業の単位で切る (短い作業の結合可) 規則を追加 / 却下: 列挙アイテム単位の段落 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
 - 2026-07-20 description は現状維持、最適化ループ不実施 / 却下: パッチ済みハーネスでのループ実行 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
 - 2026-07-20 評価資産は evals/ へ移設、イテレーションは要約のみ保存し作業場削除 / 却下: 全量保存、全削除 — ユーザー確認済み ([議事録](LOGS/2026-07-20_log-progress-redesign.md))
+- 2026-07-20 lint 実行モードを background 既定 + wrap-up 例外で同期に決定 / 却下: 全面同期、全面 background — ユーザー確認済み ([議事録](LOGS/2026-07-20_subagent-execution-mode.md))
+- 2026-07-20 delegation.md に一般則「run_in_background: false は結果が現ターンの続行に必要なときだけ」を追加 / 却下: log-progress の局所修正のみ — ユーザー確認済み ([議事録](LOGS/2026-07-20_subagent-execution-mode.md))
+- 2026-07-20 他 11 スキルは同じ失敗モードなしと判定し修正は log-progress + delegation.md に留める / 却下: 予防的な文面調整の横展開 — エージェント判断 ([議事録](LOGS/2026-07-20_subagent-execution-mode.md))
