@@ -1,0 +1,65 @@
+{
+  "skill_name": "log-progress",
+  "evals": [
+    {
+      "id": 0,
+      "name": "debug-session-decisions",
+      "prompt": "あなたはあるセッションを終えようとしている Claude Code エージェントである。以下がこのセッションで起きたことの完全な経過である。\n\n[セッション経過]\n- 目的: ユーザーから「tests/test_pipeline.py::test_batch_export が CI で 3 回に 1 回落ちる。原因を調べて直して」と依頼された\n- 仮説 1: fixture の乱数シード未固定を疑い tests/conftest.py を確認 → seed は固定されており外れ\n- 仮説 2: pytest-xdist の並列実行での競合を疑い、-p no:xdist で 20 回連続パス → 並列起因と確定\n- 調査の結果、export_batch() が固定パス /tmp/export_cache を使い、並列ワーカー間で書き込みが衝突していた (src/pipeline/export.py:142)\n- 修正方針の検討: (案 A) ファイルロックで排他制御 (案 B) pytest の tmp_path fixture でテストごとに一意なディレクトリを渡す。案 A はプロダクションコードにテスト都合のロックを持ち込み、根本原因 (共有パス) も残るため却下。案 B を採用し、ユーザーに提示して承認を得た\n- 実装: export_batch() に cache_dir 引数を追加、テストは tmp_path を渡す形に修正。20 回連続パスを確認 (コミット a1b2c3d)\n- 副産物: CI 設定 (.github/workflows/test.yml) が pip キャッシュを使っておらず毎回約 4 分無駄にしていると気づいた。今回は未修正\n\nプロジェクトの notes/ ディレクトリは入力ファイルとして与えられている。このセッションの進捗記録を作成せよ。",
+      "expected_output": "議事録 notes/LOGS/<date>_<topic>.md が新規作成され、Decisions に案 B 採用の根拠・案 A の却下理由・ユーザー承認が明記される。Failed Attempts に仮説 1 (外れの理由付き) が載る。TODO.md の該当タスクが [x] になり、ISSUES.md に CI キャッシュの件が 1–2 行 + 議事録リンクで追加される。旧 log_testing.md と PLAN.md は無変更。",
+      "files": [
+        "evals/fixtures/debug-session/notes"
+      ],
+      "expectations": [
+        "LOGS/ 直下に日付形式 (YYYY-MM-DD_<topic>.md) のセッション議事録ファイルが新規作成されている",
+        "議事録に Topic / History / Decisions / Changes / Open Items の全セクションが存在する",
+        "History が因果順: 仮説 1 の棄却 → 仮説 2 の検証・確定 → 根本原因 → 案の比較 → 採用、の順で書かれ、採用の判断がその検証・比較より前に断定されていない",
+        "History に案 A (ファイルロック) の却下理由と案 B (tmp_path) の採用理由が流れの中に記述されている",
+        "Decisions が 1 行形式 (採用案 / 却下: 案名 — 承認区分) で、根拠の重複記述を含まない",
+        "DECISIONS.md が新規作成され、議事録の Decisions 行と同一テキストの行 + 議事録リンクを持つ",
+        "TODO.md の flaky 調査タスクが [x] にチェックされている",
+        "ISSUES.md から解決済みの flaky イシューが削除され、CI pip キャッシュの新イシューが追加されている",
+        "旧トピックログ log_testing.md と PLAN.md が変更されていない",
+        "並列な項目 (仮説 2 つ、対処案 2 つ) が導入箇所で箇条書きとして同列列挙され、その後の散文で 1 つずつ解決されている",
+        "History の段落が作業の単位 (仮説の検証 / 原因の特定 / 案の比較と判断 / 実装と検証) で切られており、判断と実装が同一段落に詰め込まれていない"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "experiment-session-ledger-boundary",
+      "prompt": "あなたはあるセッションを終えようとしている Claude Code エージェントである。以下がこのセッションで起きたことの完全な経過である。\n\n[セッション経過]\n- 目的: 完了した wandb sweep (sweep_id: k9x2m4p1) の結果分析。ユーザー依頼は「スイープ終わったっぽいので見て、次何やるか決めたい」\n- 24 run 中 22 完了。2 run は OOM でクラッシュ (いずれも batch_size=512)\n- 最良は lr=3e-4, batch=256 で val_loss 0.412。lr=1e-3 系はすべて 0.5 超、lr=1e-3 & batch=256 は step 8k で発散\n- batch 128 と 256 の差は誤差範囲 (0.412 vs 0.415)。寄与は lr が支配的\n- ユーザーと相談し、次は lr=3e-4 固定で data augmentation (RandAugment の N, M) を振る方針に決定。batch は 128 に固定 (VRAM の余裕を augmentation に回すため)。lr をさらに細かく振る案は寄与が飽和して見えるため却下\n- notes/LOGS/log_sweep.md には sweep-analyze スキルが分析結果を既に追記済みである\n\nプロジェクトの notes/ ディレクトリは入力ファイルとして与えられている。このセッションの進捗記録を作成せよ。",
+      "expected_output": "議事録が新規作成され、Findings に val_loss の数値・OOM した設定など証拠付きの事実が載る。Decisions に次実験方針とその根拠・却下案 (lr 微調整) が載る。log_sweep.md (スキル固有台帳) には一切触れない。TODO.md に次の augmentation sweep が議事録リンク付きで追加される。",
+      "files": [
+        "evals/fixtures/experiment-session/notes"
+      ],
+      "expectations": [
+        "LOGS/ 直下に日付形式のセッション議事録ファイルが新規作成されている",
+        "議事録に Topic / History / Decisions / Changes / Open Items の全セクションが存在する",
+        "History に val_loss 0.412 など数値証拠が因果の流れの中に埋め込まれている",
+        "History で lr 微調整案の却下と augmentation 方針の採用が、sweep 結果の記述より後に現れる",
+        "Decisions が 1 行形式 + 承認区分で、根拠の重複記述を含まない",
+        "DECISIONS.md が新規作成され、議事録の Decisions 行と一致する",
+        "log_sweep.md が fixture から一切変更されていない (スキル固有台帳の境界)",
+        "TODO.md の sweep 分析タスクが [x] になり、次の augmentation sweep タスクが追加されている",
+        "PLAN.md が変更されていない",
+        "並列な選択肢 (次方針の候補) が導入箇所で箇条書きとして同列列挙されている"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "mid-session-reinvocation",
+      "prompt": "あなたは Claude Code エージェントである。このセッションでは既に一度進捗記録を作成しており、notes/LOGS/2026-07-19_config-refactor.md はこのセッション自身が本日先ほど作成したファイルである。その後セッションが続行し、以下が新たに起きた。\n\n[追加の経過]\n- YAML 設定の階層を flatten する追加リファクタを実施 (ユーザー承認済み)。ネスト維持案は、既存コードの参照箇所が少なく flatten の方が diff が小さいため却下\n- config.load() に後方互換シムを 1 リリース分残す決定 (エージェント判断)\n- テスト 34 件パスを確認\n\nプロジェクトの notes/ ディレクトリは入力ファイルとして与えられている。この追加分を反映して進捗記録を更新せよ。",
+      "expected_output": "新規ファイルを作らず、既存の 2026-07-19_config-refactor.md が更新される。Decisions に flatten 採用 (根拠+却下案+ユーザー承認) と後方互換シム (エージェント判断) の 2 件が追加され、Changes にテスト結果が反映される。",
+      "files": [
+        "evals/fixtures/mid-session/notes"
+      ],
+      "expectations": [
+        "LOGS/ に新しい議事録ファイルが作成されておらず、既存の 2026-07-19_config-refactor.md が更新されている",
+        "History に flatten 検討〜採用と後方互換シムの経過が因果順で追記されている",
+        "Decisions に flatten (ユーザー確認済み) とシム (エージェント判断) の 2 行が追加され、承認区分が書き分けられている",
+        "DECISIONS.md に対応する 2 行が追加され、議事録の Decisions 行と一致する",
+        "更新前から存在した記録 (YAML 一本化の決定・History の既存経過) が失われていない",
+        "セクション見出しが重複せず、単一の一貫した議事録構造が保たれている (各セクションが 1 つ)"
+      ]
+    }
+  ]
+}

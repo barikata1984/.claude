@@ -1,0 +1,42 @@
+[
+  {
+    "query": "議事録書いて",
+    "should_trigger": true
+  },
+  {
+    "query": "ここまでの進捗をノートにまとめといて。まだ作業は続けるけど一区切りついたので",
+    "should_trigger": true
+  },
+  {
+    "query": "この実験の結果と決定事項をあとから追えるようにドキュメントに残しておいて。来週 PI に説明するときに使う",
+    "should_trigger": true
+  },
+  {
+    "query": "なんでこの設計にしたか、3 週間後の自分がわかるように記録を残して",
+    "should_trigger": true
+  },
+  {
+    "query": "さっき決めた却下案も含めて DECISIONS に反映しといて",
+    "should_trigger": true
+  },
+  {
+    "query": "今日はここまで。コミットしてプッシュまでやって",
+    "should_trigger": false
+  },
+  {
+    "query": "sweep 終わったみたいだから結果分析して log_sweep.md に記録して",
+    "should_trigger": false
+  },
+  {
+    "query": "昨日の議事録読んで、何決めたか要約して",
+    "should_trigger": false
+  },
+  {
+    "query": "この論文読んでノートにまとめて。literature フォルダに PDF ある",
+    "should_trigger": false
+  },
+  {
+    "query": "TODO.md のフォーマットが崩れてるから直して",
+    "should_trigger": false
+  }
+]
