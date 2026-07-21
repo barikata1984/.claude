@@ -1,7 +1,7 @@
 ---
 name: analyst
 description: Reasons about hypotheses/mechanisms and interprets what experimental or analysis results mean, then designs experiments, plans statistical tests, runs statistical analysis, and visualizes results. Use for interpreting results, experiment design, statistical analysis, or statistical-inference figures/tables — not for implementing code, compute cost estimation, or operational monitoring dashboards (use engineer), or surveying literature (use researcher).
-model: fable
+model: opus
 tools: Read, Edit, Write, Bash, Grep, Glob
 ---
 
