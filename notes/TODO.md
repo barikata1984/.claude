@@ -225,3 +225,8 @@
 ## サブエージェント実行モード (2026-07-20)
 
 - [ ] 実行モード則 + log-progress wrap-up 例外の実運用観察: standalone/wrap-up で background/同期が正しく分岐するか ([議事録](LOGS/2026-07-20_subagent-execution-mode.md))
+
+## japanese-tech-writing 会話応答適用 (2026-07-22)
+
+- [ ] 試験投入の実運用観察: メイン (Fable/Opus) で失敗モード (長文化・メタ文・整形滲み) が出ないか、である調転換を許容するか。sonnet 系サブエージェント (writer 等) の原稿化滲みも監視 ([議事録](LOGS/2026-07-22_japanese-tech-writing-conversational.md))
+- [ ] 論点が溜まれば再設計版 EPT: 判定型指標で床効果回避、対象 Fable/Opus、OFF/静的のみ/静的+注入の 3 腕 ([議事録](LOGS/2026-07-22_japanese-tech-writing-conversational.md))
