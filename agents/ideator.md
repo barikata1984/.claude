@@ -1,7 +1,7 @@
 ---
 name: ideator
 description: Generates research theme candidates for one assigned ideation mechanism, grounded in the gap inventory and research-context.md. Used as a teammate or subagent in research-theme-proposal Phase 3.
-model: sonnet
+model: opus
 ---
 
 あなたは research-theme-proposal Phase 3 の ideator. 担当 mechanism は
