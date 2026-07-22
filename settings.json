@@ -26,54 +26,6 @@
       "Bash(pixi install *)",
       "Bash(bash /workspace/scripts/setup.sh)"
     ],
-    "_deny": [
-      "Bash(rm -rf /:*)",
-      "Bash(rm -rf ~:*)",
-      "Bash(doppler secrets get:*)",
-      "Bash(pass show:*)",
-      "Bash(gpg -d:*)",
-      "Bash(gpg --decrypt:*)",
-      "Bash(op item get:*)",
-      "Bash(vault kv get:*)",
-      "Bash(aws secretsmanager get-secret-value:*)",
-      "Bash(gcloud secrets versions access:*)",
-      "Bash(printenv:*)",
-      "Bash(printenv)",
-      "Bash(cat .env)",
-      "Bash(cat .env.local)",
-      "Bash(cat .env.secrets)",
-      "Bash(cat ~/.netrc)",
-      "Bash(cat ~/.aws/credentials)",
-      "Bash(cat ~/.ssh/id_rsa)",
-      "Bash(cat ~/.ssh/id_ed25519)",
-      "Bash(cat ~/.ssh/id_ecdsa)",
-      "Bash(cat ~/.ssh/id_dsa)",
-      "Read(**/.env)",
-      "Read(**/.env.*)",
-      "Read(**/.envrc)",
-      "Read(**/id_rsa)",
-      "Read(**/id_ed25519)",
-      "Read(**/id_ecdsa)",
-      "Read(**/id_dsa)",
-      "Read(**/*.pem)",
-      "Read(**/*.key)",
-      "Read(**/*.p12)",
-      "Read(**/*.pfx)",
-      "Read(**/*.ppk)",
-      "Read(**/*.jks)",
-      "Read(**/service_account*.json)",
-      "Read(**/application_default_credentials.json)",
-      "Read(~/.aws/credentials)",
-      "Read(~/.kube/config)",
-      "Read(~/.docker/config.json)",
-      "Read(~/.netrc)",
-      "Read(~/.npmrc)",
-      "Read(~/.pypirc)",
-      "Read(**/secrets.yaml)",
-      "Read(**/secrets.yml)",
-      "Read(**/secrets.json)",
-      "Read(**/*.secret)"
-    ],
     "_ask": [
       "Bash(rm:*)",
       "Bash(rmdir:*)",
@@ -134,30 +86,57 @@
       "Bash(sudo docker container prune:*)",
       "Bash(sudo docker network rm:*)",
       "Bash(sudo docker network prune:*)"
+    ],
+    "_deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf ~:*)",
+      "Bash(doppler secrets get:*)",
+      "Bash(pass show:*)",
+      "Bash(gpg -d:*)",
+      "Bash(gpg --decrypt:*)",
+      "Bash(op item get:*)",
+      "Bash(vault kv get:*)",
+      "Bash(aws secretsmanager get-secret-value:*)",
+      "Bash(gcloud secrets versions access:*)",
+      "Bash(printenv:*)",
+      "Bash(printenv)",
+      "Bash(cat .env)",
+      "Bash(cat .env.local)",
+      "Bash(cat .env.secrets)",
+      "Bash(cat ~/.netrc)",
+      "Bash(cat ~/.aws/credentials)",
+      "Bash(cat ~/.ssh/id_rsa)",
+      "Bash(cat ~/.ssh/id_ed25519)",
+      "Bash(cat ~/.ssh/id_ecdsa)",
+      "Bash(cat ~/.ssh/id_dsa)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.envrc)",
+      "Read(**/id_rsa)",
+      "Read(**/id_ed25519)",
+      "Read(**/id_ecdsa)",
+      "Read(**/id_dsa)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/*.ppk)",
+      "Read(**/*.jks)",
+      "Read(**/service_account*.json)",
+      "Read(**/application_default_credentials.json)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.kube/config)",
+      "Read(~/.docker/config.json)",
+      "Read(~/.netrc)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)",
+      "Read(**/secrets.yaml)",
+      "Read(**/secrets.yml)",
+      "Read(**/secrets.json)",
+      "Read(**/*.secret)"
     ]
   },
-  "model": "sonnet",
   "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/search-first-reminder.sh"
-          }
-        ]
-      }
-    ],
-    "SubagentStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/search-first-reminder-subagent.sh"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -173,12 +152,34 @@
         ]
       }
     ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/home/atsushi/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
             "command": "python3 ~/.claude/hooks/check_proposal.py"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/search-first-reminder-subagent.sh"
           }
         ]
       }
@@ -192,6 +193,20 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/search-first-reminder.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/style-rule-reminder.sh"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
@@ -199,8 +214,8 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true,
-    "andrej-karpathy-skills@karpathy-skills": true
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "skill-creator@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
@@ -209,21 +224,21 @@
         "repo": "anthropics/skills"
       }
     },
-    "karpathy-skills": {
-      "source": {
-        "source": "github",
-        "repo": "multica-ai/andrej-karpathy-skills"
-      }
-    },
     "claude-plugins-official": {
       "source": {
         "source": "github",
         "repo": "anthropics/claude-plugins-official"
       }
+    },
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "multica-ai/andrej-karpathy-skills"
+      }
     }
   },
   "language": "Japanese",
-  "effortLevel": "medium",
+  "effortLevel": "xhigh",
   "tui": "fullscreen",
   "voice": {
     "enabled": false,
@@ -234,5 +249,6 @@
   "theme": "auto",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": false
+  "voiceEnabled": false,
+  "model": "claude-opus-4-7[1M]"
 }

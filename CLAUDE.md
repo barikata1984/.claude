@@ -1,7 +1,9 @@
 # Claude Code ユーザーレベル設定
 
 @~/.claude/plugins/marketplaces/karpathy-skills/CLAUDE.md
-@~/.claude/skills/japanese-tech-writing.md
+<!-- japanese-tech-writing スキル: upstream https://gist.github.com/k16shikano/fd287c3133457c4fd8f5601d34aa817d の verbatim コピー。更新は raw を上書き取得。以下の @import + hooks/style-rule-reminder.sh の毎ターン注入で会話応答にも適用中 (2026-07-19 試験投入) -->
+@~/.claude/skills/japanese-tech-writing/SKILL.md
+<!-- cognitive-rhythm-writing スキル: upstream https://gist.github.com/k16shikano/eb2929f13ed19c97188393d297be8432 の verbatim コピー。同著者の姉妹スキルで、本文が ../japanese-tech-writing/SKILL.md を相対参照するため兄弟ディレクトリ配置が前提。更新方法は同上 -->
 @~/.claude/skills/concise/SKILL.md
 
 ## 批判的スタンス（反迎合）
